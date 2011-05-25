@@ -3,7 +3,13 @@ require 'pathname'
 require 'libv8/version'
 
 module Libv8
-  def self.LIB_PATH
-    Pathname(__FILE__).dirname.join('libv8', 'build', 'v8', 'libv8.a')
+  LIBRARY_PATH = Pathname(__FILE__).dirname.join('libv8').to_s
+  def self.library_path
+    LIBRARY_PATH
+  end
+  
+  INCLUDE_PATH = Pathname(__FILE__).dirname.join('libv8', 'v8', 'include').to_s
+  def self.include_path
+    INCLUDE_PATH
   end
 end
