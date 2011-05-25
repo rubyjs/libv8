@@ -5,4 +5,4 @@
 Gemfile.lock
 pkg/*
 tmp/*
-build/*
+lib/libv8/build/*
