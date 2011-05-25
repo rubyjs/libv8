@@ -22,11 +22,44 @@ Bundler::GemHelper.install_tasks
 #   ext.lib_dir = "lib/libv8"
 # end
 
+desc "Get the latest source"
+task "fetch" do
+  puts "Fetching latest from github..."
+  if File.exist? File.join('lib', 'libv8', 'v8') then
+    Dir.chdir(File.join('lib', 'libv8', 'v8')) do
+      `git fetch`
+      `git checkout tags/#{`git tag`.split.last}`
+    end
+  else
+    `git clone https://github.com/v8/v8.git lib/libv8/v8`
+    Dir.chdir(File.join('lib', 'libv8', 'v8')) do
+      `git checkout tags/#{`git tag`.split.last}`
+    end
+  end
+end
+
 desc "Compile the V8 JavaScript engine"
 task "compile" do
+  puts "Compiling V8..."
   Dir.chdir(File.join('lib', 'libv8')) do
-    puts "Compiling V8..."
-    $stdout.flush
     `make`
+    `cp build/v8/libv8.* .`
   end
+end
+
+desc "Clean up from the build"
+task "clean" do
+  Dir.chdir(File.join('lib', 'libv8')) do
+    `make clean`
+  end
+end
+
+desc "Create a binary gem for this current platform"
+task "binary" => "compile" do
+  gemspec = eval(File.read('libv8.gemspec'))
+  gemspec.extensions.clear
+  gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
+  gemspec.files << "lib/libv8/libv8.a"
+  FileUtils.mkdir_p 'pkg'
+  FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end
