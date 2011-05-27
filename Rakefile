@@ -43,7 +43,6 @@ task "compile" do
   puts "Compiling V8..."
   Dir.chdir(File.join('lib', 'libv8')) do
     `make`
-    `cp build/v8/libv8.* .`
   end
 end
 
@@ -59,7 +58,7 @@ task "binary" => "compile" do
   gemspec = eval(File.read('libv8.gemspec'))
   gemspec.extensions.clear
   gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
-  gemspec.files << "lib/libv8/libv8.a"
+  gemspec.files << "lib/libv8/build/v8/libv8.a"
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end

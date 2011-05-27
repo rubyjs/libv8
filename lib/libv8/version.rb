@@ -1,4 +1,4 @@
 module Libv8
-  # Get the version from the git repo
-  VERSION = "3.3.8.2"
+  V8_VERSION = "3.3.10"
+  VERSION = V8_VERSION + ""
 end
