@@ -8,7 +8,8 @@ A gem for distributing the v8 runtime libraries and headers in both source and b
 The goal of libv8 is two fold: provide a binary gem containing the a pre-compiled libv8.a for as many
 platforms as possible while at the same time supporting for an automated compilation for all others.
 
-Not only does this drastically reduce gem install times, but it opens the door for supporting Windows.
+Not only does this drastically reduce gem install times, but it also reduces dependencies on the local
+machine receiving the gem. It also opens the door for supporting Windows.
 
 ### Do I Get a Binary?
 
