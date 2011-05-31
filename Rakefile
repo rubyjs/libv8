@@ -58,7 +58,16 @@ task "binary" => "compile" do
   gemspec = eval(File.read('libv8.gemspec'))
   gemspec.extensions.clear
   gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
+
+  # We don't need most things for the binary
+  gemspec.files = []
+  # Lib
+  gemspec.files << 'lib/libv8.rb'
+  gemspec.files << 'lib/libv8/version.rb'
+  # V8
+  Dir.glob('lib/libv8/v8/include/*').each { |f| gemspec.files << f }
   gemspec.files << "lib/libv8/build/v8/libv8.a"
+  gemspec.files << "lib/libv8/build/v8/libv8preparser.a"
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end

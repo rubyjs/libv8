@@ -17,12 +17,12 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "libv8"
 
   root = Pathname(__FILE__).dirname
-  s.files         = `git ls-files`.split("\n")
+
+  s.files  = `git ls-files`.split("\n")
   s.files += Dir.chdir(root.join("lib/libv8/v8")) do
     `git ls-files`.split("\n").reject {|f| f =~ /^test/ || f =~ /^samples/ || f =~ /^benchmarks/}.map {|f| "lib/libv8/v8/#{f}"}
   end
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+
   s.extensions = ["ext/libv8/extconf.rb"]
   s.require_paths = ["lib"]
   
