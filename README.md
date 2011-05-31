@@ -26,6 +26,8 @@ talk to us about seeting up a binary distro for you.
 
 If you can fix the [Makefile](https://github.com/fractaloop/libv8/blob/master/lib/libv8/Makefile) so that it correctly compiles for your platform, we'll pull it right in!
 
+{FIXME: Add instructions about how to compile v8 for your platform}
+
 ### About
 
 This project spun off of [therubyracer](http://github.com/cowboyd/therubyracer) which depends on having
