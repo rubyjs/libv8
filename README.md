@@ -39,6 +39,3 @@ a specific version of v8 to compile and run against. However, actually deliverin
 reliably to all the different platforms proved to be a challenge to say the least.
 
 We got tired of waiting 5 minutes for v8 to compile every time we installed that gem.
-
-### Develop
-
