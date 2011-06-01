@@ -19,7 +19,7 @@ That depends on your platform. Right now, we support the following platforms.
 
 
 If you don't see your platform on this list, first, make sure that it installs from source, and second
-talk to us about seeting up a binary distro for you.
+talk to us about setting up a binary distro for you.
 
 
 ### What if I can't install from source?
@@ -27,7 +27,7 @@ talk to us about seeting up a binary distro for you.
 
 If you can fix the [Makefile](https://github.com/fractaloop/libv8/blob/master/lib/libv8/Makefile) so that it correctly compiles for your platform, we'll pull it right in!
 
-    git clone git@github.com:fractaloop/v8
+    git clone git@github.com:fractaloop/libv8
     git submodule update --init
     bundle exec rake compile
 
