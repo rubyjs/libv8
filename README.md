@@ -1,4 +1,3 @@
-
 ##libv8
 
 A gem for distributing the v8 runtime libraries and headers in both source and binary form.
@@ -16,6 +15,7 @@ machine receiving the gem. It also opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following platforms.
 
 * x86_64-darwin10.7.0
+* x86_64-linux
 
 
 If you don't see your platform on this list, first, make sure that it installs from source, and second
