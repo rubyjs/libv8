@@ -27,7 +27,10 @@ talk to us about seeting up a binary distro for you.
 
 If you can fix the [Makefile](https://github.com/fractaloop/libv8/blob/master/lib/libv8/Makefile) so that it correctly compiles for your platform, we'll pull it right in!
 
-{FIXME: Add instructions about how to compile v8 for your platform}
+    git clone git@github.com:fractaloop/v8
+    git submodule update --init
+    bundle exec rake compile
+
 
 ### About
 
@@ -39,6 +42,3 @@ We got tired of waiting 5 minutes for v8 to compile every time we installed that
 
 ### Develop
 
-git clone git@github.com:fractaloop/v8
-git submodule update --init
-bundle exec rake compile
