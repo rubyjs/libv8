@@ -23,23 +23,20 @@ Bundler::GemHelper.install_tasks
 # end
 
 desc "Get the latest source"
-task :fetch do
-  puts "Fetching latest from github..."
-  if File.exist? File.join('lib', 'libv8', 'v8') then
+task :src_check do
+  if File.exist? File.join('lib', 'libv8', 'v8', 'SConstruct') then
     Dir.chdir(File.join('lib', 'libv8', 'v8')) do
-      `git fetch`
-      `git checkout tags/#{`git tag`.split.sort.last}`
+      `git checkout -f tags/#{`git tag`.split.sort.last}`
     end
   else
-    `git clone https://github.com/v8/v8.git lib/libv8/v8`
-    Dir.chdir(File.join('lib', 'libv8', 'v8')) do
-      `git checkout tags/#{`git tag`.split.sort.last}`
-    end
+    puts "V8 source is missing. Did you initialize and update the submodule?"
+    puts "\tTry: git submodule update --init"
+    fail "Unable to find V8 source!"
   end
 end
 
 desc "Compile the V8 JavaScript engine"
-task :compile => :fetch do
+task :compile => :src_check do
   puts "Compiling V8..."
   Dir.chdir(File.join('lib', 'libv8')) do
     `make`
