@@ -71,3 +71,5 @@ task "binary" => "compile" do
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end
+
+task :default => :binary
