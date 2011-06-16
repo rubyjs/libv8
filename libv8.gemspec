@@ -1,6 +1,11 @@
 # -*- encoding: utf-8 -*-
 require 'pathname'
 
+# Sanity check!
+if !File.exist? File.join('lib', 'libv8', 'v8', 'SConstruct') then
+  `git submodule update --init`
+end
+
 $:.push File.expand_path("../lib", __FILE__)
 require "libv8/version"
 

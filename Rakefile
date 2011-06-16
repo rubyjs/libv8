@@ -1,3 +1,14 @@
+# This is a sanity check to enforce that the v8 submodule is initialized
+# before we try to run any rake tasks.
+if !File.exist? File.join('lib', 'libv8', 'v8', 'SConstruct') then
+  puts "V8 source appears to be missing. Updating..."
+  `git submodule update --init`
+end
+
+# Now we include the bundler stuff...
+# We had to do the fetch first since our version code requires that we have
+# the V8 source
+
 require 'bundler'
 require 'bundler/setup'
 
