@@ -12,8 +12,6 @@ end
 require 'bundler'
 require 'bundler/setup'
 
-# require "rake/extensiontask"
-
 Bundler::GemHelper.install_tasks
 
 # desc "remove all generated artifacts except built v8 objects"
@@ -33,21 +31,19 @@ Bundler::GemHelper.install_tasks
 #   ext.lib_dir = "lib/libv8"
 # end
 
-desc "Get the latest source"
-task :src_check do
-  if File.exist? File.join('lib', 'libv8', 'v8', 'SConstruct') then
-    Dir.chdir(File.join('lib', 'libv8', 'v8')) do
-      `git checkout -f tags/#{`git tag`.split.sort.last}`
-    end
-  else
-    puts "V8 source is missing. Did you initialize and update the submodule?"
-    puts "\tTry: git submodule update --init"
-    fail "Unable to find V8 source!"
+desc "Check out the latest stable version"
+task :latest_stable do
+  Dir.chdir(File.join('lib', 'libv8', 'v8')) do
+    `git fetch`
+    # We're checking out the latest tag. Sorted using Gem::Version
+    latest = `git tag`.split.map{|v| Gem::Version.new(v)}.sort.last
+    puts "Checking out latest stable V8 version (#{latest})"
+    `git checkout -f tags/#{latest}`
   end
 end
 
 desc "Compile the V8 JavaScript engine"
-task :compile => :src_check do
+task :compile => :latest_stable do
   puts "Compiling V8..."
   Dir.chdir(File.join('lib', 'libv8')) do
     `make`
