@@ -16,7 +16,6 @@ That depends on your platform. Right now, we support the following platforms.
 
 * x86_64-darwin10.7.0
 * x86_64-linux
-* x86-linux
 
 If you don't see your platform on this list, first, make sure that it installs from source, and second
 talk to us about setting up a binary distro for you.
