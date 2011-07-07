@@ -31,34 +31,43 @@ Bundler::GemHelper.install_tasks
 #   ext.lib_dir = "lib/libv8"
 # end
 
-desc "Check out the latest stable version"
-task :latest_stable do
+latest_v8 = nil
+Dir.chdir(File.join('lib', 'libv8', 'v8')) do
+  latest_v8 = `git tag`.split.map{|v| Gem::Version.new(v)}.sort.last.to_s
+end
+
+desc "Check out a version of V8"
+task :checkout, :version do |t, options|
+  options.with_defaults(:version => latest_v8)
   Dir.chdir(File.join('lib', 'libv8', 'v8')) do
     `git fetch`
     # We're checking out the latest tag. Sorted using Gem::Version
-    latest = `git tag`.split.map{|v| Gem::Version.new(v)}.sort.last
-    puts "Checking out latest stable V8 version (#{latest})"
-    `git checkout -f tags/#{latest}`
+    versions = `git tag`.split.map{|v| Gem::Version.new(v)}.sort
+    fail "Version #{options.version} does not exist! Aborting..." if !versions.member?(Gem::Version.new(options.version))
+    puts "Checking out version #{options.version}"
+    `git checkout -f tags/#{options.version}`
   end
 end
 
 desc "Compile the V8 JavaScript engine"
-task :compile => :latest_stable do
-  puts "Compiling V8..."
+task :compile, [:version] do |t, options|
+  options.with_defaults(:version => latest_v8)
+  puts "Compiling V8 (#{options.version})..."
+  Rake::Task[:checkout].invoke(options.version)
   Dir.chdir(File.join('lib', 'libv8')) do
     `make`
   end
 end
 
 desc "Clean up from the build"
-task :clean do
+task :clean do |t, options|
   Dir.chdir(File.join('lib', 'libv8')) do
     `make clean`
   end
 end
 
 desc "Create a binary gem for this current platform"
-task :binary => :compile do
+task :binary, [:version] => [:compile] do |t, options|
   gemspec = eval(File.read('libv8.gemspec'))
   gemspec.extensions.clear
   gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
