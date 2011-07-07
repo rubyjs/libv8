@@ -66,6 +66,13 @@ task :clean do |t, options|
   end
 end
 
+desc "List all versions of V8"
+task :list do
+  Dir.chdir(File.join('lib', 'libv8', 'v8')) do
+    puts `git tag`.split.map{|v| Gem::Version.new(v)}.sort
+  end
+end  
+
 desc "Create a binary gem for this current platform"
 task :binary, [:version] => [:compile] do |t, options|
   gemspec = eval(File.read('libv8.gemspec'))
