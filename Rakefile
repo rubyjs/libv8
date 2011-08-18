@@ -61,10 +61,13 @@ task :compile, [:version] do |t, options|
     
     print "Checking for Python..."
     version = `python --version 2>&1`
+    version_number = version.split.last.match("[0-9.]+")[0]
     crash "Python not found!" if version.split.first != "Python"
-    crash "Python 3.x is unsupported by V8!" if Gem::Version.new(version.split.last) >= Gem::Version.new(3)
-    crash "Python 2.4+ is required by V8!" if Gem::Version.new(version.split.last) < Gem::Version.new("2.4")
-    puts version.split.last
+    crash "Python 3.x is unsupported by V8!" if 
+				Gem::Version.new(version_number) >= 
+				Gem::Version.new(3)
+    crash "Python 2.4+ is required by V8!" if Gem::Version.new(version_number) < Gem::Version.new("2.4")
+    puts version_number
   end
   
   puts "Compiling V8 (#{options.version})..."
