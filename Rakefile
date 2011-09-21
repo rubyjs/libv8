@@ -46,6 +46,7 @@ task :checkout, :version do |t, options|
     fail "Version #{options.version} does not exist! Aborting..." if !versions.member?(Gem::Version.new(options.version))
     puts "Checking out version #{options.version}"
     `git checkout -f tags/#{options.version}`
+    File.open(File.join(File.dirname(__FILE__), 'lib', 'libv8', 'VERSION'), 'w') { |f| f.write options.version.to_s }
   end
 end
 

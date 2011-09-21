@@ -1,5 +1,6 @@
 module Libv8
-  V8_VERSION = Dir.chdir(File.join(File.dirname(__FILE__), 'v8')) { `git tag`.split.sort.last }
+  version_file = File.join(File.dirname(__FILE__), 'VERSION')
+  V8_VERSION = File.exist?(version_file) ? File.read(version_file).chomp : "0.0"
   REVISION = ""
   VERSION = V8_VERSION + REVISION
 end
