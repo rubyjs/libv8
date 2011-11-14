@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
 
   s.extensions = ["ext/libv8/extconf.rb"]
   s.require_paths = ["lib"]
-  
-  s.add_development_dependency "rake", "~> 0.8.7"
+
+  s.add_development_dependency "rake", "~> 0.9.2"
   s.add_development_dependency "bundler"
 end
