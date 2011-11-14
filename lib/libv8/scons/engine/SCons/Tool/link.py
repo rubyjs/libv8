@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/link.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/link.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import SCons.Defaults
 import SCons.Tool
@@ -75,14 +75,15 @@ def generate(env):
 
     env['SHLINK']      = '$LINK'
     env['SHLINKFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -shared')
-    env['SHLINKCOM']   = '$SHLINK -o $TARGET $SHLINKFLAGS $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
+    env['SHLINKCOM']   = '$SHLINK -o $TARGET $SHLINKFLAGS $__RPATH $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
     # don't set up the emitter, cause AppendUnique will generate a list
     # starting with None :-(
     env.Append(SHLIBEMITTER = [shlib_emitter])
     env['SMARTLINK']   = smart_link
     env['LINK']        = "$SMARTLINK"
     env['LINKFLAGS']   = SCons.Util.CLVar('')
-    env['LINKCOM']     = '$LINK -o $TARGET $LINKFLAGS $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
+    # __RPATH is only set to something ($_RPATH typically) on platforms that support it.
+    env['LINKCOM']     = '$LINK -o $TARGET $LINKFLAGS $__RPATH $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
     env['LIBDIRPREFIX']='-L'
     env['LIBDIRSUFFIX']=''
     env['_LIBFLAGS']='${_stripixes(LIBLINKPREFIX, LIBS, LIBLINKSUFFIX, LIBPREFIXES, LIBSUFFIXES, __env__)}'
@@ -105,7 +106,7 @@ def generate(env):
     env['LDMODULEPREFIX'] = '$SHLIBPREFIX' 
     env['LDMODULESUFFIX'] = '$SHLIBSUFFIX' 
     env['LDMODULEFLAGS'] = '$SHLINKFLAGS'
-    env['LDMODULECOM'] = '$LDMODULE -o $TARGET $LDMODULEFLAGS $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
+    env['LDMODULECOM'] = '$LDMODULE -o $TARGET $LDMODULEFLAGS $__RPATH $SOURCES $_LIBDIRFLAGS $_LIBFLAGS'
 
 
 

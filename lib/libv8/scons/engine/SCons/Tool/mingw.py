@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/mingw.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/mingw.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os
 import os.path
@@ -46,8 +46,22 @@ import SCons.Util
 key_program = 'mingw32-gcc'
 
 def find(env):
-    # First search in the SCons path and then the OS path:
-    return env.WhereIs(key_program) or SCons.Util.WhereIs(key_program)
+    # First search in the SCons path
+    path=env.WhereIs(key_program)
+    if (path):
+        return path
+    # then the OS path:
+    path=SCons.Util.WhereIs(key_program)
+    if (path):
+        return path
+
+    # If that doesn't work try default location for mingw
+    save_path=env['ENV']['PATH']
+    env.AppendENVPath('PATH',r'c:\MinGW\bin')
+    path =env.WhereIs(key_program)
+    if not path:
+        env['ENV']['PATH']=save_path
+    return path
 
 def shlib_generator(target, source, env, for_signature):
     cmd = SCons.Util.CLVar(['$SHLINK', '$SHLINKFLAGS']) 
@@ -77,10 +91,13 @@ def shlib_emitter(target, source, env):
     if not no_import_lib and \
        not env.FindIxes(target, 'LIBPREFIX', 'LIBSUFFIX'):
 
-        # Append an import library to the list of targets.
-        target.append(env.ReplaceIxes(dll,  
+        # Create list of target libraries as strings
+        targetStrings=env.ReplaceIxes(dll,  
                                       'SHLIBPREFIX', 'SHLIBSUFFIX',
-                                      'LIBPREFIX', 'LIBSUFFIX'))
+                                      'LIBPREFIX', 'LIBSUFFIX')
+        
+        # Now add file nodes to target list
+        target.append(env.fs.File(targetStrings))
 
     # Append a def file target if there isn't already a def file target
     # or a def file source. There is no option to disable def file
@@ -89,10 +106,14 @@ def shlib_emitter(target, source, env):
     def_source = env.FindIxes(source, 'WINDOWSDEFPREFIX', 'WINDOWSDEFSUFFIX')
     def_target = env.FindIxes(target, 'WINDOWSDEFPREFIX', 'WINDOWSDEFSUFFIX')
     if not def_source and not def_target:
-        target.append(env.ReplaceIxes(dll,  
+        # Create list of target libraries and def files as strings
+        targetStrings=env.ReplaceIxes(dll,  
                                       'SHLIBPREFIX', 'SHLIBSUFFIX',
-                                      'WINDOWSDEFPREFIX', 'WINDOWSDEFSUFFIX'))
-    
+                                      'WINDOWSDEFPREFIX', 'WINDOWSDEFSUFFIX')
+        
+        # Now add file nodes to target list
+        target.append(env.fs.File(targetStrings))
+
     return (target, source)
                          
 

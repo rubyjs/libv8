@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/swig.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/swig.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os.path
 import re
@@ -53,7 +53,8 @@ def swigSuffixEmitter(env, source):
 
 # Match '%module test', as well as '%module(directors="1") test'
 # Also allow for test to be quoted (SWIG permits double quotes, but not single)
-_reModule = re.compile(r'%module(\s*\(.*\))?\s+("?)(.+)\2')
+# Also allow for the line to have spaces after test if not quoted
+_reModule = re.compile(r'%module(\s*\(.*\))?\s+("?)(\S+)\2')
 
 def _find_modules(src):
     """Find all modules referenced by %module lines in `src`, a SWIG .i file.
@@ -65,9 +66,9 @@ def _find_modules(src):
     try:
         matches = _reModule.findall(open(src).read())
     except IOError:
-        # If the file's not yet generated, guess the module name from the filename
+        # If the file's not yet generated, guess the module name from the file stem
         matches = []
-        mnames.append(os.path.splitext(src)[0])
+        mnames.append(os.path.splitext(os.path.basename(src))[0])
 
     for m in matches:
         mnames.append(m[2])

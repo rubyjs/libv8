@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/yacc.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/yacc.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os.path
 
@@ -60,6 +60,16 @@ def _yaccEmitter(target, source, env, ysuf, hsuf):
     if "-g" in flags:
         base, ext = os.path.splitext(SCons.Util.to_String(source[0]))
         target.append(base + env.subst("$YACCVCGFILESUFFIX"))
+
+    # If -v is specirfied yacc will create the output debug file
+    # which is not really source for any process, but should
+    # be noted and also be cleaned
+    # Bug #2558
+    if "-v" in flags:
+        env.SideEffect(targetBase+'.output',target[0])
+        env.Clean(target[0],targetBase+'.output')
+
+
 
     # With --defines and --graph, the name of the file is totally defined
     # in the options.

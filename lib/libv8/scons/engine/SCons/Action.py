@@ -76,7 +76,7 @@ way for wrapping up the functions.
 
 """
 
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -97,7 +97,7 @@ way for wrapping up the functions.
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Action.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Action.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import SCons.compat
 
@@ -300,8 +300,10 @@ def _actionAppend(act1, act2):
     # a single ListAction.
     a1 = Action(act1)
     a2 = Action(act2)
-    if a1 is None or a2 is None:
-        raise TypeError("Cannot append %s to %s" % (type(act1), type(act2)))
+    if a1 is None:
+        return a2
+    if a2 is None:
+        return a1
     if isinstance(a1, ListAction):
         if isinstance(a2, ListAction):
             return ListAction(a1.list + a2.list)
@@ -385,6 +387,10 @@ def _do_create_action(act, kw):
         # The list of string commands may include a LazyAction, so we
         # reprocess them via _do_create_list_action.
         return _do_create_list_action(commands, kw)
+    # Catch a common error case with a nice message:
+    if isinstance(act, int) or isinstance(act, float):
+        raise TypeError("Don't know how to create an Action from a number (%s)"%act)
+    # Else fail silently (???)
     return None
 
 def _do_create_list_action(act, kw):
@@ -497,7 +503,18 @@ class _ActionAction(ActionBase):
             SCons.Util.AddMethod(self, batch_key, 'batch_key')
 
     def print_cmd_line(self, s, target, source, env):
-        sys.stdout.write(s + u"\n")
+        # In python 3, and in some of our tests, sys.stdout is
+        # a String io object, and it takes unicode strings only
+        # In other cases it's a regular Python 2.x file object
+        # which takes strings (bytes), and if you pass those a
+        # unicode object they try to decode with 'ascii' codec
+        # which fails if the cmd line has any hi-bit-set chars.
+        # This code assumes s is a regular string, but should
+        # work if it's unicode too.
+        try:
+            sys.stdout.write(unicode(s + "\n"))
+        except UnicodeDecodeError:
+            sys.stdout.write(s + "\n")
 
     def __call__(self, target, source, env,
                                exitstatfunc=_null,
@@ -654,7 +671,6 @@ def _subproc(scons_env, cmd, error = 'ignore', **kw):
     kw['env'] = new_env
 
     try:
-        #FUTURE return subprocess.Popen(cmd, **kw)
         return subprocess.Popen(cmd, **kw)
     except EnvironmentError, e:
         if error == 'raise': raise

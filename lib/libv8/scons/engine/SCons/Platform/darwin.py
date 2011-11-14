@@ -8,7 +8,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -30,14 +30,38 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Platform/darwin.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Platform/darwin.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import posix
+import os
 
 def generate(env):
     posix.generate(env)
     env['SHLIBSUFFIX'] = '.dylib'
-    env['ENV']['PATH'] = env['ENV']['PATH'] + ':/sw/bin'
+    # put macports paths at front to override Apple's versions, fink path is after
+    # For now let people who want Macports or Fink tools specify it!
+    # env['ENV']['PATH'] = '/opt/local/bin:/opt/local/sbin:' + env['ENV']['PATH'] + ':/sw/bin'
+    
+    # Store extra system paths in env['ENV']['PATHOSX']
+    
+    filelist = ['/etc/paths',]
+    # make sure this works on Macs with Tiger or earlier
+    try:
+        dirlist = os.listdir('/etc/paths.d')
+    except:
+        dirlist = []
+
+    for file in dirlist:
+        filelist.append('/etc/paths.d/'+file)
+
+    for file in filelist:
+        if os.path.isfile(file):
+            f = open(file, 'r')
+            lines = f.readlines()
+            for line in lines:
+                if line:
+                    env.AppendENVPath('PATHOSX', line.strip('\n'))
+            f.close()
 
 # Local Variables:
 # tab-width:4

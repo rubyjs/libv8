@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@
 #   * test on 64 bits XP +  VS 2005 (and VS 6 if possible)
 #   * SDK
 #   * Assembly
-__revision__ = "src/engine/SCons/Tool/MSCommon/vc.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/MSCommon/vc.py 5357 2011/09/09 21:31:03 bdeegan"
 
 __doc__ = """Module for Visual C/C++ detection and configuration.
 """
@@ -128,9 +128,11 @@ def get_host_target(env):
 
     return (host, target,req_target_platform)
 
-_VCVER = ["10.0", "9.0", "9.0Exp","8.0", "8.0Exp","7.1", "7.0", "6.0"]
+_VCVER = ["10.0Exp","10.0", "9.0", "9.0Exp","8.0", "8.0Exp","7.1", "7.0", "6.0"]
 
 _VCVER_TO_PRODUCT_DIR = {
+        '10.0Exp' : [
+            r'Microsoft\VCExpress\10.0\Setup\VC\ProductDir'],
         '10.0': [
             r'Microsoft\VisualStudio\10.0\Setup\VC\ProductDir'],
         '9.0': [
@@ -324,9 +326,10 @@ def get_default_version(env):
         installed_vcs = cached_get_installed_vcs()
         debug('installed_vcs:%s' % installed_vcs)
         if not installed_vcs:
-            msg = 'No installed VCs'
-            debug('msv %s\n' % repr(msg))
-            SCons.Warnings.warn(SCons.Warnings.VisualCMissingWarning, msg)
+            #msg = 'No installed VCs'
+            #debug('msv %s\n' % repr(msg))
+            #SCons.Warnings.warn(SCons.Warnings.VisualCMissingWarning, msg)
+            debug('msvc_setup_env: No installed VCs')
             return None
         msvc_version = installed_vcs[0]
         debug('msvc_setup_env: using default installed MSVC version %s\n' % repr(msvc_version))

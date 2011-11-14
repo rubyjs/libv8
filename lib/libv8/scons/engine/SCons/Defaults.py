@@ -10,7 +10,7 @@ from distutils.msvccompiler.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -33,7 +33,7 @@ from distutils.msvccompiler.
 #
 from __future__ import division
 
-__revision__ = "src/engine/SCons/Defaults.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Defaults.py 5357 2011/09/09 21:31:03 bdeegan"
 
 
 import os
@@ -199,14 +199,15 @@ def delete_func(dest, must_exist=0):
         dest = [dest]
     for entry in dest:
         entry = str(entry)
-        if not must_exist and not os.path.exists(entry):
+        # os.path.exists returns False with broken links that exist
+        entry_exists = os.path.exists(entry) or os.path.islink(entry)
+        if not entry_exists and not must_exist:
             continue
-        if not os.path.exists(entry) or os.path.isfile(entry):
-            os.unlink(entry)
-            continue
-        else:
+        # os.path.isdir returns True when entry is a link to a dir
+        if os.path.isdir(entry) and not os.path.islink(entry):
             shutil.rmtree(entry, 1)
             continue
+        os.unlink(entry)
 
 def delete_strfunc(dest, must_exist=0):
     return 'Delete(%s)' % get_paths_str(dest)
@@ -372,10 +373,23 @@ def processDefines(defs):
     if SCons.Util.is_List(defs):
         l = []
         for d in defs:
-            if SCons.Util.is_List(d) or isinstance(d, tuple):
-                l.append(str(d[0]) + '=' + str(d[1]))
-            else:
+            if d is None:
+                continue
+            elif SCons.Util.is_List(d) or isinstance(d, tuple):
+                if len(d) >= 2:
+                    l.append(str(d[0]) + '=' + str(d[1]))
+                else:
+                    l.append(str(d[0]))
+            elif SCons.Util.is_Dict(d):
+                for macro,value in d.iteritems():
+                    if value is not None:
+                        l.append(str(macro) + '=' + str(value))
+                    else:
+                        l.append(str(macro))
+            elif SCons.Util.is_String(d):
                 l.append(str(d))
+            else:
+                raise SCons.Errors.UserError("DEFINE %s is not a list, dict, string or None."%repr(d))
     elif SCons.Util.is_Dict(defs):
         # The items in a dictionary are stored in random order, but
         # if the order of the command-line options changes from

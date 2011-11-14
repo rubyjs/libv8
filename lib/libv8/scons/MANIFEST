@@ -88,6 +88,7 @@ engine/SCons/Tool/dmd.py
 engine/SCons/Tool/dvi.py
 engine/SCons/Tool/dvipdf.py
 engine/SCons/Tool/dvips.py
+engine/SCons/Tool/f03.py
 engine/SCons/Tool/f77.py
 engine/SCons/Tool/f90.py
 engine/SCons/Tool/f95.py

@@ -1,6 +1,6 @@
-"""engine.SCons.Tool.f95
+"""engine.SCons.Tool.f03
 
-Tool-specific initialization for the generic Posix f95 Fortran compiler.
+Tool-specific initialization for the generic Posix f03 Fortran compiler.
 
 There normally shouldn't be any need to import this module directly.
 It will usually be imported through the generic SCons.Tool.Tool()
@@ -31,23 +31,23 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/f95.py 5357 2011/09/09 21:31:03 bdeegan"
+__revision__ = "src/engine/SCons/Tool/f03.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import SCons.Defaults
 import SCons.Tool
 import SCons.Util
 import fortran
-from SCons.Tool.FortranCommon import add_all_to_env, add_f95_to_env
+from SCons.Tool.FortranCommon import add_all_to_env, add_f03_to_env
 
-compilers = ['f95']
+compilers = ['f03']
 
 def generate(env):
     add_all_to_env(env)
-    add_f95_to_env(env)
+    add_f03_to_env(env)
 
-    fcomp = env.Detect(compilers) or 'f95'
-    env['F95']  = fcomp
-    env['SHF95']  = fcomp
+    fcomp = env.Detect(compilers) or 'f03'
+    env['F03']  = fcomp
+    env['SHF03']  = fcomp
 
     env['FORTRAN']  = fcomp
     env['SHFORTRAN']  = fcomp

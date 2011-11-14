@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -20,14 +20,25 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/setup.py 5134 2010/08/16 23:02:40 bdeegan"
+"""
+NOTE: Installed SCons is not importable like usual Python packages. It is
+      executed explicitly with command line scripts. This allows multiple
+      SCons versions to coexist within single Python installation, which
+      is critical for enterprise build cases. Explicit invokation is
+      necessary to avoid confusion over which version of SCons is active.
+
+      By default SCons is installed into versioned directory, e.g.
+      site-packages/scons-2.1.0.alpha.20101125 and much of the stuff
+      below is dedicated to make it happen on various platforms.
+"""
+
+__revision__ = "src/setup.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os
-import os.path
 import stat
 import sys
 
-Version = "2.0.1"
+Version = "2.1.0"
 
 man_pages = [
     'scons.1',
@@ -35,12 +46,15 @@ man_pages = [
     'scons-time.1',
 ]
 
+# change to setup.py directory if it was executed from other dir
 (head, tail) = os.path.split(sys.argv[0])
-
 if head:
     os.chdir(head)
     sys.argv[0] = tail
 
+
+# flag if setup.py is run on win32 or _for_ win32 platform,
+# (when building windows installer on linux, for example)
 is_win32 = 0
 if not sys.platform == 'win32':
     try:
@@ -51,23 +65,14 @@ if not sys.platform == 'win32':
 else:
     is_win32 = 1
 
-try:
-    import distutils
-    import distutils.core
-    import distutils.command.install
-    import distutils.command.install_data
-    import distutils.command.install_lib
-    import distutils.command.install_scripts
-    import distutils.command.build_scripts
-except ImportError:
-    sys.stderr.write("""Could not import distutils.
 
-Building or installing SCons from this package requires that the Python
-distutils be installed.  See the README or README.txt file from this
-package for instructions on where to find distutils for installation on
-your system, or on how to install SCons from a different package.
-""")
-    sys.exit(1)
+import distutils
+import distutils.core
+import distutils.command.install
+import distutils.command.install_data
+import distutils.command.install_lib
+import distutils.command.install_scripts
+import distutils.command.build_scripts
 
 _install = distutils.command.install.install
 _install_data = distutils.command.install_data.install_data
@@ -135,7 +140,7 @@ class install(_install):
                        'version-lib'
                       ]
 
-    if hasattr(os, 'symlink'):
+    if hasattr(os, 'link'):
         user_options.append(
                     ('hardlink-scons', None,
                      "hard link 'scons' to the version-numbered script, don't make a separate 'scons' copy"),
@@ -269,15 +274,11 @@ class install_scripts(_install_scripts):
         self.copy_file(src, dst)
         self.outfiles.append(dst)
 
-    def report(self, msg, args):
-        # Wrapper around self.announce, used by older distutils versions.
-        self.announce(msg % args)
-
     def run(self):
-        # This "skip_build/build_scripts" block is cut-and-paste from
-        # distutils.
+        # --- distutils copy/paste ---
         if not self.skip_build:
             self.run_command('build_scripts')
+        # --- /distutils copy/paste ---
 
         # Custom SCons installation stuff.
         if Options.hardlink_scons:
@@ -305,6 +306,9 @@ class install_scripts(_install_scripts):
             base = os.path.basename(src)
             scons = os.path.join(self.install_dir, base)
             scons_ver = scons + '-' + Version
+            if is_win32:
+                scons += '.py'
+                scons_ver += '.py'
             create_version_script(src, scons_ver)
             create_basename_script(src, scons, scons_ver)
 
@@ -320,20 +324,19 @@ class install_scripts(_install_scripts):
                 self.copy_scons(src, scons_bat)
                 self.copy_scons(src, scons_version_bat)
 
-        # This section is cut-and-paste from distutils, modulo being
-        # able 
+        # --- distutils copy/paste ---
         if os.name == 'posix':
-            try: report = distutils.log.info
-            except AttributeError: report = self.report
             # Set the executable bits (owner, group, and world) on
             # all the scripts we just installed.
             for file in self.get_outputs():
                 if self.dry_run:
-                    report("changing mode of %s", file)
+                    # log.info("changing mode of %s", file)
+                    pass
                 else:
                     mode = ((os.stat(file)[stat.ST_MODE]) | 0555) & 07777
-                    report("changing mode of %s", file)
+                    # log.info("changing mode of %s to %o", file, mode)
                     os.chmod(file, mode)
+        # --- /distutils copy/paste ---
 
 class build_scripts(_build_scripts):
     def finalize_options(self):
@@ -377,11 +380,6 @@ scripts = [
     # accessible to Windows and you want the scons.bat.
     'script/scons.bat',
 ]
-
-#if is_win32:
-#    scripts = scripts + [
-#        'script/scons-post-install.py'
-#    ]
 
 arguments = {
     'name'             : "scons",

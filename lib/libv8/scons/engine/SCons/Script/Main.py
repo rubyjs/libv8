@@ -13,7 +13,7 @@ it goes here.
 unsupported_python_version = (2, 3, 0)
 deprecated_python_version = (2, 4, 0)
 
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@ deprecated_python_version = (2, 4, 0)
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Script/Main.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Script/Main.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import SCons.compat
 
@@ -60,6 +60,7 @@ import SCons.Errors
 import SCons.Job
 import SCons.Node
 import SCons.Node.FS
+import SCons.Platform
 import SCons.SConf
 import SCons.Script
 import SCons.Taskmaster
@@ -653,6 +654,10 @@ def _set_debug_values(options):
         print_time = 1
     if "tree" in debug_values:
         options.tree_printers.append(TreePrinter())
+    if "prepare" in debug_values:
+        SCons.Taskmaster.print_prepare = 1
+    if "duplicate" in debug_values:
+        SCons.Node.FS.print_duplicate = 1
 
 def _create_path(plist):
     path = '.'
@@ -665,15 +670,15 @@ def _create_path(plist):
 
 def _load_site_scons_dir(topdir, site_dir_name=None):
     """Load the site_scons dir under topdir.
-    Adds site_scons to sys.path, imports site_scons/site_init.py,
-    and adds site_scons/site_tools to default toolpath."""
+    Prepends site_scons to sys.path, imports site_scons/site_init.py,
+    and prepends site_scons/site_tools to default toolpath."""
     if site_dir_name:
         err_if_not_found = True       # user specified: err if missing
     else:
         site_dir_name = "site_scons"
         err_if_not_found = False
         
-    site_dir = os.path.join(topdir.path, site_dir_name)
+    site_dir = os.path.join(topdir, site_dir_name)
     if not os.path.exists(site_dir):
         if err_if_not_found:
             raise SCons.Errors.UserError("site dir %s not found."%site_dir)
@@ -682,11 +687,12 @@ def _load_site_scons_dir(topdir, site_dir_name=None):
     site_init_filename = "site_init.py"
     site_init_modname = "site_init"
     site_tools_dirname = "site_tools"
+    # prepend to sys.path
     sys.path = [os.path.abspath(site_dir)] + sys.path
     site_init_file = os.path.join(site_dir, site_init_filename)
     site_tools_dir = os.path.join(site_dir, site_tools_dirname)
     if os.path.exists(site_init_file):
-        import imp
+        import imp, re
         # TODO(2.4): turn this into try:-except:-finally:
         try:
             try:
@@ -705,14 +711,26 @@ def _load_site_scons_dir(topdir, site_dir_name=None):
                     fmt = 'cannot import site_init.py: missing SCons.Script module %s'
                     raise SCons.Errors.InternalError(fmt % repr(e))
                 try:
+                    sfx = description[0]
+                    modname = os.path.basename(pathname)[:-len(sfx)]
+                    site_m = {"__file__": pathname, "__name__": modname, "__doc__": None}
+                    re_special = re.compile("__[^_]+__")
+                    for k in m.__dict__.keys():
+                        if not re_special.match(k):
+                            site_m[k] = m.__dict__[k]
+
                     # This is the magic.
-                    exec fp in m.__dict__
+                    exec fp in site_m
                 except KeyboardInterrupt:
                     raise
                 except Exception, e:
                     fmt = '*** Error loading site_init file %s:\n'
                     sys.stderr.write(fmt % repr(site_init_file))
                     raise
+                else:
+                    for k in site_m:
+                        if not re_special.match(k):
+                            m.__dict__[k] = site_m[k]
             except KeyboardInterrupt:
                 raise
             except ImportError, e:
@@ -723,7 +741,55 @@ def _load_site_scons_dir(topdir, site_dir_name=None):
             if fp:
                 fp.close()
     if os.path.exists(site_tools_dir):
-        SCons.Tool.DefaultToolpath.append(os.path.abspath(site_tools_dir))
+        # prepend to DefaultToolpath
+        SCons.Tool.DefaultToolpath.insert(0, os.path.abspath(site_tools_dir))
+
+def _load_all_site_scons_dirs(topdir, verbose=None):
+    """Load all of the predefined site_scons dir.
+    Order is significant; we load them in order from most generic
+    (machine-wide) to most specific (topdir).
+    The verbose argument is only for testing.
+    """
+    platform = SCons.Platform.platform_default()
+
+    def homedir(d):
+        return os.path.expanduser('~/'+d)
+
+    if platform == 'win32' or platform == 'cygwin':
+        # Note we use $ here instead of %...% because older
+        # pythons (prior to 2.6?) didn't expand %...% on Windows.
+        # This set of dirs should work on XP, Vista, 7 and later.
+        sysdirs=[
+            os.path.expandvars('$ALLUSERSPROFILE\\Application Data\\scons'),
+            os.path.expandvars('$USERPROFILE\\Local Settings\\Application Data\\scons')]
+        appdatadir = os.path.expandvars('$APPDATA\\scons')
+        if appdatadir not in sysdirs:
+            sysdirs.append(appdatadir)
+        sysdirs.append(homedir('.scons'))
+
+    elif platform == 'darwin':  # MacOS X
+        sysdirs=['/Library/Application Support/SCons',
+                 '/opt/local/share/scons', # (for MacPorts)
+                 '/sw/share/scons', # (for Fink)
+                  homedir('Library/Application Support/SCons'),
+                  homedir('.scons')]
+    elif platform == 'sunos':   # Solaris
+        sysdirs=['/opt/sfw/scons',
+                 '/usr/share/scons',
+                 homedir('.scons')]
+    else:                       # Linux, HPUX, etc.
+        # assume posix-like, i.e. platform == 'posix'
+        sysdirs=['/usr/share/scons',
+                 homedir('.scons')]
+
+    dirs=sysdirs + [topdir]
+    for d in dirs:
+        if verbose:    # this is used by unit tests.
+            print "Loading site dir ", d
+        _load_site_scons_dir(d)
+
+def test_load_all_site_scons_dirs(d):
+    _load_all_site_scons_dirs(d, True)
 
 def version_string(label, module):
     version = module.__version__
@@ -738,6 +804,10 @@ def version_string(label, module):
                   module.__date__,
                   module.__developer__,
                   module.__buildsys__)
+
+def path_string(label, module):
+    path = module.__path__
+    return "\t%s path: %s\n"%(label,path)
 
 def _main(parser):
     global exit_status
@@ -860,9 +930,9 @@ def _main(parser):
         progress_display.set_mode(0)
 
     if options.site_dir:
-        _load_site_scons_dir(d, options.site_dir)
+        _load_site_scons_dir(d.path, options.site_dir)
     elif not options.no_site_dir:
-        _load_site_scons_dir(d)
+        _load_all_site_scons_dirs(d.path)
         
     if options.include_dir:
         sys.path = options.include_dir + sys.path
@@ -1258,7 +1328,8 @@ def main():
         # __main__.__version__, hence there is no script version.
         pass 
     parts.append(version_string("engine", SCons))
-    parts.append("Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation")
+    parts.append(path_string("engine", SCons))
+    parts.append("Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation")
     version = ''.join(parts)
 
     import SConsOptions

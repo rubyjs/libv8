@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -21,7 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/MSCommon/vs.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/MSCommon/vs.py 5357 2011/09/09 21:31:03 bdeegan"
 
 __doc__ = """Module to detect Visual Studio and/or Visual C/C++
 """
@@ -210,6 +210,33 @@ SupportedVSList = [
     #             executable_path=r'TBD',
     #             default_dirname='TBD',
     #),
+
+    # Visual Studio 2010
+    # The batch file we look for is in the VC directory,
+    # so the devenv.com executable is up in ..\..\Common7\IDE.
+    VisualStudio('10.0',
+                 sdk_version='6.1',
+                 hkeys=[r'Microsoft\VisualStudio\10.0\Setup\VS\ProductDir'],
+                 common_tools_var='VS100COMNTOOLS',
+                 executable_path=r'Common7\IDE\devenv.com',
+                 batch_file_path=r'Common7\Tools\vsvars32.bat',
+                 default_dirname='Microsoft Visual Studio 10',
+                 supported_arch=['x86', 'amd64'],
+    ),
+
+    # Visual C++ 2010 Express Edition
+    # The batch file we look for is in the VC directory,
+    # so the VCExpress.exe executable is up in ..\..\Common7\IDE.
+    VisualStudio('10.0Exp',
+                 vc_version='10.0',
+                 sdk_version='6.1',
+                 hkeys=[r'Microsoft\VCExpress\10.0\Setup\VS\ProductDir'],
+                 common_tools_var='VS100COMNTOOLS',
+                 executable_path=r'Common7\IDE\VCExpress.exe',
+                 batch_file_path=r'Common7\Tools\vsvars32.bat',
+                 default_dirname='Microsoft Visual Studio 10',
+                 supported_arch=['x86'],
+    ),
 
     # Visual Studio 2008
     # The batch file we look for is in the VC directory,

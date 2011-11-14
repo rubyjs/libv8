@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -30,7 +30,7 @@ used by SCons, in an interface that looks enough like collections for
 our purposes.
 """
 
-__revision__ = "src/engine/SCons/compat/_scons_collections.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/compat/_scons_collections.py 5357 2011/09/09 21:31:03 bdeegan"
 
 # Use exec to hide old names from fixers.
 exec("""if True:

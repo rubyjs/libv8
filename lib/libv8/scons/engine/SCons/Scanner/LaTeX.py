@@ -5,7 +5,7 @@ This module implements the dependency scanner for LaTeX code.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ This module implements the dependency scanner for LaTeX code.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Scanner/LaTeX.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Scanner/LaTeX.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os.path
 import re
@@ -148,6 +148,8 @@ class LaTeX(SCons.Scanner.Base):
     env['TEXINPUTS'] for "lstinputlisting" keyword
     env['BIBINPUTS'] for "bibliography" keyword
     env['BSTINPUTS'] for "bibliographystyle" keyword
+    env['INDEXSTYLE'] for "makeindex" keyword, no scanning support needed
+                      just allows user to set it if needed.
 
     FIXME: also look for the class or style in document[class|style]{}
     FIXME: also look for the argument of bibliographystyle{}
@@ -157,6 +159,7 @@ class LaTeX(SCons.Scanner.Base):
                      'includegraphics': 'TEXINPUTS',
                      'bibliography': 'BIBINPUTS',
                      'bibliographystyle': 'BSTINPUTS',
+                     'makeindex': 'INDEXSTYLE',
                      'usepackage': 'TEXINPUTS',
                      'lstinputlisting': 'TEXINPUTS'}
     env_variables = SCons.Util.unique(list(keyword_paths.values()))

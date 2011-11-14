@@ -10,7 +10,7 @@ Environment
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ Environment
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Environment.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Environment.py 5357 2011/09/09 21:31:03 bdeegan"
 
 
 import copy
@@ -649,6 +649,7 @@ class SubstitutionEnvironment(object):
             'ASFLAGS'       : SCons.Util.CLVar(''),
             'CFLAGS'        : SCons.Util.CLVar(''),
             'CCFLAGS'       : SCons.Util.CLVar(''),
+            'CXXFLAGS'      : SCons.Util.CLVar(''),
             'CPPDEFINES'    : [],
             'CPPFLAGS'      : SCons.Util.CLVar(''),
             'CPPPATH'       : [],
@@ -723,6 +724,9 @@ class SubstitutionEnvironment(object):
                    append_next_arg_to = None
                 elif not arg[0] in ['-', '+']:
                     dict['LIBS'].append(self.fs.File(arg))
+                elif arg == '-dylib_file':
+                    dict['LINKFLAGS'].append(arg)
+                    append_next_arg_to = 'LINKFLAGS'
                 elif arg[:2] == '-L':
                     if arg[2:]:
                         dict['LIBPATH'].append(arg[2:])
@@ -766,16 +770,20 @@ class SubstitutionEnvironment(object):
                         dict['FRAMEWORKPATH'].append(arg[2:])
                     else:
                         append_next_arg_to = 'FRAMEWORKPATH'
-                elif arg == '-mno-cygwin':
+                elif arg in ['-mno-cygwin',
+                             '-pthread',
+                             '-openmp',
+                             '-fopenmp']:
                     dict['CCFLAGS'].append(arg)
                     dict['LINKFLAGS'].append(arg)
                 elif arg == '-mwindows':
                     dict['LINKFLAGS'].append(arg)
-                elif arg == '-pthread':
-                    dict['CCFLAGS'].append(arg)
-                    dict['LINKFLAGS'].append(arg)
                 elif arg[:5] == '-std=':
-                    dict['CFLAGS'].append(arg) # C only
+                    if arg[5:].find('++')!=-1:
+                        key='CXXFLAGS'
+                    else:
+                        key='CFLAGS'
+                    dict[key].append(arg)
                 elif arg[0] == '+':
                     dict['CCFLAGS'].append(arg)
                     dict['LINKFLAGS'].append(arg)
@@ -1146,12 +1154,17 @@ class Base(SubstitutionEnvironment):
             # "continue" statements whenever we finish processing an item,
             # but Python 1.5.2 apparently doesn't let you use "continue"
             # within try:-except: blocks, so we have to nest our code.
-            try:
+            try:                
+                if key == 'CPPDEFINES' and SCons.Util.is_String(self._dict[key]):
+                    self._dict[key] = [self._dict[key]]
                 orig = self._dict[key]
             except KeyError:
                 # No existing variable in the environment, so just set
                 # it to the new value.
-                self._dict[key] = val
+                if key == 'CPPDEFINES' and SCons.Util.is_String(val):
+                    self._dict[key] = [val]
+                else:
+                    self._dict[key] = val
             else:
                 try:
                     # Check if the original looks like a dictionary.
@@ -1188,8 +1201,13 @@ class Base(SubstitutionEnvironment):
                     # The original looks like a dictionary, so update it
                     # based on what we think the value looks like.
                     if SCons.Util.is_List(val):
-                        for v in val:
-                            orig[v] = None
+                        if key == 'CPPDEFINES':
+                            orig = orig.items()
+                            orig += val
+                            self._dict[key] = orig
+                        else:    
+                            for v in val:
+                                orig[v] = None
                     else:
                         try:
                             update_dict(val)
@@ -1251,8 +1269,39 @@ class Base(SubstitutionEnvironment):
                 self._dict[key].update(val)
             elif SCons.Util.is_List(val):
                 dk = self._dict[key]
-                if not SCons.Util.is_List(dk):
-                    dk = [dk]
+                if key == 'CPPDEFINES':
+                    tmp = []
+                    for i in val:
+                        if SCons.Util.is_List(i):
+                            if len(i) >= 2:
+                                tmp.append((i[0], i[1]))
+                            else:
+                                tmp.append((i[0],))
+                        elif SCons.Util.is_Tuple(i):
+                            tmp.append(i)
+                        else:
+                            tmp.append((i,))
+                    val = tmp
+                    if SCons.Util.is_Dict(dk):
+                        dk = dk.items()
+                    elif SCons.Util.is_String(dk):
+                        dk = [(dk,)]
+                    else:                    
+                        tmp = []
+                        for i in dk:
+                            if SCons.Util.is_List(i):
+                                if len(i) >= 2:
+                                    tmp.append((i[0], i[1]))
+                                else:
+                                    tmp.append((i[0],))
+                            elif SCons.Util.is_Tuple(i):
+                                tmp.append(i)
+                            else:
+                                tmp.append((i,))
+                        dk = tmp
+                else:
+                    if not SCons.Util.is_List(dk):
+                        dk = [dk]
                 if delete_existing:
                     dk = [x for x in dk if x not in val]
                 else:
@@ -1261,15 +1310,57 @@ class Base(SubstitutionEnvironment):
             else:
                 dk = self._dict[key]
                 if SCons.Util.is_List(dk):
-                    # By elimination, val is not a list.  Since dk is a
-                    # list, wrap val in a list first.
-                    if delete_existing:
-                        dk = [x for x in dk if x not in val]
-                        self._dict[key] = dk + [val]
+                    if key == 'CPPDEFINES':
+                        tmp = []
+                        for i in dk:
+                            if SCons.Util.is_List(i):
+                                if len(i) >= 2:
+                                    tmp.append((i[0], i[1]))
+                                else:
+                                    tmp.append((i[0],))
+                            elif SCons.Util.is_Tuple(i):
+                                tmp.append(i)
+                            else:
+                                tmp.append((i,))
+                        dk = tmp
+                        if SCons.Util.is_Dict(val):
+                            val = val.items()
+                        elif SCons.Util.is_String(val):
+                            val = [(val,)]
+                        if delete_existing:
+                            dk = filter(lambda x, val=val: x not in val, dk)
+                            self._dict[key] = dk + val
+                        else:
+                            dk = [x for x in dk if x not in val]                
+                            self._dict[key] = dk + val
                     else:
-                        if not val in dk:
+                        # By elimination, val is not a list.  Since dk is a
+                        # list, wrap val in a list first.
+                        if delete_existing:
+                            dk = filter(lambda x, val=val: x not in val, dk)
                             self._dict[key] = dk + [val]
+                        else:
+                            if not val in dk:
+                                self._dict[key] = dk + [val]
                 else:
+                    if key == 'CPPDEFINES':
+                        if SCons.Util.is_String(dk):
+                            dk = [dk]
+                        elif SCons.Util.is_Dict(dk):
+                            dk = dk.items()
+                        if SCons.Util.is_String(val):
+                            if val in dk:
+                                val = []
+                            else:
+                                val = [val]
+                        elif SCons.Util.is_Dict(val):
+                            tmp = []
+                            for i,j in val.iteritems():
+                                if j is not None:
+                                    tmp.append((i,j))
+                                else:
+                                    tmp.append(i)
+                            val = tmp
                     if delete_existing:
                         dk = [x for x in dk if x not in val]
                     self._dict[key] = dk + val
@@ -2285,6 +2376,12 @@ def NoSubstitutionProxy(subject):
             return getattr(self.__dict__['__subject'], name)
         def __setattr__(self, name, value):
             return setattr(self.__dict__['__subject'], name, value)
+        def executor_to_lvars(self, kwdict):
+            if kwdict.has_key('executor'):
+                kwdict['lvars'] = kwdict['executor'].get_lvars()
+                del kwdict['executor']
+            else:
+                kwdict['lvars'] = {}
         def raw_to_mode(self, dict):
             try:
                 raw = dict['raw']
@@ -2301,12 +2398,14 @@ def NoSubstitutionProxy(subject):
             nargs = (string, self,) + args
             nkw = kwargs.copy()
             nkw['gvars'] = {}
+            self.executor_to_lvars(nkw)
             self.raw_to_mode(nkw)
             return SCons.Subst.scons_subst_list(*nargs, **nkw)
         def subst_target_source(self, string, *args, **kwargs):
             nargs = (string, self,) + args
             nkw = kwargs.copy()
             nkw['gvars'] = {}
+            self.executor_to_lvars(nkw)
             self.raw_to_mode(nkw)
             return SCons.Subst.scons_subst(*nargs, **nkw)
     return _NoSubstitutionProxy(subject)

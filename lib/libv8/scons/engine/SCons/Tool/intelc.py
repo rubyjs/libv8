@@ -10,7 +10,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -32,7 +32,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import division
 
-__revision__ = "src/engine/SCons/Tool/intelc.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/intelc.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import math, sys, os.path, glob, string, re
 
@@ -40,7 +40,7 @@ is_windows = sys.platform == 'win32'
 is_win64 = is_windows and (os.environ['PROCESSOR_ARCHITECTURE'] == 'AMD64' or 
                            ('PROCESSOR_ARCHITEW6432' in os.environ and
                             os.environ['PROCESSOR_ARCHITEW6432'] == 'AMD64'))
-is_linux = sys.platform == 'linux2'
+is_linux = sys.platform.startswith('linux')
 is_mac     = sys.platform == 'darwin'
 
 if is_windows:
@@ -230,17 +230,26 @@ def get_all_compiler_versions():
         for d in glob.glob('/opt/intel/cc*/*'):
             # Typical dir here is /opt/intel/cc/9.0 for IA32,
             # /opt/intel/cce/9.0 for EMT64 (AMD64)
-            m = re.search(r'([0-9.]+)$', d)
+            m = re.search(r'([0-9][0-9.]*)$', d)
+            if m:
+                versions.append(m.group(1))
+        for d in glob.glob('/opt/intel/Compiler/*'):
+            # Typical dir here is /opt/intel/Compiler/11.1
+            m = re.search(r'([0-9][0-9.]*)$', d)
             if m:
                 versions.append(m.group(1))
     elif is_mac:
         for d in glob.glob('/opt/intel/cc*/*'):
             # Typical dir here is /opt/intel/cc/9.0 for IA32,
             # /opt/intel/cce/9.0 for EMT64 (AMD64)
-            m = re.search(r'([0-9.]+)$', d)
+            m = re.search(r'([0-9][0-9.]*)$', d)
             if m:
                 versions.append(m.group(1))
-    return sorted(uniquify(versions))       # remove dups
+    def keyfunc(str):
+        """Given a dot-separated version string, return a tuple of ints representing it."""
+        return [int(x) for x in str.split('.')]
+    # split into ints, sort, then remove dups
+    return sorted(uniquify(versions), key=keyfunc, reverse=True)
 
 def get_intel_compiler_top(version, abi):
     """
@@ -259,15 +268,33 @@ def get_intel_compiler_top(version, abi):
               and not os.path.exists(os.path.join(top, "Bin", abi, "icl.exe")):
             raise MissingDirError("Can't find Intel compiler in %s"%(top))
     elif is_mac or is_linux:
-        # first dir is new (>=9.0) style, second is old (8.0) style.
-        dirs=('/opt/intel/cc/%s', '/opt/intel_cc_%s')
-        if abi == 'x86_64':
-            dirs=('/opt/intel/cce/%s',)  # 'e' stands for 'em64t', aka x86_64 aka amd64
-        top=None
-        for d in dirs:
-            if os.path.exists(os.path.join(d%version, "bin", "icc")):
-                top = d%version
-                break
+        def find_in_2008style_dir(version):
+            # first dir is new (>=9.0) style, second is old (8.0) style.
+            dirs=('/opt/intel/cc/%s', '/opt/intel_cc_%s')
+            if abi == 'x86_64':
+                dirs=('/opt/intel/cce/%s',)  # 'e' stands for 'em64t', aka x86_64 aka amd64
+            top=None
+            for d in dirs:
+                if os.path.exists(os.path.join(d%version, "bin", "icc")):
+                    top = d%version
+                    break
+            return top
+        def find_in_2010style_dir(version):
+            dirs=('/opt/intel/Compiler/%s/*'%version)
+            # typically /opt/intel/Compiler/11.1/064 (then bin/intel64/icc)
+            dirs=glob.glob(dirs)
+            # find highest sub-version number by reverse sorting and picking first existing one.
+            dirs.sort()
+            dirs.reverse()
+            top=None
+            for d in dirs:
+                if (os.path.exists(os.path.join(d, "bin", "ia32", "icc")) or
+                    os.path.exists(os.path.join(d, "bin", "intel64", "icc"))):
+                    top = d
+                    break
+            return top
+        top = find_in_2010style_dir(version) or find_in_2008style_dir(version)
+        print "INTELC: top=",top
         if not top:
             raise MissingDirError("Can't find version %s Intel compiler in %s (abi='%s')"%(version,top, abi))
     return top
@@ -353,29 +380,42 @@ def generate(env, version=None, abi=None, topdir=None, verbose=0):
                                     (str(version), str(abi)))
 
     if topdir:
+        archdir={'x86_64': 'intel64',
+                 'amd64' : 'intel64',
+                 'em64t' : 'intel64',
+                 'x86'   : 'ia32',
+                 'i386'  : 'ia32',
+                 'ia32'  : 'ia32'
+        }[abi] # for v11 and greater
+        if os.path.exists(os.path.join(topdir, 'bin', archdir)):
+            bindir="bin/%s"%archdir
+            libdir="lib/%s"%archdir
+        else:
+            bindir="bin"
+            libdir="lib"
         if verbose:
-            print "Intel C compiler: using version %s (%g), abi %s, in '%s'"%\
-                  (repr(version), linux_ver_normalize(version),abi,topdir)
+            print "Intel C compiler: using version %s (%g), abi %s, in '%s/%s'"%\
+                  (repr(version), linux_ver_normalize(version),abi,topdir,bindir)
             if is_linux:
                 # Show the actual compiler version by running the compiler.
-                os.system('%s/bin/icc --version'%topdir)
+                os.system('%s/%s/icc --version'%(topdir,bindir))
             if is_mac:
                 # Show the actual compiler version by running the compiler.
-                os.system('%s/bin/icc --version'%topdir)
+                os.system('%s/%s/icc --version'%(topdir,bindir))
 
         env['INTEL_C_COMPILER_TOP'] = topdir
         if is_linux:
             paths={'INCLUDE'         : 'include',
-                   'LIB'             : 'lib',
-                   'PATH'            : 'bin',
-                   'LD_LIBRARY_PATH' : 'lib'}
+                   'LIB'             : libdir,
+                   'PATH'            : bindir,
+                   'LD_LIBRARY_PATH' : libdir}
             for p in paths.keys():
                 env.PrependENVPath(p, os.path.join(topdir, paths[p]))
         if is_mac:
             paths={'INCLUDE'         : 'include',
-                   'LIB'             : 'lib',
-                   'PATH'            : 'bin',
-                   'LD_LIBRARY_PATH' : 'lib'}
+                   'LIB'             : libdir,
+                   'PATH'            : bindir,
+                   'LD_LIBRARY_PATH' : libdir}
             for p in paths.keys():
                 env.PrependENVPath(p, os.path.join(topdir, paths[p]))
         if is_windows:

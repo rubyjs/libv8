@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/msvc.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/msvc.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os.path
 import re
@@ -140,8 +140,13 @@ def msvc_batch_key(action, env, target, source):
     Returning None specifies that the specified target+source should not
     be batched with other compilations.
     """
-    b = env.subst('$MSVC_BATCH')
-    if b in (None, '', '0'):
+
+    # Fixing MSVC_BATCH mode. Previous if did not work when MSVC_BATCH
+    # was set to False. This new version should work better.
+    # Note we need to do the env.subst so $MSVC_BATCH can be a reference to
+    # another construction variable, which is why we test for False and 0
+    # as strings.
+    if not 'MSVC_BATCH' in env or env.subst('$MSVC_BATCH') in ('0', 'False', '', None):
         # We're not using batching; return no key.
         return None
     t = target[0]
@@ -161,8 +166,13 @@ def msvc_output_flag(target, source, env, for_signature):
     we return an /Fo string that just specifies the first target's
     directory (where the Visual C/C++ compiler will put the .obj files).
     """
-    b = env.subst('$MSVC_BATCH')
-    if b in (None, '', '0') or len(source) == 1:
+
+    # Fixing MSVC_BATCH mode. Previous if did not work when MSVC_BATCH
+    # was set to False. This new version should work better. Removed
+    # len(source)==1 as batch mode can compile only one file
+    # (and it also fixed problem with compiling only one changed file
+    # with batch mode enabled)
+    if not 'MSVC_BATCH' in env or env.subst('$MSVC_BATCH') in ('0', 'False', '', None):
         return '/Fo$TARGET'
     else:
         # The Visual C/C++ compiler requires a \ at the end of the /Fo
@@ -208,23 +218,23 @@ def generate(env):
         shared_obj.add_emitter(suffix, shared_object_emitter)
 
     env['CCPDBFLAGS'] = SCons.Util.CLVar(['${(PDB and "/Z7") or ""}'])
-    env['CCPCHFLAGS'] = SCons.Util.CLVar(['${(PCH and "/Yu%s /Fp%s"%(PCHSTOP or "",File(PCH))) or ""}'])
+    env['CCPCHFLAGS'] = SCons.Util.CLVar(['${(PCH and "/Yu%s \\\"/Fp%s\\\""%(PCHSTOP or "",File(PCH))) or ""}'])
     env['_MSVC_OUTPUT_FLAG'] = msvc_output_flag
     env['_CCCOMCOM']  = '$CPPFLAGS $_CPPDEFFLAGS $_CPPINCFLAGS $CCPCHFLAGS $CCPDBFLAGS'
     env['CC']         = 'cl'
     env['CCFLAGS']    = SCons.Util.CLVar('/nologo')
     env['CFLAGS']     = SCons.Util.CLVar('')
-    env['CCCOM']      = '$CC $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $CFLAGS $CCFLAGS $_CCCOMCOM'
+    env['CCCOM']      = '${TEMPFILE("$CC $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $CFLAGS $CCFLAGS $_CCCOMCOM")}'
     env['SHCC']       = '$CC'
     env['SHCCFLAGS']  = SCons.Util.CLVar('$CCFLAGS')
     env['SHCFLAGS']   = SCons.Util.CLVar('$CFLAGS')
-    env['SHCCCOM']    = '$SHCC $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $SHCFLAGS $SHCCFLAGS $_CCCOMCOM'
+    env['SHCCCOM']    = '${TEMPFILE("$SHCC $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $SHCFLAGS $SHCCFLAGS $_CCCOMCOM")}'
     env['CXX']        = '$CC'
     env['CXXFLAGS']   = SCons.Util.CLVar('$( /TP $)')
-    env['CXXCOM']     = '$CXX $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $CXXFLAGS $CCFLAGS $_CCCOMCOM'
+    env['CXXCOM']     = '${TEMPFILE("$CXX $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $CXXFLAGS $CCFLAGS $_CCCOMCOM")}'
     env['SHCXX']      = '$CXX'
     env['SHCXXFLAGS'] = SCons.Util.CLVar('$CXXFLAGS')
-    env['SHCXXCOM']   = '$SHCXX $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $SHCXXFLAGS $SHCCFLAGS $_CCCOMCOM'
+    env['SHCXXCOM']   = '${TEMPFILE("$SHCXX $_MSVC_OUTPUT_FLAG /c $CHANGED_SOURCES $SHCXXFLAGS $SHCCFLAGS $_CCCOMCOM")}'
     env['CPPDEFPREFIX']  = '/D'
     env['CPPDEFSUFFIX']  = ''
     env['INCPREFIX']  = '/I'

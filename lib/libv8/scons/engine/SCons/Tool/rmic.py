@@ -9,7 +9,7 @@ selection method.
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -31,7 +31,7 @@ selection method.
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-__revision__ = "src/engine/SCons/Tool/rmic.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Tool/rmic.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import os.path
 
@@ -111,7 +111,13 @@ def generate(env):
     env['JAVACLASSSUFFIX']  = '.class'
 
 def exists(env):
-    return env.Detect('rmic')
+    # As reported by Jan Nijtmans in issue #2730, the simple
+    #    return env.Detect('rmic')
+    # doesn't always work during initialization. For now, we
+    # stop trying to detect an executable (analogous to the
+    # javac Builder).
+    # TODO: Come up with a proper detect() routine...and enable it.
+    return 1
 
 # Local Variables:
 # tab-width:4

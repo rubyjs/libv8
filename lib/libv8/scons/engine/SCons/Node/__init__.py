@@ -20,7 +20,7 @@ be able to depend on any other type of "thing."
 """
 
 #
-# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 The SCons Foundation
+# Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 The SCons Foundation
 #
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
@@ -41,7 +41,7 @@ be able to depend on any other type of "thing."
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-__revision__ = "src/engine/SCons/Node/__init__.py 5134 2010/08/16 23:02:40 bdeegan"
+__revision__ = "src/engine/SCons/Node/__init__.py 5357 2011/09/09 21:31:03 bdeegan"
 
 import collections
 import copy
@@ -628,9 +628,10 @@ class Node(object):
                 if implicit_deps_unchanged or self.is_up_to_date():
                     return
                 # one of this node's sources has changed,
-                # so we must recalculate the implicit deps:
-                self.implicit = []
-                self.implicit_set = set()
+                # so we must recalculate the implicit deps for all targets
+                for tgt in executor.get_all_targets():
+                    tgt.implicit = []
+                    tgt.implicit_set = set()
 
         # Have the executor scan the sources.
         executor.scan_sources(self.builder.source_scanner)
