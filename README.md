@@ -46,6 +46,9 @@ reliably to all the different platforms proved to be a challenge to say the leas
 
 We got tired of waiting 5 minutes for v8 to compile every time we installed that gem.
 
+### Sponsored by
+<a href="http://thefrontside.net">![The Frontside](http://github.com/fractaloop/libv8/raw/master/thefrontside.png)</a>
+
 ### License
 
 (The MIT License)
