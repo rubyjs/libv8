@@ -13,6 +13,7 @@ require 'bundler'
 require 'bundler/setup'
 
 Bundler::GemHelper.install_tasks
+MAKE = /GNU/ =~ `make --version 2>/dev/null` ? 'make' : 'gmake'
 
 # desc "remove all generated artifacts except built v8 objects"
 # task :clean do
@@ -24,7 +25,7 @@ Bundler::GemHelper.install_tasks
 # 
 # desc "build v8 with debugging symbols (much slower)"
 # task "v8:debug" do
-#   sh "cd ext/v8/upstream && make debug"
+#   sh "cd ext/v8/upstream && #{MAKE} debug"
 # end
 
 # Rake::ExtensionTask.new("libv8", eval(File.read("libv8.gemspec"))) do |ext|
@@ -74,14 +75,14 @@ task :compile, [:version] do |t, options|
   puts "Compiling V8 (#{options.version})..."
   Rake::Task[:checkout].invoke(options.version)
   Dir.chdir(File.join('lib', 'libv8')) do
-    `make`
+    system(MAKE)
   end
 end
 
 desc "Clean up from the build"
 task :clean do |t, options|
   Dir.chdir(File.join('lib', 'libv8')) do
-    `make clean`
+    system(MAKE, 'clean')
   end
 end
 
