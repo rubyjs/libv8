@@ -25,6 +25,7 @@ $(SCONS): $(SCONSSRC)
 $(V8SRC): build
 	cp -r v8 build
 	patch -td build/v8 -i ../../fpic-on-linux-amd64.patch
+	patch -td build/v8 -i ../../fpic-on-freebsd-amd64.patch
 
 $(SCONSSRC): build
 	cp -r scons build
