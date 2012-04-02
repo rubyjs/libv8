@@ -1,0 +1,16 @@
+diff --git a/SConstruct b/SConstruct
+index 4a7e182..b462335 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -124,6 +124,10 @@ LIBRARY_FLAGS = {
+       'LIBPATH' : ['/usr/local/lib'],
+       'CCFLAGS':      ['-ansi'],
+-      'LIBS': ['execinfo']
++      'LIBS': ['execinfo'],
++      'arch:x64': {
++        'CCFLAGS':      ['-fPIC'],
++        'CXXFLAGS':     ['-fPIC']
++      },
+     },
+     'os:openbsd': {
+       'CPPPATH' : ['/usr/local/include'],
