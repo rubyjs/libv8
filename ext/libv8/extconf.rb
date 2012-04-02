@@ -21,7 +21,7 @@ end
 
 Dir.chdir(Pathname(__FILE__).dirname.join('..', '..', 'lib', 'libv8')) do
   puts "Compiling V8..."
-  `make`
+  /GNU/ =~ `make --version 2>/dev/null` ? `make` : `gmake`
 end
 
 create_makefile('libv8')
