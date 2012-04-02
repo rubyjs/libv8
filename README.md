@@ -53,7 +53,7 @@ We got tired of waiting 5 minutes for v8 to compile every time we installed that
 
 (The MIT License)
 
-Copyright (c) 2009,2010 Logan Lowell
+Copyright (c) 2009,2010 Charles Lowell
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
