@@ -7,4 +7,5 @@ rvm:
 notifications:
   recipients:
     - cowboyd@thefrontside.net
-
+before_install:
+  - sudo apt-get install subversion

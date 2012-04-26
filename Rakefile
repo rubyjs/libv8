@@ -12,13 +12,13 @@ task :checkout do
   Dir.chdir(V8_Source) do
     sh "git fetch"
     sh "git checkout #{V8_Version}"
+    sh "make dependencies"
   end
 end
 
 task :compile do
   Dir.chdir(V8_Source) do
     puts "compiling libv8"
-    sh "make dependencies"
     sh "make native GYP_GENERATORS=make"
   end
 end
@@ -41,7 +41,8 @@ end
 desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
-  sh "cd #{V8_Source} && rm -rf out"
+  sh "cd #{V8_Source} && git clean -dxf"
 end
 
-task :default => [:compile, :spec]
+task :default => [:checkout, :compile, :spec]
+task :build => :checkout
