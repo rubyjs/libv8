@@ -7,6 +7,7 @@ RSpec::Core::RakeTask.new(:spec)
 V8_Version = Libv8::VERSION.gsub(/\.\d$/,'')
 V8_Source = File.expand_path '../vendor/v8', __FILE__
 
+desc "setup the vendored v8 source to correspond to the libv8 gem version and prepare deps"
 task :checkout do
   sh "git submodule update --init"
   Dir.chdir(V8_Source) do
@@ -16,7 +17,14 @@ task :checkout do
   end
 end
 
+desc "compile v8 via the ruby extension mechanism"
 task :compile do
+  sh "ruby ext/libv8/extconf.rb"
+end
+
+
+desc "manually invoke the GYP compile. Useful for seeing debug output"
+task :manual_compile do
   Dir.chdir(V8_Source) do
     puts "compiling libv8"
     sh "make native GYP_GENERATORS=make"
@@ -41,6 +49,7 @@ end
 desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
+  sh "git clean -df"
   sh "cd #{V8_Source} && git clean -dxf"
 end
 

@@ -1,5 +1,3 @@
-require 'pathname'
-
 require 'libv8/version'
 
 module Libv8
@@ -7,7 +5,12 @@ module Libv8
   module_function
 
   def libv8(name)
-    File.expand_path "../../vendor/v8/out/native/libv8_#{name}.a", __FILE__
+    path = File.expand_path "../../vendor/v8/out/native/libv8_#{name}.a", __FILE__
+    if File.exists? path
+      path
+    else
+      File.expand_path "../../vendor/v8/out/native/obj.target/tools/gyp/libv8_#{name}.a", __FILE__
+    end
   end
 
   def libv8_base

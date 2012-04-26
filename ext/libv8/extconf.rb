@@ -1,5 +1,4 @@
 require 'mkmf'
-require 'pathname'
 create_makefile('libv8')
 
 Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
