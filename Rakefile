@@ -23,7 +23,22 @@ task :compile do
   end
 end
 
-"clean up artifacts of the build"
+desc "build a binary gem"
+task :binary => :compile do
+  gemspec = eval(File.read('libv8.gemspec'))
+  gemspec.extensions.clear
+  gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
+
+  # We don't need most things for the binary
+  gemspec.files = ['lib/libv8.rb', 'lib/libv8/version.rb']
+  # V8
+  gemspec.files += Dir['vendor/v8/include/*']
+  gemspec.files += Dir['vendor/v8/out/native/*']
+  FileUtils.mkdir_p 'pkg'
+  FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
+end
+
+desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
   sh "cd #{V8_Source} && rm -rf out"
