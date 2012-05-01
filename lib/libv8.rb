@@ -1,31 +1,46 @@
-require 'libv8/version'
-
+require 'mkmf'
+require 'libv8/arch'
 module Libv8
 
   module_function
 
-  def libv8(name)
-    path = File.expand_path "../../vendor/v8/out/native/libv8_#{name}.a", __FILE__
-    if File.exists? path
-      path
-    else
-      File.expand_path "../../vendor/v8/out/native/obj.target/tools/gyp/libv8_#{name}.a", __FILE__
-    end
+  def libv8_object(name)
+    "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}.release/libv8_#{name}.#{$LIBEXT}"
   end
 
   def libv8_base
-    libv8 :base
+    libv8_object :base
   end
 
   def libv8_snapshot
-    libv8 :snapshot
+    libv8_object :snapshot
   end
 
   def libv8_nosnapshot
-    libv8 :nosnapshot
+    libv8_object :nosnapshot
+  end
+
+  def libv8_objects(*names)
+    names = [:base, :snapshot] if names.empty?
+    names.map do |name|
+      fail "no libv8 object #{name}" unless File.exists?(object = libv8_object(name))
+      object
+    end
   end
 
   def libv8_ldflags
-    "-l#{libv8_base} -l#{libv8_snapshot}"
+    "-L#{libv8_base} -L#{libv8_snapshot}"
+  end
+
+  def libv8_include_flags
+    "-I#{libv8_include_path}"
+  end
+
+  def libv8_include_path
+    "#{libv8_source_path}/include"
+  end
+
+  def libv8_source_path
+    File.expand_path "../../vendor/v8", __FILE__
   end
 end
