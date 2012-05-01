@@ -40,10 +40,10 @@ task :binary => :compile do
   gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
 
   # We don't need most things for the binary
-  gemspec.files = ['lib/libv8.rb', 'lib/arch.rb', 'lib/libv8/version.rb']
+  gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']
   # V8
   gemspec.files += Dir['vendor/v8/include/*']
-  gemspec.files += Dir['vendor/v8/out/native/*']
+  gemspec.files += Dir['vendor/v8/out/**/*.a']
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end
