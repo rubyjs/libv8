@@ -12,8 +12,7 @@ task :checkout do
   sh "git submodule update --init"
   Dir.chdir(V8_Source) do
     sh "git fetch"
-    # sh "git checkout #{V8_Version}"
-    sh "git checkout master"
+    sh "git checkout #{V8_Version}"
     sh "make dependencies"
   end
 end
@@ -29,7 +28,7 @@ task :manual_compile do
   require File.expand_path '../ext/libv8/arch.rb', __FILE__
   include Libv8::Arch
   Dir.chdir(V8_Source) do
-    sh "make #{libv8_arch}.release GYP_GENERATORS=make"
+    sh "make #{libv8_arch}.release"
   end
 end
 
