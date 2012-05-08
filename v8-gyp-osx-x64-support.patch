@@ -1,0 +1,110 @@
+diff --git a/Makefile b/Makefile
+index 5dc6ca5..e4e36d8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -260,4 +260,4 @@ $(ENVFILE).new:
+ # Dependencies.
+ dependencies:
+ 	svn checkout --force http://gyp.googlecode.com/svn/trunk build/gyp \
+-	    --revision 1026
++	    --revision 1251
+diff --git a/build/common.gypi b/build/common.gypi
+index 5c0c323..4f2452c 100644
+--- a/build/common.gypi
++++ b/build/common.gypi
+@@ -317,6 +317,16 @@
+             'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
+                         '-Wnon-virtual-dtor', '-Woverloaded-virtual' ],
+           }],
++          ['OS=="mac" and target_arch=="ia32"', {
++            'xcode_settings': {
++              'ARCHS': ['i386']
++            }
++          }],
++          ['OS=="mac" and target_arch=="x64"', {
++            'xcode_settings': {
++              'ARCHS': ['x86_64']
++            }
++          }],
+         ],
+       },  # Debug
+       'Release': {
+@@ -358,6 +368,18 @@
+               # is specified explicitly.
+               'GCC_STRICT_ALIASING': 'YES',
+             },
++            'conditions': [
++              ['target_arch=="ia32"', {
++                'xcode_settings': {
++                  'ARCHS': ['i386']
++                }
++              }],
++              ['target_arch=="x64"', {
++                'xcode_settings': {
++                  'ARCHS': ['x86_64']
++                }
++              }],
++            ],
+           }],  # OS=="mac"
+           ['OS=="win"', {
+             'msvs_configuration_attributes': {
+diff --git a/build/gyp_v8 b/build/gyp_v8
+index 4293e76..54f3f7f 100755
+--- a/build/gyp_v8
++++ b/build/gyp_v8
+@@ -156,7 +156,12 @@ if __name__ == '__main__':
+
+   # Generate for the architectures supported on the given platform.
+   gyp_args = list(args)
+-  gyp_args.append('-Dtarget_arch=ia32')
++  target_arch = None
++  for p in gyp_args:
++    if p.find('-Dtarget_arch=') == 0:
++      target_arch = p
++  if target_arch is None:
++    gyp_args.append('-Dtarget_arch=ia32')
+   if utils.GuessOS() == 'linux':
+     gyp_args.append('-S-ia32')
+   run_gyp(gyp_args)
+diff --git a/tools/gyp/v8.gyp b/tools/gyp/v8.gyp
+index 764789a..2913cdf 100644
+--- a/tools/gyp/v8.gyp
++++ b/tools/gyp/v8.gyp
+@@ -59,6 +59,9 @@
+                 '../../src/v8dll-main.cc',
+               ],
+               'conditions': [
++                ['OS=="mac"', {
++                  'xcode_settings': {'OTHER_LDFLAGS': ['-dynamiclib', '-all_load']},
++                }],
+                 ['OS=="win"', {
+                   'defines': [
+                     'BUILDING_V8_SHARED',
+@@ -536,7 +539,7 @@
+                 '../../src/arm/stub-cache-arm.cc',
+               ],
+             }],
+-            ['v8_target_arch=="ia32" or v8_target_arch=="mac" or OS=="mac"', {
++            ['v8_target_arch=="ia32"', {
+               'sources': [
+                 '../../src/ia32/assembler-ia32-inl.h',
+                 '../../src/ia32/assembler-ia32.cc',
+@@ -601,7 +604,7 @@
+                 '../../src/mips/stub-cache-mips.cc',
+               ],
+             }],
+-            ['v8_target_arch=="x64" or v8_target_arch=="mac" or OS=="mac"', {
++            ['v8_target_arch=="x64"', {
+               'sources': [
+                 '../../src/x64/assembler-x64-inl.h',
+                 '../../src/x64/assembler-x64.cc',
+@@ -982,6 +985,9 @@
+             }, {
+               'toolsets': ['target'],
+             }],
++            ['OS=="mac" and component=="shared_library"', {
++              'xcode_settings': {'OTHER_LDFLAGS': ['-dynamiclib', '-all_load']},
++            }],
+           ],
+           'link_settings': {
+             'libraries': [
