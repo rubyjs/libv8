@@ -7,7 +7,6 @@ describe Libv8 do
   it "can find the static library components" do
     Pathname(libv8_base).should exist
     Pathname(libv8_snapshot).should exist
-    Pathname(libv8_nosnapshot).should exist
   end
 
   it "has a valid include path" do
@@ -15,7 +14,7 @@ describe Libv8 do
   end
 
   it "can retrieve objects by name" do
-    libv8_objects(:base, :snapshot, :nosnapshot).each do |obj|
+    libv8_objects(:base, :snapshot).each do |obj|
       Pathname(obj).should exist
     end
   end
