@@ -12,9 +12,10 @@ task :checkout do
   sh "git submodule update --init"
   Dir.chdir(V8_Source) do
     sh "git fetch"
-    sh "git checkout #{V8_Version}"
+    sh "git checkout #{V8_Version} -f"
     sh "make dependencies"
   end
+  sh "patch -N -p1 -d vendor/v8 < osx-x64.patch" rescue nil
 end
 
 desc "compile v8 via the ruby extension mechanism"
