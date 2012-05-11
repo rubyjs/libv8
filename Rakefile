@@ -55,4 +55,4 @@ task :clean do
 end
 
 task :default => [:checkout, :compile, :spec]
-task :build => :checkout
+task :build => [:clean, :checkout]
