@@ -15,7 +15,6 @@ task :checkout do
     sh "git checkout #{V8_Version} -f"
     sh "make dependencies"
   end
-  sh "patch -N -p1 -d vendor/v8 < osx-x64.patch" rescue nil
 end
 
 desc "compile v8 via the ruby extension mechanism"
@@ -29,7 +28,7 @@ task :manual_compile do
   require File.expand_path '../ext/libv8/arch.rb', __FILE__
   include Libv8::Arch
   Dir.chdir(V8_Source) do
-    sh "make -j2 #{libv8_arch}.release"
+    sh %Q{make -j2 #{libv8_arch}.release GYPFLAGS="-Dhost_arch=#{libv8_arch}"}
   end
 end
 
