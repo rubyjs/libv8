@@ -30,10 +30,11 @@ module Libv8
       compiler = `which #{name}`
       return nil unless $?.success?
 
+      compiler.chomp!
       return nil unless `#{compiler} --version` =~ /([0-9]\.[0-9]\.[0-9])/
 
       return nil if $1 < "4.4"
-      compiler.chomp
+      compiler
     end
 
     def check_clang_compiler(name)
