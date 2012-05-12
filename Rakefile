@@ -7,6 +7,9 @@ RSpec::Core::RakeTask.new(:spec)
 V8_Version = Libv8::VERSION.gsub(/\.\d$/,'')
 V8_Source = File.expand_path '../vendor/v8', __FILE__
 
+require File.expand_path '../ext/libv8/make.rb', __FILE__
+include Libv8::Make
+
 desc "setup the vendored v8 source to correspond to the libv8 gem version and prepare deps"
 task :checkout do
   sh "git submodule update --init"
