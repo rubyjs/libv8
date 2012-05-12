@@ -7,5 +7,5 @@ include Libv8::Arch
 include Libv8::Make
 
 Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
-  puts `#{make} #{libv8_arch}.release`
+  puts `#{make} #{libv8_arch}.release GYPFLAGS="-Dhost_arch=#{libv8_arch}"`
 end
