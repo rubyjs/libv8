@@ -13,9 +13,6 @@ module Libv8
         cc ||= check_gcc_compiler "g++46"
         cc ||= check_gcc_compiler "g++48"
 
-        # Check for the Clang compiler
-        cc ||= check_clang_compiler "clang++"
-
         if cc.nil?
           puts "Unable to find a suitable compiler."
           puts "Install GCC v4.4 or higher"
