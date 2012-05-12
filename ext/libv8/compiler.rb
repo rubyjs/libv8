@@ -20,6 +20,7 @@ module Libv8
           # Raise error, no appropriate compiler found
         end
 
+        puts "Using compiler: #{cc}"
         @compiler = cc
       end
 
