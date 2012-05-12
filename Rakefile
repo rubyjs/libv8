@@ -18,6 +18,10 @@ task :checkout do
     sh "git checkout #{V8_Version} -f"
     sh "#{make} dependencies"
   end
+
+  # Fix gyp trying to build platform-linux on FreeBSD 9 and FreeBSD 10.
+  # Based on: https://chromiumcodereview.appspot.com/10079030/patch/1/2
+  sh "patch -N -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
 end
 
 desc "compile v8 via the ruby extension mechanism"
