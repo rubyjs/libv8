@@ -17,7 +17,9 @@ module Libv8
         cc ||= check_clang_compiler "clang++"
 
         if cc.nil?
-          # Raise error, no appropriate compiler found
+          puts "Unable to find a suitable compiler."
+          puts "Install GCC v4.4 or higher"
+          exit 1
         end
 
         puts "Using compiler: #{cc}"
