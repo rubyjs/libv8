@@ -14,9 +14,9 @@ module Libv8
         cc ||= check_gcc_compiler "g++48"
 
         if cc.nil?
-          puts "Unable to find a suitable compiler."
-          puts "Install GCC v4.4 or higher"
-          exit 1
+          warn "Unable to find a compiler officially supported by v8."
+          warn "It is recommended to use GCC v4.4 or higher"
+          @compiler = cc = 'g++'
         end
 
         puts "Using compiler: #{cc}"
