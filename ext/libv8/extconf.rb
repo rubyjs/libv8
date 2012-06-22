@@ -11,3 +11,4 @@ include Libv8::Compiler
 Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
   puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{libv8_arch}.release GYPFLAGS="-Dhost_arch=#{libv8_arch}"`
 end
+exit $?.exitstatus
