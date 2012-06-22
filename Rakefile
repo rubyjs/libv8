@@ -39,11 +39,21 @@ task :manual_compile do
   end
 end
 
-desc "build a binary gem"
-task :binary => :compile do
+def get_binary_gemspec(platform = RUBY_PLATFORM)
   gemspec = eval(File.read('libv8.gemspec'))
-  gemspec.extensions.clear
-  gemspec.platform = Gem::Platform.new(RUBY_PLATFORM)
+  gemspec.platform = Gem::Platform.new(platform)
+  gemspec
+end
+
+begin 
+  binary_gem_name = File.basename get_binary_gemspec.cache_file
+rescue
+  binary_gem_name = ''
+end
+
+desc "build a binary gem #{binary_gem_name}"
+task :binary => :compile do
+  gemspec = get_binary_gemspec
 
   # We don't need most things for the binary
   gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']

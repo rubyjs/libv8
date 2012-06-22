@@ -18,8 +18,6 @@ That depends on your platform. Right now, we support the following platforms.
 * x86_64-linux
 * x86-linux
 
-> **Note**: Gentoo amd64 users may need to tweak their environment. see [issue 8](/fractaloop/libv8/issues/8)
-
 If you don't see your platform on this list, first, make sure that it installs from source, and second
 talk to us about setting up a binary distro for you.
 
@@ -27,11 +25,11 @@ talk to us about setting up a binary distro for you.
 ### What if I can't install from source?
 
 
-If you can fix the [Makefile](https://github.com/fractaloop/libv8/blob/master/lib/libv8/Makefile) so that it correctly compiles for your platform, we'll pull it right in!
+If you can fix the "Makefile" so that it correctly compiles for your platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
-    git clone git@github.com:fractaloop/libv8
+    git clone git@github.com:cowboyd/libv8
     cd libv8
     git submodule update --init
     bundle install
@@ -47,7 +45,7 @@ reliably to all the different platforms proved to be a challenge to say the leas
 We got tired of waiting 5 minutes for v8 to compile every time we installed that gem.
 
 ### Sponsored by
-<a href="http://thefrontside.net">![The Frontside](http://github.com/fractaloop/libv8/raw/master/thefrontside.png)</a>
+<a href="http://thefrontside.net">![The Frontside](http://github.com/cowboyd/libv8/raw/master/thefrontside.png)</a>
 
 ### License
 
