@@ -55,7 +55,7 @@ end
 desc "build a binary gem #{binary_gem_name}"
 task :binary => :compile do
   gemspec = get_binary_gemspec
-
+  gemspec.extensions.clear
   # We don't need most things for the binary
   gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']
   # V8
