@@ -1,5 +1,10 @@
 require 'bundler/setup'
 Bundler::GemHelper.install_tasks
+class Bundler::GemHelper
+  def clean?
+    sh_with_code('git diff --exit-code --ignore-submodules')[1] == 0
+  end
+end
 
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
