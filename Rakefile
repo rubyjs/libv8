@@ -35,6 +35,12 @@ task :compile do
   sh "ruby ext/libv8/extconf.rb"
 end
 
+task :cross_compile do
+  sh "patch -N -p0 -d vendor/v8 < patches/scons_crossmingw.patch"
+  Dir.chdir(V8_Source) do
+    sh "scons os=win32 toolchain=crossmingw library=shared"
+  end
+end
 
 desc "manually invoke the GYP compile. Useful for seeing debug output"
 task :manual_compile do
@@ -45,32 +51,40 @@ task :manual_compile do
   end
 end
 
-def get_binary_gemspec(platform = RUBY_PLATFORM)
-  gemspec = eval(File.read('libv8.gemspec'))
-  gemspec.platform = Gem::Platform.new(platform)
-  gemspec
-end
+GEMSPEC_NAME = 'libv8.gemspec'
+WIN_PLATFORM = 'i386-mingw32'
 
-begin 
-  binary_gem_name = File.basename get_binary_gemspec.cache_file
-rescue
-  binary_gem_name = ''
-end
+begin
+  GEMSPEC = eval(File.read(GEMSPEC_NAME))
 
-desc "build a binary gem #{binary_gem_name}"
-task :binary => :compile do
-  gemspec = get_binary_gemspec
-  gemspec.extensions.clear
-  # We don't need most things for the binary
-  gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']
-  # V8
-  gemspec.files += Dir['vendor/v8/include/*']
-  gemspec.files += Dir['vendor/v8/out/**/*.a']
-  # SCons build
-  gemspec.files += Dir['vendor/v8/libv8.a']
-  gemspec.files += Dir['vendor/v8/v8.dll']
-  FileUtils.mkdir_p 'pkg'
-  FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
+  desc "build all binary gems"
+  task :binary
+
+  def binary_task(platform, dep)
+    gemspec = GEMSPEC.dup
+    gemspec.platform = Gem::Platform.new(platform)
+    # binary_gem_name = File.basename gemspec.cache_file  
+    # desc "build a binary gem #{binary_gem_name}"
+    task "binary:#{platform}" => dep do
+      gemspec.extensions.clear
+      # We don't need most things for the binary
+      gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']
+      # V8
+      gemspec.files += Dir['vendor/v8/include/*']
+      gemspec.files += Dir['vendor/v8/out/**/*.a']
+      # SCons build
+      gemspec.files += Dir['vendor/v8/libv8.a']
+      gemspec.files += Dir['vendor/v8/v8.dll']
+      FileUtils.mkdir_p 'pkg'
+      FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
+    end
+    Rake::Task[:binary].prerequisites << "binary:#{platform}"
+  end
+
+  binary_task(RUBY_PLATFORM, :compile)
+  binary_task(WIN_PLATFORM,  :cross_compile) unless RUBY_PLATFORM =~ /mingw|mswin/
+rescue SyntaxError
+  puts "There is syntax error in #{GEMSPEC_NAME}"
 end
 
 desc "clean up artifacts of the build"
