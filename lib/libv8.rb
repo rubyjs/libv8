@@ -4,12 +4,20 @@ module Libv8
 
   module_function
 
+  def mingw?
+    RUBY_PLATFORM =~ /mingw/
+  end
+
   def libv8_object(name)
     filename = "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}.release/libv8_#{name}.#{$LIBEXT}"
     unless File.exists? filename
       filename = "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}.release/obj.target/tools/gyp/libv8_#{name}.#{$LIBEXT}"
     end
-    return filename
+    unless File.exists? filename
+      # SCons build
+      filename = "#{libv8_source_path}/#{name}.#{$LIBEXT}"
+    end
+    filename
   end
 
   def libv8_base
@@ -25,7 +33,14 @@ module Libv8
   end
 
   def libv8_objects(*names)
-    names = [:base, :snapshot] if names.empty?
+    if names.empty?
+      names = if mingw?
+        # SCons build
+        [:libv8]
+      else
+        [:base, :snapshot]
+      end
+    end
     names.map do |name|
       fail "no libv8 object #{name}" unless File.exists?(object = libv8_object(name))
       object
