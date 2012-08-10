@@ -5,11 +5,17 @@ module Libv8
   module_function
 
   def libv8_object(name)
-    filename = "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}.release/libv8_#{name}.#{$LIBEXT}"
+    filename = "#{libv8_profile}/libv8_#{name}.#{$LIBEXT}"
     unless File.exists? filename
-      filename = "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}.release/obj.target/tools/gyp/libv8_#{name}.#{$LIBEXT}"
+      filename = "#{libv8_profile}/obj.target/tools/gyp/libv8_#{name}.#{$LIBEXT}"
     end
     return filename
+  end
+
+  def libv8_profile
+    base = "#{libv8_source_path}/out/#{Libv8::Arch.libv8_arch}"
+    debug = "#{base}.debug"
+    File.exists?(debug) ? debug : "#{base}.release"
   end
 
   def libv8_base
