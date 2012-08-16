@@ -4,6 +4,7 @@
 *.a
 .rbx/
 Gemfile.lock
+Makefile
 pkg/*
 tmp/*
 lib/libv8/build/*
