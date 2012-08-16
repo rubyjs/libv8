@@ -31,8 +31,8 @@ To get the source, these commands will get you started:
 
     git clone git@github.com:cowboyd/libv8
     cd libv8
-    git submodule update --init
     bundle install
+    bundle exec rake checkout
     bundle exec rake compile
 
 
