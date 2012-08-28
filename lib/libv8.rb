@@ -1,13 +1,18 @@
-require 'mkmf'
+require 'rbconfig'
+
 require 'libv8/arch'
 module Libv8
 
   module_function
 
+  def config
+    Config::MAKEFILE_CONFIG
+  end
+
   def libv8_object(name)
-    filename = "#{libv8_profile}/libv8_#{name}.#{$LIBEXT}"
+    filename = "#{libv8_profile}/libv8_#{name}.#{config['LIBEXT']}"
     unless File.exists? filename
-      filename = "#{libv8_profile}/obj.target/tools/gyp/libv8_#{name}.#{$LIBEXT}"
+      filename = "#{libv8_profile}/obj.target/tools/gyp/libv8_#{name}.#{config['LIBEXT']}"
     end
     return filename
   end
