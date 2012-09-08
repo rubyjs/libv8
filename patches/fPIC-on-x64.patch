@@ -6,8 +6,8 @@ index ebdf557..c7a59bc 100644
            [ 'OS=="linux"', {
              'cflags': [ '-ansi' ],
            }],
-+          [ 'OS=="linux" and v8_target_arch=="x64" and component=="static_library"', {
-+            'cflags': [ '-fPIC', ],
++          [ '(OS=="linux" or OS=="freebsd") and v8_target_arch=="x64" and component=="static_library"', {
++            'cflags': [ '-fPIC' ],
 +          }],
            [ 'visibility=="hidden"', {
              'cflags': [ '-fvisibility=hidden' ],
