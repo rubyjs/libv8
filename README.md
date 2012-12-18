@@ -29,7 +29,7 @@ If you can fix the "Makefile" so that it correctly compiles for your platform, w
 
 To get the source, these commands will get you started:
 
-    git clone git@github.com:cowboyd/libv8
+    git clone git://github.com/cowboyd/libv8.git
     cd libv8
     bundle install
     bundle exec rake checkout
@@ -39,7 +39,7 @@ To get the source, these commands will get you started:
 ### About
 
 This project spun off of [therubyracer](http://github.com/cowboyd/therubyracer) which depends on having
-a specific version of v8 to compile and run against. However, actually delivering that version 
+a specific version of v8 to compile and run against. However, actually delivering that version
 reliably to all the different platforms proved to be a challenge to say the least.
 
 We got tired of waiting 5 minutes for v8 to compile every time we installed that gem.
