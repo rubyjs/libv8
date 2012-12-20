@@ -52,7 +52,7 @@ def get_binary_gemspec(platform = RUBY_PLATFORM)
   gemspec
 end
 
-begin 
+begin
   binary_gem_name = File.basename get_binary_gemspec.cache_file
 rescue
   binary_gem_name = ''
@@ -75,7 +75,7 @@ desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
-  sh "cd #{V8_Source} && git clean -dxf"
+  sh "cd #{V8_Source} && git co -f && git clean -dxf"
 end
 
 task :default => [:checkout, :compile, :spec]
