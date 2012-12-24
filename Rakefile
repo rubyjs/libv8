@@ -29,8 +29,23 @@ task :checkout do
   sh "patch -N -p0 -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/gcc42-on-freebsd.patch" if RUBY_PLATFORM.include?("freebsd") && !system("pkg_info | grep gcc-4")
-end
 
+  # Replace all mentions of "python" with "python2" if the executable
+  # is in the path. This is an issue for Arch Linux, which is also
+  # where the following fix comes from.
+  #
+  # See: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/v8
+  Dir.chdir(V8_Source) do
+    sh <<-'EOF'
+      find build/ test/ tools/ src/ -type f \
+        -exec sed -e 's_^#!/usr/bin/env python$_&2_' \
+                  -e 's_^\(#!/usr/bin/python2\).[45]$_\1_' \
+                  -e 's_^#!/usr/bin/python$_&2_' \
+                  -e "s_'python'_'python2'_" -i {} \;
+    EOF
+    sh "sed -i 's/python /python2 /' Makefile"
+  end if system('which python2', :err => '/dev/null')
+end
 desc "compile v8 via the ruby extension mechanism"
 task :compile do
   sh "ruby ext/libv8/extconf.rb"
