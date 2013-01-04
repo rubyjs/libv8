@@ -1,6 +1,6 @@
-require 'libv8/compiler'
-require 'libv8/arch'
-require 'libv8/make'
+require File.expand_path '../compiler', __FILE__
+require File.expand_path '../arch', __FILE__
+require File.expand_path '../make', __FILE__
 
 module Libv8
   class Builder
