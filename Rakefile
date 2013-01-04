@@ -63,7 +63,10 @@ task :binary => :compile do
   gemspec = get_binary_gemspec
   gemspec.extensions.clear
   # We don't need most things for the binary
-  gemspec.files = ['lib/libv8.rb', 'ext/libv8/arch.rb', 'lib/libv8/version.rb']
+  gemspec.files = []
+  gemspec.files += ['lib/libv8.rb', 'lib/libv8/version.rb']
+  gemspec.files += ['ext/libv8/arch.rb', 'ext/libv8/location.rb', 'ext/libv8/paths.rb']
+  gemspec.files += ['ext/libv8/.location.yml']
   # V8
   gemspec.files += Dir['vendor/v8/include/*']
   gemspec.files += Dir['vendor/v8/out/**/*.a']

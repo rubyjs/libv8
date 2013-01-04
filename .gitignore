@@ -9,3 +9,4 @@ pkg/*
 tmp/*
 lib/libv8/build/*
 lib/libv8/VERSION
+/ext/libv8/.location.yml
