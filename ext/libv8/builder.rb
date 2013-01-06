@@ -11,8 +11,11 @@ module Libv8
     def build_libv8!
       profile = enable_config('debug') ? 'debug' : 'release'
 
+      gypflags = ["-Dhost_arch=#{libv8_arch}"]
+      gypflags << "-Dv8_no_strict_aliasing=1" if RUBY_PLATFORM.include?("freebsd") && !check_gcc_compiler(compiler)
+
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
-        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{libv8_arch}.#{profile} GYPFLAGS="-Dhost_arch=#{libv8_arch}"`
+        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{libv8_arch}.#{profile} GYPFLAGS="#{gypflags.join ' '}"`
       end
       return $?.exitstatus
     end
