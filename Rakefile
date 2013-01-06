@@ -78,7 +78,7 @@ desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
-  sh "cd #{V8_Source} && git co -f && git clean -dxf"
+  sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
 end
 
 task :default => [:checkout, :compile, :spec]
