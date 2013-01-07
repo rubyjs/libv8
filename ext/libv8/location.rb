@@ -46,8 +46,8 @@ module Libv8
 
     class System < Location
       def configure(context = MkmfContext.new)
-        context.dir_config('v8')
-        context.find_header('v8.h') or fail NotFoundError
+        context.send(:dir_config, 'v8')
+        context.send(:find_header, 'v8.h') or fail NotFoundError
       end
 
       class NotFoundError < StandardError
