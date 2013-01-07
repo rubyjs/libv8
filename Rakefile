@@ -9,7 +9,7 @@ end
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-V8_Version = Libv8::VERSION.gsub(/\.\d$/,'')
+V8_Version = Libv8::VERSION.gsub(/\.\d+$/,'')
 V8_Source = File.expand_path '../vendor/v8', __FILE__
 
 require File.expand_path '../ext/libv8/make.rb', __FILE__
