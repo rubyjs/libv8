@@ -9,21 +9,13 @@ module Libv8
     include Libv8::Compiler
     include Libv8::Make
 
-    def gyp_flags(*flags)
-      # Fix a compilation failure under MacOS.
-      # See https://groups.google.com/d/topic/v8-users/Oj-efHLjygc/discussion
-      flags << "-Dhost_arch=#{libv8_arch}" if RUBY_PLATFORM.include?("darwin")
+    def make_flags(*flags)
+      profile = enable_config('debug') ? 'debug' : 'release'
 
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
-      flags << "-Dv8_no_strict_aliasing=1" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
-
-      %Q(GYPFLAGS+="#{flags.join(' ')}") unless flags.empty?
-    end
-
-    def make_flags(*flags)
-      profile = enable_config('debug') ? 'debug' : 'release'
-      flags << gyp_flags
+      # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
+      flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
 
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
