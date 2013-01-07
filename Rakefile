@@ -28,7 +28,6 @@ task :checkout do
   # Based on: https://chromiumcodereview.appspot.com/10079030/patch/1/2
   sh "patch -N -p0 -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
-  sh "patch -N -p1 -d vendor/v8 < patches/gcc42-on-freebsd.patch" if RUBY_PLATFORM.include?("freebsd") && !system("pkg_info | grep gcc-4")
 end
 
 desc "compile v8 via the ruby extension mechanism"
@@ -42,7 +41,7 @@ task :manual_compile do
   require File.expand_path '../ext/libv8/arch.rb', __FILE__
   include Libv8::Arch
   Dir.chdir(V8_Source) do
-    sh %Q{#{make} -j2 #{libv8_arch}.release GYPFLAGS="-Dhost_arch=#{libv8_arch}"}
+    sh %Q{#{make} -j2 #{libv8_arch}.release}
   end
 end
 
