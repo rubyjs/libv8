@@ -23,6 +23,10 @@ task :checkout do
     sh "git checkout #{V8_Version} -f"
     sh "#{make} dependencies"
   end
+
+  # The -fPIC flag is necessary when linking a shared library
+  # against the static libv8 on x86_64.
+  sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
 end
 
 desc "compile v8 via the ruby extension mechanism"
@@ -36,7 +40,7 @@ task :manual_compile do
   require File.expand_path '../ext/libv8/arch.rb', __FILE__
   include Libv8::Arch
   Dir.chdir(V8_Source) do
-    sh %Q{#{make} -j2 #{libv8_arch}.release}
+    sh %Q{#{make} -j2 #{libv8_arch}.release ARFLAGS.target=crs}
   end
 end
 
