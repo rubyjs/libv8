@@ -41,7 +41,7 @@ task :manual_compile do
   require File.expand_path '../ext/libv8/arch.rb', __FILE__
   include Libv8::Arch
   Dir.chdir(V8_Source) do
-    sh %Q{#{make} -j2 #{libv8_arch}.release}
+    sh %Q{#{make} -j2 #{libv8_arch}.release ARFLAGS.target=crs}
   end
 end
 
