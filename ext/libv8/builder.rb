@@ -17,6 +17,10 @@ module Libv8
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
       flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
 
+      # Fix Malformed archive issue caused by GYP creating thin archives by
+      # default.
+      flags << "ARFLAGS.target=crs"
+
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
 
