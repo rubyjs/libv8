@@ -56,6 +56,9 @@ Using Bundler (in your Gemfile):
 
     bundle config build.libv8 --with-system-v8
 
+Please note that if you intend to run your own V8, you must install
+both V8 *and its headers* (found in libv8-dev for Debian distros).
+
 ### About
 
 This project spun off of
