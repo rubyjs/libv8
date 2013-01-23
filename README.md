@@ -1,31 +1,36 @@
-##libv8
+# libv8
 
-A gem for distributing the v8 runtime libraries and headers in both source and binary form.
+A gem for distributing the v8 runtime libraries and headers in both
+source and binary form.
 
 ### Why?
 
-The goal of libv8 is two fold: provide a binary gem containing the a pre-compiled libv8.a for as many
-platforms as possible while at the same time supporting for an automated compilation for all others.
+The goal of libv8 is two fold: provide a binary gem containing the a
+pre-compiled libv8.a for as many platforms as possible while at the
+same time supporting for an automated compilation for all others.
 
-Not only does this drastically reduce gem install times, but it also reduces dependencies on the local
-machine receiving the gem. It also opens the door for supporting Windows.
+Not only does this drastically reduce gem install times, but it also
+reduces dependencies on the local machine receiving the gem. It also
+opens the door for supporting Windows.
 
-### Do I Get a Binary?
+### Do I get a binary?
 
-That depends on your platform. Right now, we support the following platforms.
+That depends on your platform. Right now, we support the following
+platforms.
 
 * x86_64-darwin10.7.0
 * x86_64-linux
 * x86-linux
 
-If you don't see your platform on this list, first, make sure that it installs from source, and second
-talk to us about setting up a binary distro for you.
+If you don't see your platform on this list, first, make sure that it
+installs from source, and second talk to us about setting up a binary
+distro for you.
 
 
 ### What if I can't install from source?
 
-
-If you can fix the "Makefile" so that it correctly compiles for your platform, we'll pull it right in!
+If you can fix the "Makefile" so that it correctly compiles for your
+platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
@@ -35,16 +40,38 @@ To get the source, these commands will get you started:
     bundle exec rake checkout
     bundle exec rake compile
 
+### Bring your own V8
+
+Because libv8 is the interface for the V8 engine used by
+[therubyracer](http://github.com/cowboyd/therubyracer), you may need
+to use libv8, even if you have V8 installed already. If you wish to
+use your own V8 installation, rather than have it built for you, use 
+the `--with-system-v8` option.
+
+Using RubyGems:
+
+    gem install libv8 -- --with-system-v8
+
+Using Bundler (in your Gemfile):
+
+    bundle config build.libv8 --with-system-v8
+
+Please note that if you intend to run your own V8, you must install
+both V8 *and its headers* (found in libv8-dev for Debian distros).
 
 ### About
 
-This project spun off of [therubyracer](http://github.com/cowboyd/therubyracer) which depends on having
-a specific version of v8 to compile and run against. However, actually delivering that version
-reliably to all the different platforms proved to be a challenge to say the least.
+This project spun off of
+[therubyracer](http://github.com/cowboyd/therubyracer) which depends
+on having a specific version of v8 to compile and run against.
+However, actually delivering that version reliably to all the
+different platforms proved to be a challenge to say the least.
 
-We got tired of waiting 5 minutes for v8 to compile every time we installed that gem.
+We got tired of waiting 5 minutes for v8 to compile every time we
+installed that gem.
 
 ### Sponsored by
+
 <a href="http://thefrontside.net">![The Frontside](http://github.com/cowboyd/libv8/raw/master/thefrontside.png)</a>
 
 ### License
