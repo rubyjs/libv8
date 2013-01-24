@@ -26,25 +26,35 @@ module Libv8
 
     def build_libv8!
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
-        # Replace all mentions of "python" with "python2" if the executable
-        # is in the path. This is an issue for Arch Linux, which is also
-        # where the following fix comes from.
-        # See: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/v8
-        if system('which python2') &&
-           !File.open('Makefile', 'r').read.include?('python2')
-          system <<-'EOF'
-            find build/ test/ tools/ src/ -type f \
-              -exec sed -e 's_^#!/usr/bin/env python$_&2_' \
-                        -e 's_^\(#!/usr/bin/python2\).[45]$_\1_' \
-                        -e 's_^#!/usr/bin/python$_&2_' \
-                        -e "s_'python'_'python2'_" -i {} \;
-          EOF
-          system "sed -i 's/python /python2 /' Makefile"
-        end 
-
+        setup_python!
         puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
       end
       return $?.exitstatus
+    end
+
+    def setup_python!
+      # If python v2 cannot be found in PATH,
+      # create a symbolic link to python2 the current directory and put it
+      # at the head of PATH. That way all commands that inherit this environment
+      # will use ./python -> python2
+      if python_version !~ /^2/
+        unless system 'which python2 2>&1 > /dev/null'
+          fail "libv8 requires python 2 to be installed in order to build, but it is currently #{python_version}"
+        end
+        `ln -fs #{`which python2`.chomp} python`
+        ENV['PATH'] = "#{File.expand_path '.'}:#{ENV['PATH']}"
+      end
+      puts "using python #{python_version}"
+    end
+
+    private
+
+    def python_version
+      if system 'which python 2>&1 > /dev/null'
+        `python -c 'import platform; print platform.python_version()'`.chomp
+      else
+        "not available"
+      end
     end
   end
 end
