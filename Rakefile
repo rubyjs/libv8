@@ -69,6 +69,7 @@ task :binary => :compile do
   # V8
   gemspec.files += Dir['vendor/v8/include/*']
   gemspec.files += Dir['vendor/v8/out/**/*.a']
+  FileUtils.chmod 'a+r', gemspec.files
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
 end
