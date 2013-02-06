@@ -11,7 +11,7 @@ namespace :compile do
     if hard_float_arm_compilers.any?
       desc 'Cross-compile for ARM (with hard float)'
       task :armhf do
-        ENV['CXX'] = hard_float_arm_compilers.last
+        ENV['CXX'] = hard_float_arm_compilers.last unless ENV['CXX']
         compile
       end
     end
