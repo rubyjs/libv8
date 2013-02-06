@@ -7,10 +7,6 @@ module Libv8
     include Libv8::Compiler
     include Libv8::Make
 
-    def initialize(target = :native)
-      @target = target
-    end
-
     def libv8_arch
       case target
       when /^amd64|^x86_64/ then 'x64'
@@ -33,6 +29,10 @@ module Libv8
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
       flags << "ARFLAGS.target=crs"
+
+      # Do not cause errors on eabihf environments
+      # TODO: make sure this is off when softfp support is added
+      flags << "hardfp=on" if config_flags.include? '--with-float=hard'
 
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
