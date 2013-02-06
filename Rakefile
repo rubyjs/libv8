@@ -60,9 +60,8 @@ rescue
   binary_gem_name = ''
 end
 
-desc "build a binary gem #{binary_gem_name}"
-task :binary => :compile do
-  gemspec = get_binary_gemspec
+def build_binary_gem(platform = RUBY_PLATFORM)
+  gemspec = get_binary_gemspec platform
   gemspec.extensions.clear
   # We don't need most things for the binary
   gemspec.files = []
@@ -74,6 +73,11 @@ task :binary => :compile do
   gemspec.files += Dir['vendor/v8/out/**/*.a']
   FileUtils.mkdir_p 'pkg'
   FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
+end
+
+desc "build a binary gem #{binary_gem_name}"
+task :binary => :compile do
+  build_binary_gem
 end
 
 desc "clean up artifacts of the build"

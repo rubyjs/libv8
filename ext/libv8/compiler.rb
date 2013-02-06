@@ -7,7 +7,7 @@ module Libv8
         compilers = ['g++', 'g++44', 'g++46', 'g++48']
         compilers << ENV['CXX'] if ENV['CXX']
 
-        cxx = elect_compiler compilers
+        cxx = select_compiler compilers
 
         if cxx.nil?
           warn "Unable to find a compiler officially supported by v8."
@@ -22,8 +22,8 @@ module Libv8
       @compiler
     end
 
-    def elect_compiler(compilers)
-      compilers.delete_if { |name| !check_gcc_compiler(name) }.last
+    def select_compiler(compilers)
+      compilers.select { |name| check_gcc_compiler name }.last
     end
 
     def target
