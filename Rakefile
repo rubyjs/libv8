@@ -29,9 +29,13 @@ task :checkout do
   sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
 end
 
+def compile
+  sh 'ruby ext/libv8/extconf.rb'
+end
+
 desc "compile v8 via the ruby extension mechanism"
 task :compile do
-  sh "ruby ext/libv8/extconf.rb"
+  compile
 end
 
 
@@ -85,6 +89,8 @@ task :vulcan => directory("tmp/vulcan") do
     sh "vulcan build -v -c 'LANG=en_US.UTF-8 export BIN=/`pwd`/bin && export GEM=$BIN/gem && curl https://s3.amazonaws.com/heroku-buildpack-ruby/ruby-1.9.3.tgz > ruby-1.9.3.tgz && tar xf ruby-1.9.3.tgz && cd /tmp && $GEM fetch libv8 --platform=ruby --version=#{Libv8::VERSION} && $GEM unpack libv8*.gem && $GEM install bundler -n $BIN --no-ri --no-rdoc && cd libv8-#{Libv8::VERSION} && $BIN/bundle && $BIN/bundle exec rake binary' -p /tmp/libv8-#{Libv8::VERSION}"
   end
 end
+
+require File.expand_path '../tasks/cross_compile', __FILE__
 
 task :default => [:checkout, :compile, :spec]
 task :build => [:clean, :checkout]
