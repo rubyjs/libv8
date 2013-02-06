@@ -1,9 +1,11 @@
 require 'rbconfig'
-require File.expand_path '../arch', __FILE__
+require File.expand_path '../builder', __FILE__
 
 module Libv8
-  module Paths
-    module_function
+  class Paths
+    def initialize(libv8_arch)
+      @libv8_arch = libv8_arch
+    end
 
     def include_paths
       ["#{vendored_source_path}/include"]
@@ -26,7 +28,8 @@ module Libv8
     end
 
     def libv8_profile
-      base = "#{vendored_source_path}/out/#{Libv8::Arch.libv8_arch}"
+      base = "#{vendored_source_path}/out/#{@libv8_arch}"
+      p base
       debug = "#{base}.debug"
       File.exists?(debug) ? debug : "#{base}.release"
     end

@@ -1,13 +1,26 @@
 require 'mkmf'
 require File.expand_path '../compiler', __FILE__
-require File.expand_path '../arch', __FILE__
 require File.expand_path '../make', __FILE__
 
 module Libv8
   class Builder
-    include Libv8::Arch
     include Libv8::Compiler
     include Libv8::Make
+
+    def initialize(target = :native)
+      @target = target
+    end
+
+    def libv8_arch
+      case target
+      when /^amd64|^x86_64/ then 'x64'
+      when /^arm/           then 'arm'
+      when /^mips/          then 'mips'
+      when /mingw32$/       then 'mingw32'
+      when /^i[3456]86/     then 'ia32'
+      else raise "Unsupported target #{target}"
+      end
+    end
 
     def make_flags(*flags)
       profile = enable_config('debug') ? 'debug' : 'release'
@@ -27,7 +40,7 @@ module Libv8
     def build_libv8!
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
         setup_python!
-        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
+        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags} -j8`
       end
       return $?.exitstatus
     end

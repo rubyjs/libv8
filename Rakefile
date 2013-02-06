@@ -41,8 +41,8 @@ end
 
 desc "manually invoke the GYP compile. Useful for seeing debug output"
 task :manual_compile do
-  require File.expand_path '../ext/libv8/arch.rb', __FILE__
-  include Libv8::Arch
+  require File.expand_path '../ext/libv8/builder.rb', __FILE__
+  include Libv8::Builder
   Dir.chdir(V8_Source) do
     sh %Q{#{make} -j2 #{libv8_arch}.release ARFLAGS.target=crs}
   end
@@ -67,7 +67,7 @@ task :binary => :compile do
   # We don't need most things for the binary
   gemspec.files = []
   gemspec.files += ['lib/libv8.rb', 'lib/libv8/version.rb']
-  gemspec.files += ['ext/libv8/arch.rb', 'ext/libv8/location.rb', 'ext/libv8/paths.rb']
+  gemspec.files += ['ext/libv8/location.rb', 'ext/libv8/paths.rb']
   gemspec.files += ['ext/libv8/.location.yml']
   # V8
   gemspec.files += Dir['vendor/v8/include/*']
