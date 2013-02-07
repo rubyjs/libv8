@@ -15,6 +15,6 @@ if hard_float_arm_compilers.any?
 
   desc "Build a binary gem for arm-linux-eabihf"
   task 'binary:armhf' => ['compile:armhf'] do
-    build_binary_gem 'arm-linux-eabihf'
+    build_binary_gem ['arm', 'linux-eabihf']
   end
 end

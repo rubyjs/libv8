@@ -40,7 +40,7 @@ module Libv8
     def build_libv8!
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
         setup_python!
-        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags} -j8`
+        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
       end
       return $?.exitstatus
     end

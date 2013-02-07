@@ -1,5 +1,4 @@
 require 'rbconfig'
-require File.expand_path '../builder', __FILE__
 
 module Libv8
   class Paths
