@@ -27,6 +27,7 @@ module Libv8
     def build_libv8!
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
         setup_python!
+        print_build_info
         puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
       end
       return $?.exitstatus
@@ -44,16 +45,27 @@ module Libv8
         `ln -fs #{`which python2`.chomp} python`
         ENV['PATH'] = "#{File.expand_path '.'}:#{ENV['PATH']}"
       end
-      puts "using python #{python_version}"
     end
 
     private
 
     def python_version
       if system 'which python 2>&1 > /dev/null'
-        `python -c 'import platform; print platform.python_version()'`.chomp
+        `python -c 'import platform; print(platform.python_version())'`.chomp
       else
         "not available"
+      end
+    end
+
+    def print_build_info
+      puts "Compiling v8 for #{libv8_arch}"
+
+      puts "Using python #{python_version}"
+
+      puts "Using compiler: #{compiler}"
+      unless check_gcc_compiler compiler
+        warn "Unable to find a compiler officially supported by v8."
+        warn "It is recommended to use GCC v4.4 or higher"
       end
     end
   end
