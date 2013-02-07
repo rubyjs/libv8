@@ -28,7 +28,6 @@ module Libv8
 
     def libv8_profile
       base = "#{vendored_source_path}/out/#{@libv8_arch}"
-      p base
       debug = "#{base}.debug"
       File.exists?(debug) ? debug : "#{base}.release"
     end

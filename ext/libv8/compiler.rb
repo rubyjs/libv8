@@ -10,12 +10,9 @@ module Libv8
         cxx = select_compiler compilers
 
         if cxx.nil?
-          warn "Unable to find a compiler officially supported by v8."
-          warn "It is recommended to use GCC v4.4 or higher"
           @compiler = cxx = ENV['CXX'] ? ENV['CXX'] : 'g++'
         end
 
-        puts "Using compiler: #{cxx}"
         @compiler = cxx
       end
 
