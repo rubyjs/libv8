@@ -19,7 +19,6 @@ module Libv8
           @compiler = cc = 'g++'
         end
 
-        puts "Using compiler: #{cc}"
         @compiler = cc
       end
 
@@ -27,7 +26,7 @@ module Libv8
     end
 
     def check_gcc_compiler(name)
-      compiler = `which #{name}`
+      compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
 
       compiler.chomp!
@@ -38,7 +37,7 @@ module Libv8
     end
 
     def check_clang_compiler(name)
-      compiler = `which #{name}`
+      compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
       compiler.chomp
     end
