@@ -4,7 +4,7 @@ module Libv8
 
     def make
       unless defined?(@make)
-        @make = `which gmake`.chomp
+        @make = `which gmake 2> /dev/null`.chomp
         @make = `which make`.chomp unless $?.success?
       end
       @make

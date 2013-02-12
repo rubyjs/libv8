@@ -1,5 +1,6 @@
 require 'yaml'
 require 'pathname'
+require File.expand_path '../builder', __FILE__
 require File.expand_path '../paths', __FILE__
 
 module Libv8
@@ -18,21 +19,26 @@ module Libv8
     end
 
     class Vendor < Location
+
+      def initialize
+        @builder = Libv8::Builder.new
+        @paths = Libv8::Paths.new @builder.libv8_arch
+      end
+
       def install!
-        require File.expand_path '../builder', __FILE__
-        builder = Libv8::Builder.new
-        exit_status = builder.build_libv8!
+        exit_status = @builder.build_libv8!
         super if exit_status == 0
         verify_installation!
         return exit_status
       end
+
       def configure(context = MkmfContext.new)
-        context.incflags.insert 0, Libv8::Paths.include_paths.map{|p| "-I#{p}"}.join(" ")  + " "
-        context.ldflags.insert 0, Libv8::Paths.object_paths.join(" ") + " "
+        context.incflags.insert 0, @paths.include_paths.map{|p| "-I#{p}"}.join(" ")  + " "
+        context.ldflags.insert 0, @paths.object_paths.join(" ") + " "
       end
 
       def verify_installation!
-        Libv8::Paths.object_paths.each do |p|
+        @paths.object_paths.each do |p|
           fail ArchiveNotFound, p unless File.exists? p
         end
       end

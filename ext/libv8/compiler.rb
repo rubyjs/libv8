@@ -4,30 +4,35 @@ module Libv8
 
     def compiler
       unless defined?(@compiler)
-        cc   = check_gcc_compiler "g++"
+        compilers = ['g++', 'g++44', 'g++46', 'g++48']
+        compilers << ENV['CXX'] if ENV['CXX']
 
-        # Check alternative GCC names
-        # These are common on BSD's after
-        # GCC has been installed by a port
-        cc ||= check_gcc_compiler "g++44"
-        cc ||= check_gcc_compiler "g++46"
-        cc ||= check_gcc_compiler "g++48"
+        cxx = select_compiler compilers
 
-        if cc.nil?
-          warn "Unable to find a compiler officially supported by v8."
-          warn "It is recommended to use GCC v4.4 or higher"
-          @compiler = cc = 'g++'
+        if cxx.nil?
+          @compiler = cxx = ENV['CXX'] ? ENV['CXX'] : 'g++'
         end
 
-        puts "Using compiler: #{cc}"
-        @compiler = cc
+        @compiler = cxx
       end
 
       @compiler
     end
 
+    def select_compiler(compilers)
+      compilers.select { |name| check_gcc_compiler name }.last
+    end
+
+    def target
+      `#{compiler} -v 2>&1 | grep Target`.chomp.split.last
+    end
+
+    def config_flags
+      `#{compiler} -v 2>&1 | grep 'Configured with'`.chomp.split(': ', 2).last
+    end
+
     def check_gcc_compiler(name)
-      compiler = `which #{name}`
+      compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
 
       compiler.chomp!
@@ -38,7 +43,7 @@ module Libv8
     end
 
     def check_clang_compiler(name)
-      compiler = `which #{name}`
+      compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
       compiler.chomp
     end
