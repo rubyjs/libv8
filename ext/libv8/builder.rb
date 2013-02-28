@@ -17,6 +17,12 @@ module Libv8
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
       flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
 
+      # Avoid compilation failures on the Raspberry Pi.
+      flags << "vfp2=off vfp3=off" if RUBY_PLATFORM.include? "arm"
+
+      # Enable hardfloat support if available.
+      flags << "hardfp=on" if RUBY_PLATFORM.include? "eabihf"
+
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
       flags << "ARFLAGS.target=crs"
