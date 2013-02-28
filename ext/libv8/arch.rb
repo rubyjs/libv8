@@ -28,8 +28,12 @@ module Libv8
       end
     end
 
+    def arm?
+      RbConfig::MAKEFILE_CONFIG['build_cpu'] == 'arm'
+    end
+
     def libv8_arch
-      x64? ? "x64" : "ia32"
+      x64? ? "x64" : arm? ? "arm" : "ia32"
     end
   end
 end
