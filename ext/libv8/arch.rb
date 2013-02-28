@@ -20,6 +20,7 @@ module Libv8
       Object.const_defined?(:RUBY_ENGINE) && RUBY_ENGINE == "rbx"
     end
 
+    # TODO fix false positive on 64-bit ARM
     def x64?
       if rubinius?
         x86_64_from_build_cpu || x86_64_from_arch_flag
@@ -33,7 +34,10 @@ module Libv8
     end
 
     def libv8_arch
-      x64? ? "x64" : arm? ? "arm" : "ia32"
+      if x64? then "x64"
+      elsif arm? then "arm"
+      else "ia32"
+      end
     end
   end
 end
