@@ -28,6 +28,7 @@ task :checkout do
   # Based on: https://chromiumcodereview.appspot.com/10079030/patch/1/2
   sh "patch -N -p0 -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
+  sh "patch -N -p1 -d vendor/v8 < patches/do-not-imply-vfp3-and-armv7.patch"
 end
 
 desc "compile v8 via the ruby extension mechanism"
