@@ -34,8 +34,8 @@ module Libv8
     end
 
     def libv8_arch
-      if x64? then "x64"
-      elsif arm? then "arm"
+      if arm? then "arm"
+      elsif x64? then "x64"
       else "ia32"
       end
     end
