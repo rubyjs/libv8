@@ -72,7 +72,8 @@ task :binary => :compile do
   gemspec.files += Dir['vendor/v8/out/**/*.a']
   FileUtils.chmod 'a+r', gemspec.files
   FileUtils.mkdir_p 'pkg'
-  FileUtils.mv(Gem::Builder.new(gemspec).build, 'pkg')
+  package = RUBY_VERSION < '2.0.0' ? Gem::Builder.new(gemspec).build : Gem::Package.build(gemspec)
+  FileUtils.mv(package, 'pkg')
 end
 
 desc "clean up artifacts of the build"
