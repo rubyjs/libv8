@@ -1,20 +1,36 @@
+diff --git a/Makefile b/Makefile
+index 0d825c0..c508f33 100644
+--- a/Makefile
++++ b/Makefile
+@@ -95,6 +95,11 @@ endif
+ ifeq ($(strictaliasing), off)
+   GYPFLAGS += -Dv8_no_strict_aliasing=1
+ endif
++# hardfp=on
++ifeq ($(hardfp), on)
++  GYPFLAGS += -Dv8_use_arm_eabi_hardfloat=true
++endif
++
+ 
+ # ----------------- available targets: --------------------
+ # - "dependencies": pulls in external dependencies (currently: GYP)
 diff --git a/build/common.gypi b/build/common.gypi
-index e68ee15..198c2b7 100644
+index 7f084b8..d89f1f4 100644
 --- a/build/common.gypi
 +++ b/build/common.gypi
-@@ -160,7 +160,6 @@
+@@ -133,7 +133,6 @@
            [ 'v8_use_arm_eabi_hardfloat=="true"', {
              'defines': [
                'USE_EABI_HARDFLOAT=1',
--              'CAN_USE_VFP3_INSTRUCTIONS',
+-              'CAN_USE_VFP_INSTRUCTIONS',
              ],
              'target_conditions': [
                ['_toolset=="target"', {
 diff --git a/build/standalone.gypi b/build/standalone.gypi
-index 7145a16..f34a6c8 100644
+index ebdf557..2961bac 100644
 --- a/build/standalone.gypi
 +++ b/build/standalone.gypi
-@@ -76,9 +76,9 @@
+@@ -74,9 +74,9 @@
        }],
      ],
      # Default ARM variable settings.
