@@ -21,10 +21,11 @@ platforms.
 * x86_64-darwin10.7.0
 * x86_64-darwin-10
 * x86_64-darwin-11
-* x86_64-darwin-10
+* x86_64-darwin-12
 * x86_64-linux
 * x86-linux
-* x86_64-freebsd-9
+* arm-linux-gnueabihf
+* amd64-freebsd-9
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -70,12 +71,16 @@ To get the source, these commands will get you started:
     bundle exec rake checkout
     bundle exec rake compile
 
+A binary gem can be produced by executing `bundle exec rake binary`.
+Once the compilation is finished, the gem will be stored in the `pkg`
+directory.
+
 ### Bring your own V8
 
 Because libv8 is the interface for the V8 engine used by
 [therubyracer](http://github.com/cowboyd/therubyracer), you may need
 to use libv8, even if you have V8 installed already. If you wish to
-use your own V8 installation, rather than have it built for you, use 
+use your own V8 installation, rather than have it built for you, use
 the `--with-system-v8` option.
 
 Using RubyGems:
@@ -88,6 +93,26 @@ Using Bundler (in your Gemfile):
 
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian distros).
+
+### Cross-compilation
+
+Currently the libv8 gem supports cross-compilation for ARM and is
+tested on the Raspberry Pi running with a hard float image.
+
+To build a binary gem for the Pi, you will need to get yourself a
+toolchain. The easiest way to do this is by following the
+instructions [here](http://www.kitware.com/blog/home/post/426).
+
+Once you have `g++` and `glib` that can produce an ARM binaries,
+you only need to set the `TARGET` and `CXX` environment variables
+and execute `bundle exec rake binary`. The target needs to match
+the value of `RbConfig::CONFIG['target']` of the system you are
+cross-compiling for.
+
+Example for the Raspberry Pi with hfp:
+```
+TARGET=arm-linux-gnueabihf CXX=arm-unknown-linux-gnueabi-g++ rake binary
+```
 
 ### About
 
