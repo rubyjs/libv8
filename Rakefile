@@ -45,7 +45,15 @@ task :manual_compile do
   end
 end
 
-def get_binary_gemspec(platform = RUBY_PLATFORM)
+def default_platform
+  require 'rbconfig'
+
+  # Returning an array is necessary as Platform::new reduces strings as
+  # 'arm-unknown-linux-gnueabihf' to 'arm-unknown-linux'
+  RbConfig::CONFIG.values_at 'target_cpu', 'target_os'
+end
+
+def get_binary_gemspec(platform = default_platform)
   gemspec = eval(File.read('libv8.gemspec'))
   gemspec.platform = Gem::Platform.new(platform)
   gemspec
