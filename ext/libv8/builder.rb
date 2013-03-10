@@ -18,10 +18,12 @@ module Libv8
       flags << "strictaliasing=off" if target.include?("freebsd") and !check_gcc_compiler(compiler)
 
       # Avoid compilation failures on the Raspberry Pi.
-      flags << "vfp2=off vfp3=off" if target.include? "arm"
+      # TODO: Implement hardware feature detection to govern usage of vfp and
+      # hardfp.
+      flags << "vfp2=off vfp3=off" if target =~ /^arm/
 
       # Enable hardfloat support if available.
-      flags << "hardfp=on" if target.include? "eabihf"
+      flags << "hardfp=on" if target =~ /eabihf$/
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.

@@ -49,8 +49,10 @@ def default_platform
   require 'rbconfig'
 
   # Returning an array is necessary as Platform::new reduces strings as
-  # 'arm-unknown-linux-gnueabihf' to 'arm-unknown-linux'
-  RbConfig::CONFIG.values_at 'target_cpu', 'target_os'
+  # 'arm-linux-gnueabihf' to 'arm-linux'
+  if ENV['TARGET'] then ENV['TARGET'].split '-', 1
+  else  RbConfig::CONFIG.values_at 'target_cpu', 'target_os'
+  end
 end
 
 def get_binary_gemspec(platform = default_platform)
