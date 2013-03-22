@@ -71,7 +71,12 @@ task :binary => :compile do
   gemspec.files += Dir['vendor/v8/out/**/*.a']
   FileUtils.chmod 'a+r', gemspec.files
   FileUtils.mkdir_p 'pkg'
-  package = Gem::VERSION < '2.0.0' ? Gem::Builder.new(gemspec).build : Gem::Package.build(gemspec)
+  package = if Gem::VERSION < '2.0.0'
+    Gem::Builder.new(gempsec).build
+  else
+    require 'rubygems/package'
+    Gem::Package.build(gemspec)
+  end
   FileUtils.mv(package, 'pkg')
 end
 
