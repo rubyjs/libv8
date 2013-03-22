@@ -19,13 +19,43 @@ That depends on your platform. Right now, we support the following
 platforms.
 
 * x86_64-darwin10.7.0
+* x86_64-darwin-10
+* x86_64-darwin-11
+* x86_64-darwin-10
 * x86_64-linux
 * x86-linux
+* x86_64-freebsd-9
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
 distro for you.
 
+### Versioning
+
+Versions of the libv8 gem track the version of v8 itself, adding its
+own point release after the main v8 version. So libv8 `3.11.8.5` and
+`3.11.8.14` both correspond to v8 version `3.11.8`. Another way to
+think about it would be that `3.11.8.14` is the 14th release of the
+libv8 rubygem based on v8 version `3.11.8`
+
+#### Source and Binary Releases
+
+Starting with libv8 `3.11.8.0`, all even point releases contain
+only a source-based distribution, while odd point releases contain both
+a source-based distribution *and* binary distributions. However both
+point releases correspond to the *exact* underlying code. The only
+difference is the version number.
+
+This way, the most recent version of the gem always has binary
+distributions, but if, for whatever reason, you have problems with the
+binaries, you can always "lock in" your dependency a single point version
+down, forcing it to compile from source.
+
+So for example, `3.15.12.3` contains all the binary distributions, while
+`3.15.12.2` is the exact same code, but contain only a source-based
+distribution
+
+> This step release system is a workaround to carlhuda/bundler#1537
 
 ### What if I can't install from source?
 
