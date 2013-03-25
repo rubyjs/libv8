@@ -23,11 +23,6 @@ task :checkout do
     sh "git checkout #{V8_Version} -f"
     sh "#{make} dependencies"
   end
-
-  # The -fPIC flag is necessary when linking a shared library
-  # against the static libv8 on x86_64.
-  sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
-  sh "patch -N -p1 -d vendor/v8 < patches/do-not-imply-vfp3-and-armv7.patch"
 end
 
 desc "compile v8 via the ruby extension mechanism"
