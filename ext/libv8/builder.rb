@@ -15,13 +15,15 @@ module Libv8
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
-      flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
+      flags << "strictaliasing=off" if target.include?("freebsd") and !check_gcc_compiler(compiler)
 
       # Avoid compilation failures on the Raspberry Pi.
-      flags << "vfp2=off vfp3=off" if RUBY_PLATFORM.include? "arm"
+      # TODO: Implement hardware feature detection to govern usage of vfp and
+      # hardfp.
+      flags << "vfp2=off vfp3=off" if target =~ /^arm/
 
       # Enable hardfloat support if available.
-      flags << "hardfp=on" if RUBY_PLATFORM.include? "eabihf"
+      flags << "hardfp=on" if target =~ /eabihf$/
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.

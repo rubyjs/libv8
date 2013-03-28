@@ -4,22 +4,14 @@ module Libv8
 
     def compiler
       unless defined?(@compiler)
-        cc   = check_gcc_compiler "g++"
-
-        # Check alternative GCC names
-        # These are common on BSD's after
-        # GCC has been installed by a port
-        cc ||= check_gcc_compiler "g++44"
-        cc ||= check_gcc_compiler "g++46"
-        cc ||= check_gcc_compiler "g++48"
-
-        if cc.nil?
-          warn "Unable to find a compiler officially supported by v8."
-          warn "It is recommended to use GCC v4.4 or higher"
-          @compiler = cc = 'g++'
+        unless ENV['CXX']
+          compilers = ['g++', 'g++48', 'g++46', 'g++44']
+        else
+          compilers = [ENV['CXX']]
         end
 
-        @compiler = cc
+        @compiler = compilers.map { |compiler| check_gcc_compiler compiler }.compact.first
+        @compiler ||= compilers.first
       end
 
       @compiler
