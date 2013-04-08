@@ -27,6 +27,9 @@ module Libv8
       # default.
       flags << "ARFLAGS.target=crs"
 
+      # Fix the build with GCC 4.8 (the "unused typedef" warning)
+      flags << "werror=no" if compiler_is_gcc_48_plus(compiler)
+
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
 
