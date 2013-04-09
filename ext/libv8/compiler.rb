@@ -36,6 +36,13 @@ module Libv8
       compiler
     end
 
+    def compiler_is_gcc_48_plus(name)
+      versionstr = `#{name} --version`.lines[0]
+      return false unless versionstr.include? "GCC"
+      return false unless versionstr =~ /([0-9]+\.[0-9]+\.[0-9]+)/
+      $1 >= "4.8"
+    end
+
     def check_clang_compiler(name)
       compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
