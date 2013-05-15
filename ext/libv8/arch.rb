@@ -30,7 +30,7 @@ module Libv8
     end
 
     def arm?
-      RbConfig::MAKEFILE_CONFIG['build_cpu'] == 'arm'
+      RbConfig::MAKEFILE_CONFIG['build_cpu'] =~ /^arm/
     end
 
     def libv8_arch
