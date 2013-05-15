@@ -1,0 +1,25 @@
+diff --git a/Makefile b/Makefileindex 0d825c0..0c099dc 100644--- a/Makefile+++ b/Makefile@@ -120,7 +120,7 @@ MODES = release debug # List of files that trigger Makefile regeneration: GYPFILES = build/all.gyp build/common.gypi build/standalone.gypi \            preparser/preparser.gyp samples/samples.gyp src/d8.gyp \-           test/cctest/cctest.gyp tools/gyp/v8.gyp+           tools/gyp/v8.gyp  # Generates all combinations of ARCHES and MODES, e.g. "ia32.release". BUILDS = $(foreach mode,$(MODES),$(addsuffix .$(mode),$(ARCHES)))diff --git a/build/all.gyp b/build/all.gypindex 4b2fe52..9885678 100644--- a/build/all.gyp+++ b/build/all.gyp@@ -11,7 +11,6 @@         '../preparser/preparser.gyp:*',         '../samples/samples.gyp:*',         '../src/d8.gyp:d8',-        '../test/cctest/cctest.gyp:*',       ],     }   ]diff --git a/Makefile b/Makefile
+index 0d825c0..0c099dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -120,7 +120,7 @@ MODES = release debug
+ # List of files that trigger Makefile regeneration:
+ GYPFILES = build/all.gyp build/common.gypi build/standalone.gypi \
+            preparser/preparser.gyp samples/samples.gyp src/d8.gyp \
+-           test/cctest/cctest.gyp tools/gyp/v8.gyp
++           tools/gyp/v8.gyp
+ 
+ # Generates all combinations of ARCHES and MODES, e.g. "ia32.release".
+ BUILDS = $(foreach mode,$(MODES),$(addsuffix .$(mode),$(ARCHES)))
+diff --git a/build/all.gyp b/build/all.gyp
+index 4b2fe52..9885678 100644
+--- a/build/all.gyp
++++ b/build/all.gyp
+@@ -11,7 +11,6 @@
+         '../preparser/preparser.gyp:*',
+         '../samples/samples.gyp:*',
+         '../src/d8.gyp:d8',
+-        '../test/cctest/cctest.gyp:*',
+       ],
+     }
+   ]
