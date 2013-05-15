@@ -29,6 +29,8 @@ task :checkout do
   sh "patch -N -p0 -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
   sh "patch -N -p1 -d vendor/v8 < patches/do-not-imply-vfp3-and-armv7.patch"
+  sh "patch -N -p1 -d vendor/v8 < patches/gcc48-wno-unused-local-typedefs.patch"
+  sh "patch -N -p1 -d vendor/v8 < patches/disable-building-tests.patch"
 end
 
 desc "compile v8 via the ruby extension mechanism"
