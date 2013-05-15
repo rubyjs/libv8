@@ -23,19 +23,25 @@ task :checkout do
     sh "git checkout #{V8_Version} -f"
     sh "#{make} dependencies"
   end
+end
 
-  # Fix gyp trying to build platform-linux on FreeBSD 9 and FreeBSD 10.
-  # Based on: https://chromiumcodereview.appspot.com/10079030/patch/1/2
-  sh "patch -N -p0 -d vendor/v8 < patches/add-freebsd9-and-freebsd10-to-gyp-GetFlavor.patch"
-  sh "patch -N -p1 -d vendor/v8 < patches/fPIC-on-x64.patch"
-  sh "patch -N -p1 -d vendor/v8 < patches/do-not-imply-vfp3-and-armv7.patch"
+desc "apply the libv8 gem patches to the vendored v8 source"
+task :patch do
+  File.open("#{V8_Source}/.applied_patches", File::RDWR|File::CREAT) do |f|
+    available_patches = Dir.glob('patches/*.patch').sort
+    applied_patches = f.readlines.map(&:chomp)
+
+    (available_patches - applied_patches).each do |patch|
+      sh "patch -p1 -N -d vendor/v8 < #{patch}"
+      f.puts patch
+    end
+  end
 end
 
 desc "compile v8 via the ruby extension mechanism"
-task :compile do
+task :compile => :patch do
   sh "ruby ext/libv8/extconf.rb"
 end
-
 
 desc "manually invoke the GYP compile. Useful for seeing debug output"
 task :manual_compile do
@@ -96,4 +102,4 @@ task :vulcan => directory("tmp/vulcan") do
 end
 
 task :default => [:checkout, :compile, :spec]
-task :build => [:clean, :checkout]
+task :build => [:clean, :checkout, :patch]

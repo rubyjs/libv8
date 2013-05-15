@@ -1,5 +1,7 @@
---- build/gyp/pylib/gyp/common.py.orig	2012-05-12 15:36:46.235280559 +0100
-+++ build/gyp/pylib/gyp/common.py	2012-05-12 15:37:10.315754125 +0100
+Index: pylib/gyp/common.py
+===================================================================
+--- a/build/gyp/pylib/gyp/common.py	(revision 1282)
++++ b/build/gyp/pylib/gyp/common.py	(working copy)
 @@ -355,6 +355,8 @@
      'sunos5': 'solaris',
      'freebsd7': 'freebsd',
