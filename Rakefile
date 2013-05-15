@@ -25,8 +25,21 @@ task :checkout do
   end
 end
 
+desc "apply the libv8 gem patches to the vendored v8 source"
+task :patch do
+  File.open("#{V8_Source}/.applied_patches", File::RDWR|File::CREAT) do |f|
+    available_patches = Dir.glob('patches/*.patch').sort
+    applied_patches = f.readlines.map(&:chomp)
+
+    (available_patches - applied_patches).each do |patch|
+      sh "patch -p1 -N -d vendor/v8 < #{patch}"
+      f.puts patch
+    end
+  end
+end
+
 desc "compile v8 via the ruby extension mechanism"
-task :compile do
+task :compile => :patch do
   sh "ruby ext/libv8/extconf.rb"
 end
 
@@ -90,4 +103,4 @@ task :vulcan => directory("tmp/vulcan") do
 end
 
 task :default => [:checkout, :compile, :spec]
-task :build => [:clean, :checkout]
+task :build => [:clean, :checkout, :patch]
