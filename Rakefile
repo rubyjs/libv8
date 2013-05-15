@@ -27,13 +27,14 @@ end
 
 desc "apply the libv8 gem patches to the vendored v8 source"
 task :patch do
-  patch_file = File.open "#{V8_Source}/.patches_applied", 'a+'
-  available_patches = Dir.glob('patches/*.patch').sort
-  applied_patches = IO.readlines(patch_file).map(&:chomp)
+  File.open("#{V8_Source}/.applied_patches", File::RDWR|File::CREAT) do |f|
+    available_patches = Dir.glob('patches/*.patch').sort
+    applied_patches = f.readlines.map(&:chomp)
 
-  (available_patches - applied_patches).each do |patch|
-    sh "patch -p1 -N -d vendor/v8 < #{patch}"
-    patch_file.puts patch
+    (available_patches - applied_patches).each do |patch|
+      sh "patch -p1 -N -d vendor/v8 < #{patch}"
+      f.puts patch
+    end
   end
 end
 
