@@ -20,8 +20,9 @@ module Libv8
       # Avoid compilation failures on the Raspberry Pi.
       flags << "vfp2=off vfp3=off" if RUBY_PLATFORM.include? "arm"
 
-      # Enable hardfloat support if available.
-      flags << "hardfp=on" if RUBY_PLATFORM.include? "eabihf"
+      # FIXME: Determine when to activate this instead of leaving it on by
+      # default.
+      flags << "hardfp=on" if RUBY_PLATFORM.include? "arm"
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
