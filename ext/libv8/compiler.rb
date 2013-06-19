@@ -4,7 +4,8 @@ module Libv8
 
     def compiler
       unless defined?(@compiler)
-        cc   = check_gcc_compiler ENV['CXX']
+        cc   = check_gcc_compiler with_config("cxx")
+        cc ||= check_gcc_compiler ENV["CXX"]
         cc ||= check_gcc_compiler "g++"
 
         # Check alternative GCC names
