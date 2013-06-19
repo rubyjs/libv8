@@ -21,6 +21,9 @@ Gem::Specification.new do |s|
     `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/v8/#{f}"}
   end
   s.files += Dir['vendor/v8/build/**/*']
+  s.files += Dir.chdir("vendor/gyp") do
+    `git ls-files`.split("\n").map {|f| "vendor/gyp/#{f}"}
+  end
 
   s.extensions = ["ext/libv8/extconf.rb"]
   s.require_paths = ["lib", "ext"]

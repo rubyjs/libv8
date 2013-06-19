@@ -34,6 +34,8 @@ module Libv8
     def build_libv8!
       Dir.chdir(File.expand_path '../../../vendor/v8', __FILE__) do
         setup_python!
+        setup_build_deps!
+        apply_patches!
         print_build_info
         puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
       end
@@ -51,6 +53,25 @@ module Libv8
         end
         `ln -fs #{`which python2`.chomp} python`
         ENV['PATH'] = "#{File.expand_path '.'}:#{ENV['PATH']}"
+      end
+    end
+
+    def setup_build_deps!
+      # This uses the Git mirror of the svn repository used by
+      # "make dependencies", instead of calling that make target
+      `rm -rf build/gyp`
+      `ln -fs #{File.expand_path '../../../vendor/gyp', __FILE__} build/gyp`
+    end
+
+    def apply_patches!
+      File.open(".applied_patches", File::RDWR|File::CREAT) do |f|
+        available_patches = Dir.glob(File.expand_path '../../../patches/*.patch', __FILE__).sort
+        applied_patches = f.readlines.map(&:chomp)
+
+        (available_patches - applied_patches).each do |patch|
+          `patch -p1 -N < #{patch}`
+          f.puts patch
+        end
       end
     end
 
