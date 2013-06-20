@@ -1,3 +1,5 @@
+require File.expand_path '../../../lib/libv8/version.rb', __FILE__
+
 module Libv8
   module Checkout
     module_function
