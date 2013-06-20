@@ -9,19 +9,15 @@ end
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-V8_Version = Libv8::VERSION.gsub(/\.\d+$/,'')
-V8_Source = File.expand_path '../vendor/v8', __FILE__
-
 require File.expand_path '../ext/libv8/make.rb', __FILE__
+require File.expand_path '../ext/libv8/checkout.rb', __FILE__
 include Libv8::Make
+include Libv8::Checkout
 
 desc "setup the vendored v8 source to correspond to the libv8 gem version"
 task :checkout do
   sh "git submodule update --init"
-  Dir.chdir(V8_Source) do
-    sh "git fetch"
-    sh "git checkout #{V8_Version} -f"
-  end
+  checkout!
 end
 
 desc "compile v8 via the ruby extension mechanism"
@@ -78,6 +74,7 @@ task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
   sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
+  sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
 end
 
 desc "build a binary on heroku (you must have vulcan configured for this)"
