@@ -7,3 +7,5 @@ notifications:
   recipients:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
+before_install:
+  - sudo apt-get install git-svn
