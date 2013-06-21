@@ -9,40 +9,21 @@ end
 require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-V8_Version = Libv8::VERSION.gsub(/\.\d+$/,'')
-V8_Source = File.expand_path '../vendor/v8', __FILE__
-
 require File.expand_path '../ext/libv8/make.rb', __FILE__
+require File.expand_path '../ext/libv8/checkout.rb', __FILE__
 include Libv8::Make
+include Libv8::Checkout
 
-desc "setup the vendored v8 source to correspond to the libv8 gem version and prepare deps"
+desc "setup the vendored v8 source to correspond to the libv8 gem version"
 task :checkout do
   sh "git submodule update --init"
-  Dir.chdir(V8_Source) do
-    sh "git fetch"
-    sh "git checkout #{V8_Version} -f"
-    sh "#{make} dependencies"
-  end
-end
-
-desc "apply the libv8 gem patches to the vendored v8 source"
-task :patch do
-  File.open("#{V8_Source}/.applied_patches", File::RDWR|File::CREAT) do |f|
-    available_patches = Dir.glob('patches/*.patch').sort
-    applied_patches = f.readlines.map(&:chomp)
-
-    (available_patches - applied_patches).each do |patch|
-      sh "patch -p1 -N -d vendor/v8 < #{patch}"
-      f.puts patch
-    end
-  end
+  checkout!
 end
 
 desc "compile v8 via the ruby extension mechanism"
-task :compile => :patch do
+task :compile do
   sh "ruby ext/libv8/extconf.rb"
 end
-
 
 desc "manually invoke the GYP compile. Useful for seeing debug output"
 task :manual_compile do
@@ -93,6 +74,7 @@ task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
   sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
+  sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
 end
 
 desc "build a binary on heroku (you must have vulcan configured for this)"
@@ -103,4 +85,4 @@ task :vulcan => directory("tmp/vulcan") do
 end
 
 task :default => [:checkout, :compile, :spec]
-task :build => [:clean, :checkout, :patch]
+task :build => [:clean, :checkout]

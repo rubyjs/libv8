@@ -8,4 +8,4 @@ notifications:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
 before_install:
-  - sudo apt-get install subversion
+  - sudo apt-get install git-svn
