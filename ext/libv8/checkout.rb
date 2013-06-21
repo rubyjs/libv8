@@ -16,6 +16,7 @@ module Libv8
       Dir.chdir(V8_Source) do
         `git fetch`
         `git checkout #{Libv8::VERSION.gsub(/\.\d+$/,'')} -f`
+        `rm -f .applied_patches`
       end
 
       return unless git?(GYP_Source)
