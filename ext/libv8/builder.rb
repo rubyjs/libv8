@@ -28,6 +28,9 @@ module Libv8
       # default.
       flags << "ARFLAGS.target=crs"
 
+      # Solaris / Smart OS requires additional -G flag to use with -fPIC
+      flags << "CFLAGS=-G" if RUBY_PLATFORM =~ /solaris/
+
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
 
