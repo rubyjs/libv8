@@ -28,6 +28,9 @@ module Libv8
     end
 
     def check_gcc_compiler(name)
+      # in SmartOS, `which` returns success with no arguments. 'with_config' above may return nil
+      return nil if "#{name}".empty?
+
       compiler = `which #{name} 2> /dev/null`
       return nil unless $?.success?
 
