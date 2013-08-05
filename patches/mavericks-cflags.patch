@@ -1,0 +1,12 @@
+diff --git a/build/standalone.gypi b/build/standalone.gypi
+index ebdf557..d13c1e2 100644
+--- a/build/standalone.gypi
++++ b/build/standalone.gypi
+@@ -204,6 +207,7 @@
+             '-W',
+             '-Wno-unused-parameter',
+             '-Wnon-virtual-dtor',
++            '-Wno-unused-private-field',
+           ],
+         },
+         'target_conditions': [
