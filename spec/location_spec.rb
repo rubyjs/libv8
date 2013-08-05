@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "libv8 locations" do
   before do
-    @context = mock(:CompilationContext)
+    @context = double(:CompilationContext)
   end
   describe "the system location" do
     before do
@@ -15,8 +15,8 @@ describe "libv8 locations" do
         @location.configure @context
       end
       it "adds the include path to the front of the include flags" do
-        @context.should have_received(:dir_config).with 'v8'
-        @context.should have_received(:find_header).with 'v8.h'
+        @context.should have_received(:dir_config).with('v8').at_least(:once)
+        @context.should have_received(:find_header).with('v8.h').at_least(:once)
       end
     end
     describe "when the v8.h header cannot be found" do
