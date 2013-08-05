@@ -21,10 +21,12 @@ platforms.
 * x86_64-darwin10.7.0
 * x86_64-darwin-10
 * x86_64-darwin-11
-* x86_64-darwin-10
+* x86_64-darwin-12
+* x86_64-darwin-13
 * x86_64-linux
 * x86-linux
 * x86_64-freebsd-9
+* x86_64-freebsd-10
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -37,6 +39,20 @@ own point release after the main v8 version. So libv8 `3.11.8.5` and
 `3.11.8.14` both correspond to v8 version `3.11.8`. Another way to
 think about it would be that `3.11.8.14` is the 14th release of the
 libv8 rubygem based on v8 version `3.11.8`
+
+### Using a git version
+
+If you want to use the latest unstable version of the gem you can do
+so by specifying the git repo as a gem source. Just add the following
+to your `Gemfile`:
+
+```Ruby
+gem "libv8", git: "git://github.com/cowboyd/libv8.git",
+branch: '3.11', submodules: true
+```
+
+You can find more info on using a git repo as a gem source in
+[Bundler's documentation](http://bundler.io/v1.3/git.html).
 
 #### Source and Binary Releases
 
@@ -75,7 +91,7 @@ To get the source, these commands will get you started:
 Because libv8 is the interface for the V8 engine used by
 [therubyracer](http://github.com/cowboyd/therubyracer), you may need
 to use libv8, even if you have V8 installed already. If you wish to
-use your own V8 installation, rather than have it built for you, use 
+use your own V8 installation, rather than have it built for you, use
 the `--with-system-v8` option.
 
 Using RubyGems:
