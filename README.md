@@ -40,20 +40,6 @@ own point release after the main v8 version. So libv8 `3.11.8.5` and
 think about it would be that `3.11.8.14` is the 14th release of the
 libv8 rubygem based on v8 version `3.11.8`
 
-### Using a git version
-
-If you want to use the latest unstable version of the gem you can do
-so by specifying the git repo as a gem source. Just add the following
-to your `Gemfile`:
-
-```Ruby
-gem "libv8", git: "git://github.com/cowboyd/libv8.git",
-branch: '3.11', submodules: true
-```
-
-You can find more info on using a git repo as a gem source in
-[Bundler's documentation](http://bundler.io/v1.3/git.html).
-
 #### Source and Binary Releases
 
 Starting with libv8 `3.11.8.0`, all even point releases contain
@@ -72,6 +58,20 @@ So for example, `3.15.12.3` contains all the binary distributions, while
 distribution
 
 > This step release system is a workaround to carlhuda/bundler#1537
+
+### Using a git version
+
+If you want to use the latest unstable version of the gem you can do
+so by specifying the git repo as a gem source. Just make sure you have
+`git-svn` and add the following to your `Gemfile`:
+
+```Ruby
+gem "libv8", git: "git://github.com/cowboyd/libv8.git",
+branch: '3.11', submodules: true
+```
+
+You can find more info on using a git repo as a gem source in
+[Bundler's documentation](http://bundler.io/v1.3/git.html).
 
 ### What if I can't install from source?
 
