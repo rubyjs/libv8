@@ -3,12 +3,14 @@ require File.expand_path '../compiler', __FILE__
 require File.expand_path '../arch', __FILE__
 require File.expand_path '../make', __FILE__
 require File.expand_path '../checkout', __FILE__
+require File.expand_path '../patcher', __FILE__
 
 module Libv8
   class Builder
     include Libv8::Arch
     include Libv8::Make
     include Libv8::Checkout
+    include Libv8::Patcher
 
     def initialize
       @compiler = choose_compiler
@@ -45,7 +47,7 @@ module Libv8
         checkout!
         setup_python!
         setup_build_deps!
-        apply_patches!
+        patch! *patch_directories_for(@compiler)
         print_build_info
         puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
       end
@@ -71,18 +73,6 @@ module Libv8
       # "make dependencies", instead of calling that make target
       `rm -rf build/gyp`
       `ln -fs #{GYP_Source} build/gyp`
-    end
-
-    def apply_patches!
-      File.open(".applied_patches", File::RDWR|File::CREAT) do |f|
-        available_patches = Dir.glob(File.expand_path '../../../patches/*.patch', __FILE__).sort
-        applied_patches = f.readlines.map(&:chomp)
-
-        (available_patches - applied_patches).each do |patch|
-          `patch -p1 -N < #{patch}`
-          f.puts patch
-        end
-      end
     end
 
     private
