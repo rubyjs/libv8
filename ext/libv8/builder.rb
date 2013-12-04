@@ -7,9 +7,12 @@ require File.expand_path '../checkout', __FILE__
 module Libv8
   class Builder
     include Libv8::Arch
-    include Libv8::Compiler
     include Libv8::Make
     include Libv8::Checkout
+
+    def initialize
+      @compiler = choose_compiler
+    end
 
     def make_flags(*flags)
       profile = enable_config('debug') ? 'debug' : 'release'
@@ -17,7 +20,7 @@ module Libv8
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
-      flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !check_gcc_compiler(compiler)
+      flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !@compiler.compatible?
 
       # Avoid compilation failures on the Raspberry Pi.
       flags << "vfp2=off vfp3=off" if RUBY_PLATFORM.include? "arm"
@@ -38,12 +41,13 @@ module Libv8
 
     def build_libv8!
       Dir.chdir(V8_Source) do
+        raise 'No compilers available' if @compiler.nil?
         checkout!
         setup_python!
         setup_build_deps!
         apply_patches!
         print_build_info
-        puts `env CXX=#{compiler} LINK=#{compiler} #{make} #{make_flags}`
+        puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
       end
       return $?.exitstatus
     end
@@ -83,6 +87,20 @@ module Libv8
 
     private
 
+    def choose_compiler
+      compiler_names = if with_config('cxx') then [with_config('cxx')]
+                       elsif ENV['CXX']      then [ENV['CXX']]
+                       else                       Compiler::KNOWN_COMPILERS
+                       end
+
+      available_compilers = Compiler.available_compilers(*compiler_names)
+      compatible_compilers = available_compilers.select(&:compatible?)
+
+      unless compatible_compilers.empty? then compatible_compilers
+      else available_compilers
+      end.first
+    end
+
     def python_version
       if system 'which python 2>&1 > /dev/null'
         `python -c 'import platform; print(platform.python_version())'`.chomp
@@ -96,8 +114,8 @@ module Libv8
 
       puts "Using python #{python_version}"
 
-      puts "Using compiler: #{compiler}"
-      unless check_gcc_compiler compiler
+      puts "Using compiler: #{@compiler} (#{@compiler.name} version #{@compiler.version})"
+      unless @compiler.compatible?
         warn "Unable to find a compiler officially supported by v8."
         warn "It is recommended to use GCC v4.4 or higher"
       end
