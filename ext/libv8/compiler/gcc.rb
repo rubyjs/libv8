@@ -8,7 +8,7 @@ module Libv8
       end
 
       def compatible?
-        version > '4.2' and version < '4.9'
+        version > '4.3' and version < '4.9'
       end
     end
   end
