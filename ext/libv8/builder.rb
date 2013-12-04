@@ -22,28 +22,28 @@ module Libv8
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
-      flags << "strictaliasing=off" if RUBY_PLATFORM.include?("freebsd") and !@compiler.compatible?
+      flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.4'
 
       # Avoid compilation failures on the Raspberry Pi.
-      flags << "vfp2=off vfp3=off" if RUBY_PLATFORM.include? "arm"
+      flags << "vfp2=off vfp3=off" if @compiler.target.include? "arm"
 
       # FIXME: Determine when to activate this instead of leaving it on by
       # default.
-      flags << "hardfp=on" if RUBY_PLATFORM.include? "arm"
+      flags << "hardfp=on" if @compiler.target.include? "arm"
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
       flags << "ARFLAGS.target=crs"
 
       # Solaris / Smart OS requires additional -G flag to use with -fPIC
-      flags << "CFLAGS=-G" if RUBY_PLATFORM =~ /solaris/
+      flags << "CFLAGS=-G" if @compiler.target =~ /solaris/
 
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
 
     def build_libv8!
       Dir.chdir(V8_Source) do
-        raise 'No compilers available' if @compiler.nil?
+        fail 'No compilers available' if @compiler.nil?
         checkout!
         setup_python!
         setup_build_deps!
