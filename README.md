@@ -21,10 +21,13 @@ platforms.
 * x86_64-darwin10.7.0
 * x86_64-darwin-10
 * x86_64-darwin-11
-* x86_64-darwin-10
+* x86_64-darwin-12
+* x86_64-darwin-13
 * x86_64-linux
 * x86-linux
 * x86_64-freebsd-9
+* x86_64-freebsd-10
+* x86_64-solaris-2.11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -88,7 +91,7 @@ To get the source, these commands will get you started:
 Because libv8 is the interface for the V8 engine used by
 [therubyracer](http://github.com/cowboyd/therubyracer), you may need
 to use libv8, even if you have V8 installed already. If you wish to
-use your own V8 installation, rather than have it built for you, use 
+use your own V8 installation, rather than have it built for you, use
 the `--with-system-v8` option.
 
 Using RubyGems:
@@ -101,6 +104,14 @@ Using Bundler (in your Gemfile):
 
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian distros).
+
+### Bring your own compiler
+
+You can specify a compiler of your choice by either setting the `CXX`
+environment variable before compilation, or by adding the
+`--with-cxx=<compiler>` option to the bundle configuration:
+
+    bundle config build.libv8 --with-cxx=clang++
 
 ### About
 
