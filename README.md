@@ -27,6 +27,7 @@ platforms.
 * x86-linux
 * x86_64-freebsd-9
 * x86_64-freebsd-10
+* x86_64-solaris-2.11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -104,6 +105,14 @@ Using Bundler (in your Gemfile):
 
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian distros).
+
+### Bring your own compiler
+
+You can specify a compiler of your choice by either setting the `CXX`
+environment variable before compilation, or by adding the
+`--with-cxx=<compiler>` option to the bundle configuration:
+
+    bundle config build.libv8 --with-cxx=clang++
 
 ### About
 
