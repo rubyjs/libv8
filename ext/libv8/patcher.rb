@@ -9,7 +9,7 @@ module Libv8
 
       case
       when compiler.target =~ /arm/
-        patch_directories += 'arm'
+        patch_directories << 'arm'
       end
 
       case compiler
