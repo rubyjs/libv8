@@ -1,11 +1,13 @@
 rvm:
   - 2.0.0
-  - 1.9.2
+  - 2.1.0
   - 1.9.3
-  - rbx-19mode
+  - rbx-2.1.1
+  - rbx-2.2.1
 notifications:
   recipients:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
 before_install:
-  - sudo apt-get install subversion
+  - sudo apt-get update
+  - sudo apt-get install git-svn

@@ -1,0 +1,36 @@
+diff --git a/build/common.gypi b/build/common.gypi
+index 7f084b8..4fc8572 100644
+--- a/build/common.gypi
++++ b/build/common.gypi
+@@ -325,7 +325,8 @@
+         'conditions': [
+           ['OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="netbsd"', {
+             'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
+-                        '-Wnon-virtual-dtor', '-Woverloaded-virtual' ],
++                        '-Wnon-virtual-dtor', '-Woverloaded-virtual',
++                        '-Wno-unused-private-field' ],
+           }],
+         ],
+       },  # Debug
+diff --git a/build/standalone.gypi b/build/standalone.gypi
+index 7b1c425..d9cc41f 100644
+--- a/build/standalone.gypi
++++ b/build/standalone.gypi
+@@ -92,7 +92,8 @@
+       'target_defaults': {
+         'cflags': [ '-Wall', '<(werror)', '-W', '-Wno-unused-parameter',
+                     '-Wnon-virtual-dtor', '-pthread', '-fno-rtti',
+-                    '-fno-exceptions', '-pedantic' ],
++                    '-fno-exceptions', '-pedantic',
++                    '-Wno-unused-private-field' ],
+         'ldflags': [ '-pthread', ],
+         'conditions': [
+           [ 'OS=="linux"', {
+@@ -207,6 +208,7 @@
+             '-W',
+             '-Wno-unused-parameter',
+             '-Wnon-virtual-dtor',
++            '-Wno-unused-private-field',
+           ],
+         },
+         'target_conditions': [

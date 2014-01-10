@@ -21,6 +21,9 @@ Gem::Specification.new do |s|
     `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/v8/#{f}"}
   end
   s.files += Dir['vendor/v8/build/**/*']
+  s.files += Dir.chdir("vendor/gyp") do
+    `git ls-files`.split("\n").map {|f| "vendor/gyp/#{f}"}
+  end
 
   s.extensions = ["ext/libv8/extconf.rb"]
   s.require_paths = ["lib", "ext"]
@@ -29,5 +32,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake-compiler"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rspec-spies"
+  s.add_development_dependency "rubysl", "~> 2.0" if RUBY_ENGINE == "rbx"
   s.add_development_dependency "vulcan"
 end
