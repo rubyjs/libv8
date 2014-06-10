@@ -15,11 +15,11 @@ module Libv8
     module_function
 
     def system_compilers
-      available_compilers *Compiler::KNOWN_COMPILERS
+      available_compilers(*Compiler::KNOWN_COMPILERS)
     end
 
     def available_compilers(*compiler_names)
-      compiler_paths = compiler_names.map { |name| find name }.reject &:nil?
+      compiler_names.map { |name| find name }.reject(&:nil?)
     end
 
     def find(name)
