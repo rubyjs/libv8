@@ -4,18 +4,15 @@ module Libv8
 
     module_function
 
-    def patches(*additional_directories)
-      Dir.glob(File.join 'patches', '*.patch')
-    end
-
-    def patch!(*additional_directories)
+    def patch!
       File.open(".applied_patches", File::RDWR|File::CREAT) do |f|
-        available_patches = patches
+        available_patches = Dir.glob(File.join(PATCH_DIRECTORY, '*.patch'))
         applied_patches = f.readlines.map(&:chomp)
 
         (available_patches - applied_patches).each do |patch|
           `patch -p1 -N < #{patch}`
           f.puts patch
+          puts "Applying #{patch}"
         end
       end
     end
