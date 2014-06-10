@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 $:.unshift File.expand_path("../lib", __FILE__)
 require "libv8/version"
 
@@ -18,7 +17,7 @@ Gem::Specification.new do |s|
 
   s.files  = `git ls-files`.split("\n")
   s.files += Dir.chdir("vendor/v8") do
-    `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/v8/#{f}"}
+    `git ls-files`.split("\n").reject {|f| f =~ /^out|^test|^benchmarks/}.map {|f| "vendor/v8/#{f}"}
   end
   s.files += Dir['vendor/v8/build/**/*']
   s.files += Dir.chdir("vendor/gyp") do
