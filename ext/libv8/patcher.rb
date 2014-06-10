@@ -4,44 +4,13 @@ module Libv8
 
     module_function
 
-    def patch_directories_for(compiler)
-      patch_directories = []
-
-      case
-      when compiler.target =~ /arm/
-        patch_directories << 'arm'
-      end
-
-      case compiler
-      when Compiler::GCC
-        patch_directories << 'gcc48' if compiler.version >= '4.8'
-      when Compiler::Clang
-        patch_directories << 'clang'
-        patch_directories << 'clang33' if compiler.version >= '3.3'
-      end
-
-      patch_directories
-    end
-
-    def patch_directories(*additional_directories)
-      absolute_paths = [PATCH_DIRECTORY]
-
-      additional_directories.each do |directory|
-        absolute_paths << File.join(PATCH_DIRECTORY, directory)
-      end
-
-      absolute_paths.uniq
-    end
-
     def patches(*additional_directories)
-      patch_directories(*additional_directories).map do |directory|
-        Dir.glob(File.join directory, '*.patch')
-      end.flatten.sort
+      Dir.glob(File.join 'patches', '*.patch')
     end
 
     def patch!(*additional_directories)
       File.open(".applied_patches", File::RDWR|File::CREAT) do |f|
-        available_patches = patches *additional_directories
+        available_patches = patches
         applied_patches = f.readlines.map(&:chomp)
 
         (available_patches - applied_patches).each do |patch|
