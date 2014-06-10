@@ -46,7 +46,8 @@ module Libv8
         patch!
         setup_build_deps!
         print_build_info
-        puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
+        puts 'Beginning compilation. This will take some time.'
+        puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags} 2>&1`
       end
       return $?.exitstatus
     end
