@@ -18,6 +18,7 @@ module Libv8
       when Compiler::Clang
         patch_directories << 'clang'
         patch_directories << 'clang33' if compiler.version >= '3.3'
+        patch_directories << 'clang51' if compiler.version >= '5.1'
       end
 
       patch_directories
