@@ -8,6 +8,7 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ree
+bundler_args: -j4
 script:
   - travis_wait bundle exec rake
 notifications:
