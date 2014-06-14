@@ -73,8 +73,8 @@ desc "clean up artifacts of the build"
 task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
-  sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
-  sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
+  sh "git submodule foreach git reset --hard"
+  sh "git submodule foreach git clean -df"
 end
 
 desc "build a binary on heroku (you must have vulcan configured for this)"
