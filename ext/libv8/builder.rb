@@ -67,7 +67,7 @@ module Libv8
     end
 
     def setup_build_deps!
-      `make dependencies`
+      `#{make} dependencies`
     end
 
     private
