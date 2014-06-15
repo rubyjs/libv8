@@ -36,7 +36,7 @@ module CompilerHelpers
 
   def stub_as_unavailable(command)
     stub_shell_command "which #{command} 2>&1", '', failure_status
-    stub_shell_command(/^#{command}/, '', failure_status)
+    stub_shell_command(/^#{Regexp.escape(command)}/, '', failure_status)
   end
 end
 
