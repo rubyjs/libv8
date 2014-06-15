@@ -1,5 +1,4 @@
-require 'mkmf'
-require 'open3'
+require 'rbconfig'
 require File.expand_path '../compiler/generic_compiler', __FILE__
 require File.expand_path '../compiler/gcc', __FILE__
 require File.expand_path '../compiler/clang', __FILE__
@@ -7,14 +6,25 @@ require File.expand_path '../compiler/apple_llvm', __FILE__
 
 module Libv8
   module Compiler
-    KNOWN_COMPILERS = [
-                       ::MakeMakefile::CONFIG['CXX'],
-                       'c++',
-                       'g++48', 'g++46', 'g++44', 'g++',
-                       'clang++',
-                      ].uniq
-
     module_function
+
+    def well_known_compilers
+      compilers = []
+
+      # The command Ruby was compiled with
+      compilers << RbConfig::CONFIG['CXX']
+
+      # The default system compiler
+      compilers << 'c++'
+
+      # FreeBSD GCC command names
+      compilers += ['g++48', 'g++46', 'g++44']
+
+      # Default compiler names
+      compilers << ['g++', 'clang++']
+
+      compilers.uniq
+    end
 
     def available_compilers(*compiler_names)
       available = compiler_names.select { |compiler_name| available? compiler_name }
