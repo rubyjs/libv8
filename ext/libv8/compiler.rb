@@ -19,24 +19,39 @@ module Libv8
     end
 
     def available_compilers(*compiler_names)
-      compiler_names.map { |name| find name }.reject(&:nil?)
+      available = compiler_names.select { |compiler_name| available? compiler_name }
+      available.map { |compiler_name| type_of(compiler_name).new compiler_name }
     end
 
-    def find(name)
-      return nil if name.empty?
-      path, _, status = Open3.capture3 "which #{name}"
-      path.chomp!
-      determine_type(path).new(path) if status.success?
-    end
-
-    def determine_type(compiler_path)
-      compiler_version = Open3.capture3("#{compiler_path} -v")[0..1].join
-
-      case compiler_version
+    def type_of(compiler_name)
+      case version_string_of(compiler_name)
       when /\bclang\b/i then Clang
       when /^gcc/i      then GCC
       else                   GenericCompiler
       end
+    end
+
+    def version_string_of(compiler_name)
+      command_result = execute_command "#{compiler_name} -v 2>&1"
+
+      unless command_result.status.success?
+        raise "Could not get version string of compiler #{compiler_name}"
+      end
+
+      command_result.output
+    end
+
+    def available?(command)
+      execute_command("which #{command} 2>&1").status.success?
+    end
+
+    def execute_command(command)
+      output = `#{command}`
+      status = $?
+      ExecutionResult.new output, status
+    end
+
+    class ExecutionResult < Struct.new(:output, :status)
     end
   end
 end
