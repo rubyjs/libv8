@@ -1,8 +1,8 @@
 module Libv8
   module Compiler
     class GenericCompiler
-      VERSION_REGEXP = /(\d+\.\d+(\.\d+)*)/
-      TARGET_REGEXP = /Target: ([a-z0-9\-_.]*)/
+      GENERIC_VERSION_REGEXP = /(\d+\.\d+(\.\d+)*)/
+      GENERIC_TARGET_REGEXP = /Target: ([a-z0-9\-_.]*)/
 
       def initialize(command)
         @command = command
@@ -17,12 +17,12 @@ module Libv8
       end
 
       def version
-        call('-v').output =~ VERSION_REGEXP
+        call('-v').output =~ version_regexp
         $1
       end
 
       def target
-        call('-v').output =~ TARGET_REGEXP
+        call('-v').output =~ target_regexp
         $1
       end
 
@@ -32,6 +32,16 @@ module Libv8
 
       def call(*arguments)
         Compiler::execute_command arguments.unshift(@command).push('2>&1').join(' ')
+      end
+
+      private
+
+      def version_regexp
+        GENERIC_VERSION_REGEXP
+      end
+
+      def target_regexp
+        GENERIC_TARGET_REGEXP
       end
     end
   end
