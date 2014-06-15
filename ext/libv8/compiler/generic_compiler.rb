@@ -17,12 +17,12 @@ module Libv8
       end
 
       def version
-        call('-v').output =~ version_regexp
+        version_string =~ version_regexp
         $1
       end
 
       def target
-        call('-v').output =~ target_regexp
+        version_string =~ target_regexp
         $1
       end
 
@@ -31,10 +31,18 @@ module Libv8
       end
 
       def call(*arguments)
-        Compiler::execute_command arguments.unshift(@command).push('2>&1').join(' ')
+        Compiler::execute_command arguments.unshift(@command).join(' ')
       end
 
       private
+
+      def version_string
+        begin
+          Compiler::version_string_of @command
+        rescue StandardError
+          nil
+        end
+      end
 
       def version_regexp
         GENERIC_VERSION_REGEXP
