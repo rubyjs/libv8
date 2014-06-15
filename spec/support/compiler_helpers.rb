@@ -16,16 +16,16 @@ module CompilerHelpers
   end
 
   def success_status
-    double success?: true
+    double :success? => true
   end
 
   def failure_status
-    double success?: false
+    double :success? => false
   end
 
   def stub_shell_command(command, output, status)
     allow(Libv8::Compiler).to receive(:execute_command).with(command) do
-      double output: output, status: status
+      double :output => output, :status => status
     end
   end
 
