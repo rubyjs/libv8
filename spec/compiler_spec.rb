@@ -4,17 +4,17 @@ require 'compiler'
 module Libv8
   describe Compiler do
     describe '::type_of' do
-      it 'returns a GCC class for GCC 4.9.0' do
+      it 'recognises correctly GCC' do
         stub_as_available 'c++', :gcc, '4.9.0'
         Compiler.available_compilers('c++').first.should be_a Compiler::GCC
       end
 
-      it 'returns a Clang class for Clang 3.4.1' do
+      it 'recognises correctly Clang' do
         stub_as_available 'c++', :clang, '3.4.1'
         Compiler.available_compilers('c++').first.should be_a Compiler::Clang
       end
 
-      it 'recognises Apple\'s LLVM' do
+      it 'recognises correctly Apple\'s LLVM' do
         stub_as_available 'c++', :apple_llvm, '5.1'
         Compiler.available_compilers('c++').first.should be_a Compiler::AppleLLVM
       end
