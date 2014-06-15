@@ -8,7 +8,7 @@ module Libv8
       end
 
       def compatible?
-        version > '4.3' and version < '5'
+        version > '4.3' unless version.nil?
       end
     end
   end
