@@ -13,6 +13,11 @@ module Libv8
         stub_as_available 'c++', :clang, '3.4.1'
         Compiler.available_compilers('c++').first.should be_a Compiler::Clang
       end
+
+      it 'recognises Apple\'s LLVM' do
+        stub_as_available 'c++', :apple_llvm, '5.1'
+        Compiler.available_compilers('c++').first.should be_a Compiler::AppleLLVM
+      end
     end
 
     describe '::available_compilers' do

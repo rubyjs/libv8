@@ -3,6 +3,7 @@ require 'open3'
 require File.expand_path '../compiler/generic_compiler', __FILE__
 require File.expand_path '../compiler/gcc', __FILE__
 require File.expand_path '../compiler/clang', __FILE__
+require File.expand_path '../compiler/apple_llvm', __FILE__
 
 module Libv8
   module Compiler
@@ -25,6 +26,7 @@ module Libv8
 
     def type_of(compiler_name)
       case version_string_of(compiler_name)
+      when /\bApple LLVM\b/ then AppleLLVM
       when /\bclang\b/i then Clang
       when /^gcc/i      then GCC
       else                   GenericCompiler

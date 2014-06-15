@@ -8,6 +8,9 @@ module CompilerHelpers
       "3.4.1" => %Q{clang version 3.4.1 (tags/RELEASE_34/dot1-final)\nTarget: x86_64-unknown-linux-gnu\nThread model: posix\nFound candidate GCC installation: /usr/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.0\nFound candidate GCC installation: /usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.0\nFound candidate GCC installation: /usr/lib/gcc/x86_64-unknown-linux-gnu/4.9.0\nFound candidate GCC installation: /usr/lib64/gcc/x86_64-unknown-linux-gnu/4.9.0\nSelected GCC installation: /usr/bin/../lib64/gcc/x86_64-unknown-linux-gnu/4.9.0\n},
       "3.10.0" => %Q{clang version 3.10.0 (tags/RELEASE_310/dot0-final)\nTarget: x86_64-unknown-linux-gnu\n},
       "3.0.0" => %Q{clang version 3.0.0 (tags/RELEASE_30/dot0-final)\nTarget: x86_64-unknown-linux-gnu\n}
+    },
+    :apple_llvm => {
+      '5.1' => %Q{Configured with: --prefix=/Applications/Xcode.app/Contents/Developer//usr --with-gxx-include-dir=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/usr/include/c++/4.2.1\nApple LLVM version 5.1 (clang-503.0.38) (based on LLVM 3.4svn)\nTarget: x86_64-apple-darwin14.0.0\nThread model: posix\n}
     }
   }
 
