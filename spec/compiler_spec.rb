@@ -1,11 +1,5 @@
-$:.unshift File.expand_path '../../ext/libv8', __FILE__
-
 require 'spec_helper'
 require 'compiler'
-
-RSpec.configure do |c|
-  c.include CompilerHelpers
-end
 
 module Libv8
   describe Compiler do
