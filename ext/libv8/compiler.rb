@@ -15,10 +15,6 @@ module Libv8
 
     module_function
 
-    def system_compilers
-      available_compilers(*Compiler::KNOWN_COMPILERS)
-    end
-
     def available_compilers(*compiler_names)
       available = compiler_names.select { |compiler_name| available? compiler_name }
       available.map { |compiler_name| type_of(compiler_name).new compiler_name }
@@ -26,7 +22,7 @@ module Libv8
 
     def type_of(compiler_name)
       case version_string_of(compiler_name)
-      when /\bApple LLVM\b/ then AppleLLVM
+      when /^Apple LLVM\b/ then AppleLLVM
       when /\bclang\b/i then Clang
       when /^gcc/i      then GCC
       else                   GenericCompiler

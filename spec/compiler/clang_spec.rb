@@ -23,16 +23,6 @@ module Libv8::Compiler
         it 'returns true' do
           stub_as_available 'c++', :clang, '3.4.1'
           subject.compatible?.should be_true
-
-          stub_as_available 'c++', :clang, '3.10.0'
-          subject.compatible?.should be_true
-        end
-      end
-
-      context 'when clang\'s version is < 3.1' do
-        it 'returns false' do
-          stub_as_available 'c++', :clang, '3.0.0'
-          subject.compatible?.should be_false
         end
       end
     end

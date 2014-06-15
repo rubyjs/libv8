@@ -7,11 +7,17 @@ module Libv8
       it 'recognises correctly GCC' do
         stub_as_available 'c++', :gcc, '4.9.0'
         Compiler.available_compilers('c++').first.should be_a Compiler::GCC
+
+        stub_as_available 'g++', :gcc, '4.2.1-freebsd'
+        Compiler.available_compilers('g++').first.should be_a Compiler::GCC
       end
 
       it 'recognises correctly Clang' do
         stub_as_available 'c++', :clang, '3.4.1'
         Compiler.available_compilers('c++').first.should be_a Compiler::Clang
+
+        stub_as_available 'freebsd-clang++', :clang, '3.3-freebsd'
+        Compiler.available_compilers('freebsd-clang++').first.should be_a Compiler::Clang
       end
 
       it 'recognises correctly Apple\'s LLVM' do
