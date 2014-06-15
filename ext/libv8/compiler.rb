@@ -8,10 +8,11 @@ require File.expand_path '../compiler/apple_llvm', __FILE__
 module Libv8
   module Compiler
     KNOWN_COMPILERS = [
+                       ::MakeMakefile::CONFIG['CXX'],
                        'c++',
                        'g++48', 'g++46', 'g++44', 'g++',
                        'clang++',
-                      ]
+                      ].uniq
 
     module_function
 
