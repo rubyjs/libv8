@@ -15,7 +15,8 @@ matrix:
     - rvm: 1.8.7
 bundler_args: -j4
 script:
-  - travis_wait bundle exec rake
+  - bundle exec rake spec build binary
+  - gem install pkg/*.gem
 notifications:
   recipients:
     - cowboyd@thefrontside.net
