@@ -50,13 +50,16 @@ task :binary => :compile do
   FileUtils.mv(package, 'pkg')
 end
 
+task :clean_submodules do
+  sh "git submodule --quiet foreach git reset --hard"
+  sh "git submodule --quiet foreach git clean -df"
+end
+
 desc "clean up artifacts of the build"
-task :clean do
+task :clean => [:clean_submodules] do
   sh "rm -rf pkg"
   sh "git clean -df"
-  sh "git submodule foreach git reset --hard"
-  sh "git submodule foreach git clean -df"
 end
 
 task :default => [:compile, :spec]
-task :build => [:clean]
+task :build => [:clean_submodules]
