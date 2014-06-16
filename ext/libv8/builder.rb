@@ -40,7 +40,7 @@ module Libv8
     end
 
     def build_libv8!
-      Dir.chdir('vendor/v8') do
+      Dir.chdir(File.expand_path('../../../vendor/v8', __FILE__)) do
         fail 'No compilers available' if @compiler.nil?
         setup_python!
         patch!
