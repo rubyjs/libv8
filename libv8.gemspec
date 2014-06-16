@@ -15,12 +15,12 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "libv8"
 
   s.files  = `git ls-files`.split("\n")
-  s.files += Dir.chdir("vendor/v8") do
-    `git ls-files`.split("\n").reject {|f| f =~ /^out|^test|^benchmarks/}.map {|f| "vendor/v8/#{f}"}
-  end
-  s.files += Dir['vendor/v8/build/**/*']
-  s.files += Dir.chdir("vendor/gyp") do
-    `git ls-files`.split("\n").map {|f| "vendor/gyp/#{f}"}
+
+  submodules = `git submodule --quiet foreach 'echo $path'`.split("\n").map(&:chomp)
+  submodules.each do |submodule|
+    s.files += Dir.chdir(submodule) do
+      `git ls-files`.split("\n").reject {|f| f =~ /^out|^test|^benchmarks/}.map {|f| "#{submodule}/#{f}"}
+    end
   end
 
   s.extensions = ["ext/libv8/extconf.rb"]
