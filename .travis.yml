@@ -1,8 +1,9 @@
 language: ruby
 rvm:
+  - 1.8.7
+  - 1.9.3
   - 2.0.0
   - 2.1.2
-  - 1.9.3
   - rbx-2
   - ree
 env:
@@ -11,6 +12,7 @@ env:
 matrix:
   allow_failures:
     - rvm: ree
+    - rvm: 1.8.7
 bundler_args: -j4
 script:
   - travis_wait bundle exec rake
