@@ -37,7 +37,7 @@ task :binary => :compile do
   gemspec.files += Dir['vendor/v8/include/*']
   gemspec.files += Dir['vendor/v8/out/**/*.a']
 
-  FileUtils.chmod 'a+r', gemspec.files
+  FileUtils.chmod 0644, gemspec.files
   FileUtils.mkdir_p 'pkg'
 
   package = if Gem::VERSION < '2.0.0'
