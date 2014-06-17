@@ -30,6 +30,9 @@ module Libv8
       # default.
       flags << "ARFLAGS.target=crs"
 
+      # Pass clang=1 to GYP as noted in wiki
+      # https://code.google.com/p/v8/wiki/BuildingWithGYP#Clang_+_make
+      flags << 'GYP_DEFINES="clang=1"' if @compiler.is_a? Compiler::Clang
       # Solaris / Smart OS requires additional -G flag to use with -fPIC
       flags << "CFLAGS=-G" if @compiler.target =~ /solaris/
 
