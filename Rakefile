@@ -52,13 +52,13 @@ end
 
 task :clean_submodules do
   sh "git submodule --quiet foreach git reset --hard"
-  sh "git submodule --quiet foreach git clean -df"
+  sh "git submodule --quiet foreach git clean -dxf"
 end
 
 desc "clean up artifacts of the build"
 task :clean => [:clean_submodules] do
   sh "rm -rf pkg"
-  sh "git clean -df"
+  sh "git clean -dxf"
 end
 
 task :default => [:compile, :spec]
