@@ -11,7 +11,7 @@ module Libv8
       when /^mips/           then 'mips'
       when /^amd64|^x86_64/  then 'x64'
       when /^i[3456]86/      then 'ia32'
-      else raise "Unsupported target: #{target}"
+      else raise "Unsupported target: #{Gem::Platform.local.cpu}"
       end
     end
   end
