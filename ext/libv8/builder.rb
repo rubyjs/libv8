@@ -22,12 +22,9 @@ module Libv8
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
       flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.4'
 
-      # Avoid compilation failures on the Raspberry Pi.
-      flags << "vfp2=off vfp3=off" if @compiler.target.include? "arm"
-
-      # FIXME: Determine when to activate this instead of leaving it on by
-      # default.
-      flags << "hardfp=on" if @compiler.target.include? "arm"
+      # Check which ARM features are available according to the compiler
+      # XXX: Needs testing
+      flags << "armtest=on" if @compiler.target.include? "arm"
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
