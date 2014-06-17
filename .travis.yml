@@ -13,6 +13,7 @@ matrix:
   include:
     - rvm: 2.1.2-clang
       env: CXX=clang++
+  fast_finish: true
 bundler_args: -j4
 script:
   - bundle exec rake spec build binary --trace
