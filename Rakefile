@@ -6,14 +6,14 @@ RSpec::Core::RakeTask.new(:spec)
 
 module Helpers
   module_function
-  def binary_gemspec(platform = RUBY_PLATFORM)
+  def binary_gemspec(platform = Gem::Platform.local)
     gemspec = eval(File.read('libv8.gemspec'))
-    gemspec.platform = Gem::Platform.new(platform)
+    gemspec.platform = platform
     gemspec
   end
 
-  def binary_gem_name
-    File.basename binary_gemspec.cache_file
+  def binary_gem_name(platform = Gem::Platform.local)
+    File.basename binary_gemspec(platform).cache_file
   end
 end
 
