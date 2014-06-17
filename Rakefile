@@ -2,12 +2,12 @@ require 'bundler/setup'
 require 'rspec/core/rake_task'
 
 Bundler::GemHelper.install_tasks
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new :spec
 
 module Helpers
   module_function
   def binary_gemspec(platform = Gem::Platform.local)
-    gemspec = eval(File.read('libv8.gemspec'))
+    gemspec = eval(File.read 'libv8.gemspec')
     gemspec.platform = platform
     gemspec
   end
@@ -44,10 +44,10 @@ task :binary => :compile do
     Gem::Builder.new(gemspec).build
   else
     require 'rubygems/package'
-    Gem::Package.build(gemspec)
+    Gem::Package.build gemspec
   end
 
-  FileUtils.mv(package, 'pkg')
+  FileUtils.mv package, 'pkg'
 end
 
 task :clean_submodules do
