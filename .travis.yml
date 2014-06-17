@@ -16,7 +16,7 @@ matrix:
 bundler_args: -j4
 script:
   - bundle exec rake spec build binary
-  - gem install pkg/*.gem
+  - travis_wait gem install pkg/*.gem
 notifications:
   recipients:
     - cowboyd@thefrontside.net
