@@ -25,7 +25,7 @@ module Libv8
       flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.4'
 
       # Avoid compilation failures on the Raspberry Pi.
-      flags << "vfp2=off vfp3=on" if @compiler.target.include? "arm"
+      flags << "vfp2=off vfp3=off" if @compiler.target.include? "arm"
 
       # FIXME: Determine when to activate this instead of leaving it on by
       # default.
