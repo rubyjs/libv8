@@ -1,3 +1,3 @@
 module Libv8
-  VERSION = "3.27.34.0"
+  VERSION = "3.29.27.0"
 end
