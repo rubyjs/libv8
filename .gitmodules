@@ -4,6 +4,3 @@
 [submodule "vendor/gyp"]
 	path = vendor/gyp
 	url = https://git.chromium.org/git/external/gyp.git
-[submodule "vendor/buildtools"]
-	path = vendor/buildtools
-	url = https://chromium.googlesource.com/chromium/buildtools.git
