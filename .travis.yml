@@ -16,8 +16,8 @@ matrix:
   fast_finish: true
 bundler_args: -j4
 script:
-  - bundle exec rake spec build binary --trace
-  - travis_wait gem install pkg/*.gem
+  - MAKEFLAGS+=-j8 bundle exec rake spec build binary --trace
+  - MAKEFLAGS+=-j8 travis_wait gem install pkg/*.gem
 notifications:
   recipients:
     - cowboyd@thefrontside.net
