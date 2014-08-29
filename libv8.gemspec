@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   submodules = `git submodule --quiet foreach 'echo $path'`.split("\n").map(&:chomp)
   submodules.each do |submodule|
     s.files += Dir.chdir(submodule) do
-      `git ls-files`.split("\n").reject {|f| f =~ /^out|^test|^benchmarks/}.map {|f| "#{submodule}/#{f}"}
+      `git ls-files`.split("\n").reject {|f| f =~ /^test/}.map {|f| "#{submodule}/#{f}"}
     end
   end
 
