@@ -7,7 +7,7 @@ index 125c5bf..71641a3 100644
              'cflags': [ '-fvisibility=hidden' ],
            }],
 -          [ 'component=="shared_library"', {
-+          [ 'component=="shared_library" or component=="static_library" and v8_target_arch=="x64"', {
++          [ 'component=="shared_library" or component=="static_library" and v8_target_arch=="x64" or v8_target_arch=="arm"', {
              'cflags': [ '-fPIC', ],
            }],
          ],
