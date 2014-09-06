@@ -1,30 +1,36 @@
-diff --git a/src/platform-freebsd.cc b/src/platform-freebsd.cc
-index a1a0739..f21e254 100644
---- a/src/platform-freebsd.cc
-+++ b/src/platform-freebsd.cc
-@@ -121,10 +121,10 @@ static unsigned StringToLong(char* buffer) {
- 
- 
- std::vector<OS::SharedLibraryAddress> OS::GetSharedLibraryAddresses() {
--  std::vector<SharedLibraryAddress> result;
-+  std::vector<SharedLibraryAddress> result2;
-   static const int MAP_LENGTH = 1024;
-   int fd = open("/proc/self/maps", O_RDONLY);
--  if (fd < 0) return result;
-+  if (fd < 0) return result2;
-   while (true) {
-     char addr_buffer[11];
+diff --git a/src/base/platform/platform-freebsd.cc b/src/base/platform/platform-freebsd.cc
+index 09d7ca7..98cd4de 100644
+--- a/src/base/platform/platform-freebsd.cc
++++ b/src/base/platform/platform-freebsd.cc
+@@ -131,14 +131,14 @@ std::vector<OS::SharedLibraryAddress> OS::GetSharedLibraryAddresses() {
      addr_buffer[0] = '0';
-@@ -155,10 +155,10 @@ std::vector<OS::SharedLibraryAddress> OS::GetSharedLibraryAddresses() {
-     // There may be no filename in this line.  Skip to next.
-     if (start_of_path == NULL) continue;
+     addr_buffer[1] = 'x';
+     addr_buffer[10] = 0;
+-    int result = read(fd, addr_buffer + 2, 8);
+-    if (result < 8) break;
++    int result2 = read(fd, addr_buffer + 2, 8);
++    if (result2 < 8) break;
+     unsigned start = StringToLong(addr_buffer);
+-    result = read(fd, addr_buffer + 2, 1);
+-    if (result < 1) break;
++    result2 = read(fd, addr_buffer + 2, 1);
++    if (result2 < 1) break;
+     if (addr_buffer[2] != '-') break;
+-    result = read(fd, addr_buffer + 2, 8);
+-    if (result < 8) break;
++    result2 = read(fd, addr_buffer + 2, 8);
++    if (result2 < 8) break;
+     unsigned end = StringToLong(addr_buffer);
+     char buffer[MAP_LENGTH];
+     int bytes_read = -1;
+@@ -146,8 +146,8 @@ std::vector<OS::SharedLibraryAddress> OS::GetSharedLibraryAddresses() {
+       bytes_read++;
+       if (bytes_read >= MAP_LENGTH - 1)
+         break;
+-      result = read(fd, buffer + bytes_read, 1);
+-      if (result < 1) break;
++      result2 = read(fd, buffer + bytes_read, 1);
++      if (result2 < 1) break;
+     } while (buffer[bytes_read] != '\n');
      buffer[bytes_read] = 0;
--    result.push_back(SharedLibraryAddress(start_of_path, start, end));
-+    result2.push_back(SharedLibraryAddress(start_of_path, start, end));
-   }
-   close(fd);
--  return result;
-+  return result2;
- }
- 
- 
+     // Ignore mappings that are not executable.
