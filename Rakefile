@@ -53,6 +53,7 @@ end
 task :clean_submodules do
   sh "git submodule --quiet foreach git reset --hard"
   sh "git submodule --quiet foreach git clean -dxf"
+  sh "git submodule update --init"
 end
 
 desc "clean up artifacts of the build"
