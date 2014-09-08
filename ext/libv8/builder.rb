@@ -38,6 +38,10 @@ module Libv8
       # Solaris / Smart OS requires additional -G flag to use with -fPIC
       flags << "CFLAGS=-G" if @compiler.target =~ /solaris/
 
+      # Disable werror as this version of v8 is getting difficult to maintain
+      # with it on
+      flags << 'werror=no'
+
       "#{libv8_arch}.#{profile} #{flags.join ' '}"
     end
 
