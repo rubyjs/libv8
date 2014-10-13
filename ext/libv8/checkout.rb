@@ -36,7 +36,7 @@ module Libv8
     end
 
     def git?(dir)
-      File.exists?(File.join(dir, '.git'))
+      File.exist?(File.join(dir, '.git'))
     end
 
     def check_git_svn!

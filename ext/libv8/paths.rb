@@ -19,7 +19,7 @@ module Libv8
 
     def libv8_object(name)
       filename = "#{libv8_profile}/libv8_#{name}.#{config['LIBEXT']}"
-      unless File.exists? filename
+      unless File.exist? filename
         filename = "#{libv8_profile}/obj.target/tools/gyp/libv8_#{name}.#{config['LIBEXT']}"
       end
       return filename
@@ -28,7 +28,7 @@ module Libv8
     def libv8_profile
       base = "#{vendored_source_path}/out/#{Libv8::Arch.libv8_arch}"
       debug = "#{base}.debug"
-      File.exists?(debug) ? debug : "#{base}.release"
+      File.exist?(debug) ? debug : "#{base}.release"
     end
 
     def vendored_source_path
