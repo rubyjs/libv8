@@ -18,16 +18,11 @@ opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following
 platforms.
 
-* x86_64-darwin10.7.0
-* x86_64-darwin-10
-* x86_64-darwin-11
-* x86_64-darwin-12
 * x86_64-darwin-13
+* x86_64-darwin-14
 * x86_64-linux
 * x86-linux
-* x86_64-freebsd-9
 * x86_64-freebsd-10
-* x86_64-solaris-2.11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -80,10 +75,9 @@ platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
-    git clone git://github.com/cowboyd/libv8.git
+    git clone --recursive git://github.com/cowboyd/libv8.git
     cd libv8
     bundle install
-    bundle exec rake checkout
     bundle exec rake compile
 
 ### Bring your own V8
