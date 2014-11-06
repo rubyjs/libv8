@@ -1,31 +1,28 @@
 diff --git a/Makefile b/Makefile
-index 96d7a7a..ddcb564 100644
+index 3b02f52..35405f9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -231,7 +231,7 @@ NACL_ARCHES = nacl_ia32 nacl_x64
+@@ -236,7 +236,7 @@ NACL_ARCHES = nacl_ia32 nacl_x64
  # List of files that trigger Makefile regeneration:
  GYPFILES = build/all.gyp build/features.gypi build/standalone.gypi \
             build/toolchain.gypi samples/samples.gyp src/d8.gyp \
--           test/cctest/cctest.gyp tools/gyp/v8.gyp
+-           test/cctest/cctest.gyp test/unittests/unittests.gyp tools/gyp/v8.gyp
 +           tools/gyp/v8.gyp
  
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/build/all.gyp b/build/all.gyp
-index 1e420fa..7775fe5 100644
+index 4aeb507..96820a0 100644
 --- a/build/all.gyp
 +++ b/build/all.gyp
-@@ -8,13 +8,7 @@
+@@ -8,10 +8,7 @@
        'target_name': 'All',
        'type': 'none',
        'dependencies': [
 -        '../samples/samples.gyp:*',
--        '../src/base/base.gyp:base-unittests',
--        '../src/compiler/compiler.gyp:compiler-unittests',
          '../src/d8.gyp:d8',
--        '../src/heap/heap.gyp:heap-unittests',
--        '../src/libplatform/libplatform.gyp:libplatform-unittests',
 -        '../test/cctest/cctest.gyp:*',
+-        '../test/unittests/unittests.gyp:*',
        ],
        'conditions': [
          ['component!="shared_library"', {

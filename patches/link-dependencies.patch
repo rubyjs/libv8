@@ -1,8 +1,8 @@
 diff --git a/Makefile b/Makefile
-index 96d7a7a..6d54790 100644
+index 3b02f52..7bd3381 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -472,21 +472,7 @@ gtags.clean:
+@@ -486,21 +486,7 @@ gtags.clean:
  # "dependencies" includes also dependencies required for development.
  # Remember to keep these in sync with the DEPS file.
  builddeps:

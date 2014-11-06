@@ -1,8 +1,8 @@
 diff --git a/build/standalone.gypi b/build/standalone.gypi
-index b09122b..6723f1b 100644
+index 47b2763..0d86990 100644
 --- a/build/standalone.gypi
 +++ b/build/standalone.gypi
-@@ -233,7 +233,7 @@
+@@ -241,7 +241,7 @@
            [ 'visibility=="hidden" and v8_enable_backtrace==0', {
              'cflags': [ '-fvisibility=hidden' ],
            }],
