@@ -28,5 +28,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10'
   s.add_development_dependency 'rake-compiler', '~> 0'
-  s.add_development_dependency 'rspec', '~> 2.14', '< 2.14.99'
+  s.add_development_dependency 'rspec', '~> 3'
 end
