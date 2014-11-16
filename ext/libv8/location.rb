@@ -33,7 +33,7 @@ module Libv8
 
       def verify_installation!
         Libv8::Paths.object_paths.each do |p|
-          fail ArchiveNotFound, p unless File.exists? p
+          fail ArchiveNotFound, p unless File.exist? p
         end
       end
 
