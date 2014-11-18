@@ -1,8 +1,8 @@
 diff --git a/Makefile b/Makefile
-index 3b02f52..35405f9 100644
+index d04d9ef..bd60399 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -236,7 +236,7 @@ NACL_ARCHES = nacl_ia32 nacl_x64
+@@ -240,7 +240,7 @@ NACL_ARCHES = nacl_ia32 nacl_x64
  # List of files that trigger Makefile regeneration:
  GYPFILES = build/all.gyp build/features.gypi build/standalone.gypi \
             build/toolchain.gypi samples/samples.gyp src/d8.gyp \
