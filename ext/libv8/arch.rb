@@ -1,9 +1,9 @@
-require 'rbconfig'
 require 'rubygems'
 
 module Libv8
   module Arch
     module_function
+
     def libv8_arch
       case Gem::Platform.local.cpu
       when /^arm$/          then 'arm'
