@@ -31,7 +31,7 @@ module Libv8
       end
 
       def call(*arguments)
-        Open3.capture3 arguments.unshift('LC_ALL=en', @path).join(' ')
+        Open3.capture3 arguments.unshift('env LC_ALL=en', @path).join(' ')
       end
     end
   end
