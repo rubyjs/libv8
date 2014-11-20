@@ -77,12 +77,5 @@ task :clean do
   sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
 end
 
-desc "build a binary on heroku (you must have vulcan configured for this)"
-task :vulcan => directory("tmp/vulcan") do
-  Dir.chdir('tmp/vulcan') do
-    sh "vulcan build -v -c 'LANG=en_US.UTF-8 export BIN=/`pwd`/bin && export GEM=$BIN/gem && curl https://s3.amazonaws.com/heroku-buildpack-ruby/ruby-1.9.3.tgz > ruby-1.9.3.tgz && tar xf ruby-1.9.3.tgz && cd /tmp && $GEM fetch libv8 --platform=ruby --version=#{Libv8::VERSION} && $GEM unpack libv8*.gem && $GEM install bundler -n $BIN --no-ri --no-rdoc && cd libv8-#{Libv8::VERSION} && $BIN/bundle && $BIN/bundle exec rake binary' -p /tmp/libv8-#{Libv8::VERSION}"
-  end
-end
-
 task :default => [:checkout, :compile, :spec]
 task :build => [:clean, :checkout]
