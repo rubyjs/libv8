@@ -6,11 +6,11 @@ module Libv8
     module_function
 
     def include_paths
-      ["#{vendored_source_path}/include"]
+      [vendored_source_path]
     end
 
     def object_paths
-      [libv8_object(:base), libv8_object(:snapshot)]
+      [libv8_object(:base), libv8_object(:libplatform), libv8_object(:libbase), libv8_object(:snapshot)]
     end
 
     def config

@@ -48,6 +48,7 @@ module Libv8
       def configure(context = MkmfContext.new)
         context.send(:dir_config, 'v8')
         context.send(:find_header, 'v8.h') or fail NotFoundError
+        context.send(:find_header, 'libplatform/libplatform.h') or fail NotFoundError
       end
 
       class NotFoundError < StandardError
