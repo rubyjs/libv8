@@ -12,16 +12,28 @@ describe "libv8 locations" do
     describe "configuring a compliation context with it" do
       before do
         @context.stub(:find_header) {true}
+        @context.stub(:have_library) {true}
         @location.configure @context
       end
       it "adds the include path to the front of the include flags" do
         @context.should have_received(:dir_config).with('v8').at_least(:once)
         @context.should have_received(:find_header).with('v8.h').at_least(:once)
+        @context.should have_received(:have_library).with('v8').at_least(:once)
+      end
+    end
+    describe "when the v8 library cannot be found" do
+      before do
+        @context.stub(:find_header) {true}
+        @context.stub(:have_library) {false}
+      end
+      it "raises a NotFoundError" do
+        expect {@location.configure @context}.to raise_error Libv8::Location::System::NotFoundError
       end
     end
     describe "when the v8.h header cannot be found" do
       before do
         @context.stub(:find_header) {false}
+        @context.stub(:have_library) {true}
       end
       it "raises a NotFoundError" do
         expect {@location.configure @context}.to raise_error Libv8::Location::System::NotFoundError
