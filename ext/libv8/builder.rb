@@ -17,12 +17,11 @@ module Libv8
     end
 
     def make_target
+      profile = enable_config('debug') ? 'debug' : 'release'
       "#{libv8_arch}.#{profile}"
     end
     
     def make_flags(*flags)
-      profile = enable_config('debug') ? 'debug' : 'release'
-
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
