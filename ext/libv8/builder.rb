@@ -61,8 +61,8 @@ module Libv8
         when /mingw/
           # use a script that will fix the paths in the generated Makefiles
           # don't use make_flags otherwise it will trigger a rebuild of the Makefiles
-          `env CXX=#{@compiler} LINK=#{@compiler} bash #{PATCH_DIRECTORY}/mingw-generate-makefiles.sh`
-          puts `env CXX=#{@compiler} LINK=#{@compiler} make #{make_target}`
+          system "env CXX=#{@compiler} LINK=#{@compiler} bash #{PATCH_DIRECTORY}/mingw-generate-makefiles.sh"
+          system "env CXX=#{@compiler} LINK=#{@compiler} make #{make_target}"
           
         else
           puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
