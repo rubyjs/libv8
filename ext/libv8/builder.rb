@@ -16,9 +16,12 @@ module Libv8
       @compiler = choose_compiler
     end
 
-    def make_flags(*flags)
+    def make_target
       profile = enable_config('debug') ? 'debug' : 'release'
-
+      "#{libv8_arch}.#{profile}"
+    end
+    
+    def make_flags(*flags)
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
@@ -42,7 +45,7 @@ module Libv8
       # with it on
       flags << 'werror=no'
 
-      "#{libv8_arch}.#{profile} #{flags.join ' '}"
+      "#{make_target} #{flags.join ' '}"
     end
 
     def build_libv8!
@@ -53,7 +56,17 @@ module Libv8
         setup_build_deps!
         patch! *patch_directories_for(@compiler)
         print_build_info
-        puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
+
+        case RUBY_PLATFORM
+        when /mingw/
+          # use a script that will fix the paths in the generated Makefiles
+          # don't use make_flags otherwise it will trigger a rebuild of the Makefiles
+          system "env CXX=#{@compiler} LINK=#{@compiler} bash #{PATCH_DIRECTORY}/mingw-generate-makefiles.sh"
+          system "env CXX=#{@compiler} LINK=#{@compiler} make #{make_target}"
+          
+        else
+          puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
+        end
       end
       return $?.exitstatus
     end
@@ -96,8 +109,8 @@ module Libv8
     end
 
     def python_version
-      if system 'which python 2>&1 > /dev/null'
-        `python -c 'import platform; print(platform.python_version())'`.chomp
+      if `which python` =~ /python/
+        `python -c "import platform; print(platform.python_version())"`.chomp
       else
         "not available"
       end

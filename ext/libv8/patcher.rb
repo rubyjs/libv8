@@ -47,6 +47,7 @@ module Libv8
 
         (available_patches - applied_patches).each do |patch|
           `patch -p1 -N < #{patch}`
+          fail 'failed to apply patch' unless $?.success?
           f.puts patch
         end
       end

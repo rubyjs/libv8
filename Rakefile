@@ -21,7 +21,7 @@ task :checkout do
 end
 
 desc "compile v8 via the ruby extension mechanism"
-task :compile do
+task :compile => :devkit do
   sh "ruby ext/libv8/extconf.rb"
 end
 
@@ -75,6 +75,16 @@ task :clean do
   sh "git clean -df"
   sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
   sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
+end
+
+task :devkit do
+  begin
+    if RUBY_PLATFORM =~ /mingw/
+      require "devkit"
+    end
+  rescue LoadError => e
+    abort "Failed to activate RubyInstaller's DevKit required for compilation."
+  end
 end
 
 task :default => [:checkout, :compile, :spec]
