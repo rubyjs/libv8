@@ -18,7 +18,6 @@ environment:
 # scripts that run after cloning repository
 install:
   - set PATH=C:\Ruby%ruby_version%\bin;%PATH%
-  - C:\Ruby%ruby_version%\DevKit\devkitvars.bat
   - git submodule update --init
   - ruby --version
   - gem --version
