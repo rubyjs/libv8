@@ -1,4 +1,5 @@
 require 'rbconfig'
+require 'shellwords'
 require File.expand_path '../arch', __FILE__
 
 module Libv8
@@ -6,11 +7,13 @@ module Libv8
     module_function
 
     def include_paths
-      ["#{vendored_source_path}/include"]
+      [Shellwords.escape("#{vendored_source_path}/include")]
     end
 
     def object_paths
-      [libv8_object(:base), libv8_object(:snapshot)]
+      [libv8_object(:base), libv8_object(:snapshot)].map do |path|
+        Shellwords.escape path
+      end
     end
 
     def config
