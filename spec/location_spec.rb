@@ -54,17 +54,17 @@ describe "libv8 locations" do
       @context.stub(:incflags) {@incflags ||= "-I/usr/include -I/usr/local/include"}
       @context.stub(:ldflags) {@ldflags ||= "-lobjc -lpthread"}
 
-      Libv8::Paths.stub(:include_paths) {["/frp/v8/include"]}
-      Libv8::Paths.stub(:object_paths) {["/frp/v8/obj/libv8_base.a", "/frp/v8/obj/libv8_snapshot.a"]}
+      Libv8::Paths.stub(:vendored_source_path) {"/foo bar/v8"}
+      Libv8::Arch.stub(:libv8_arch) {'x64'}
       @location.configure @context
     end
 
     it "prepends its own incflags before any pre-existing ones" do
-      @context.incflags.should eql "-I/frp/v8/include -I/usr/include -I/usr/local/include"
+      @context.incflags.should eql "-I/foo\\ bar/v8/include -I/usr/include -I/usr/local/include"
     end
 
     it "prepends the locations of any libv8 objects on the the ldflags" do
-      @context.ldflags.should eql "/frp/v8/obj/libv8_base.a /frp/v8/obj/libv8_snapshot.a -lobjc -lpthread"
+      @context.ldflags.should eql "/foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_base.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_snapshot.a -lobjc -lpthread"
     end
   end
 end
