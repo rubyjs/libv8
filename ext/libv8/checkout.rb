@@ -31,7 +31,7 @@ module Libv8
         # --git-dir is needed for older versions of git and git-svn
         `git --git-dir=../../.git/modules/vendor/gyp/ svn init #{GYP_SVN} -Ttrunk`
         `git config --replace-all svn-remote.svn.fetch trunk:refs/remotes/origin/master`
-        svn_rev = `git --git-dir=../../.git/modules/vendor/gyp/ svn find-rev r#{rev} | tail -n 1`
+        svn_rev = `git --git-dir=../../.git/modules/vendor/gyp/ svn find-rev r#{rev} | tail -n 1`.chomp
         `git checkout #{svn_rev} -f`
       end
     end
@@ -43,7 +43,7 @@ module Libv8
     def check_git_svn!
       # msysgit provides git svn
       return if RUBY_PLATFORM =~ /mingw/
-    
+
       unless system 'git help svn 2>&1 > /dev/null'
         fail "git-svn not installed!\nPlease install git-svn."
       end

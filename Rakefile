@@ -74,7 +74,11 @@ task :clean do
   sh "rm -rf pkg"
   sh "git clean -df"
   sh "cd #{V8_Source} && git checkout -f && git clean -dxf"
-  sh "cd #{GYP_Source} && git checkout -f && git clean -dxf"
+  if Dir.chdir GYP_Source
+    sh "git checkout -f"
+    puts "git clean -dxf"
+    `git clean -dxf`
+  end
 end
 
 task :devkit do
