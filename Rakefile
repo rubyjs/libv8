@@ -92,7 +92,7 @@ task :devkit do
 end
 
 namespace :build do
-  ['x86_64-linux'].each do |arch|
+  ['x86_64-linux', 'x86-linux'].each do |arch|
     desc "build binary gem for #{arch}"
     task arch do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
