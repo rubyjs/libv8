@@ -99,10 +99,12 @@ module Libv8
       fetch = File.expand_path('../../../vendor/depot_tools/fetch', __FILE__)
       gclient = File.expand_path('../../../vendor/depot_tools/gclient', __FILE__)
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        `#{fetch} v8`
+        system "#{fetch} v8" or fail "unable to fetch v8 source"
         Dir.chdir('v8') do
-          `git checkout #{source_version}`
-          `#{gclient} sync`
+          unless system "git checkout #{source_version}"
+            fail "unable to checkout source for v8 #{source_version}"
+          end
+          system "#{gclient} sync" or fail "could not sync v8 build dependencies"
         end
       end
     end
