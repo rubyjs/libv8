@@ -96,15 +96,14 @@ module Libv8
     # https://chromium.googlesource.com/v8/v8.git#Getting-the-Code
     #
     def setup_build_deps!
-      fetch = File.expand_path('../../../vendor/depot_tools/fetch', __FILE__)
-      gclient = File.expand_path('../../../vendor/depot_tools/gclient', __FILE__)
+      ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        system "#{fetch} v8" or fail "unable to fetch v8 source"
+        system "fetch v8" or fail "unable to fetch v8 source"
         Dir.chdir('v8') do
           unless system "git checkout #{source_version}"
             fail "unable to checkout source for v8 #{source_version}"
           end
-          system "#{gclient} sync" or fail "could not sync v8 build dependencies"
+          system "gclient sync" or fail "could not sync v8 build dependencies"
         end
       end
     end
