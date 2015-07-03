@@ -1,4 +1,8 @@
+unless $:.include? File.expand_path("../../../lib", __FILE__)
+  $:.unshift File.expand_path("../../../lib", __FILE__)
+end
 require 'mkmf'
+require 'libv8/version'
 require File.expand_path '../compiler', __FILE__
 require File.expand_path '../arch', __FILE__
 require File.expand_path '../make', __FILE__
@@ -51,10 +55,10 @@ module Libv8
     end
 
     def build_libv8!
+      setup_python!
+      setup_build_deps!
       Dir.chdir(File.expand_path('../../../vendor/v8', __FILE__)) do
         fail 'No compilers available' if @compiler.nil?
-        setup_python!
-        setup_build_deps!
         patch!
         print_build_info
         puts 'Beginning compilation. This will take some time.'
@@ -77,9 +81,30 @@ module Libv8
       end
     end
 
+    ##
+    # The release tag to checkout. If this is version 4.5.95.0 of the libv8 gem,
+    # then this will be 4.5.95
+    #
+    def source_version
+      Libv8::VERSION.gsub(/\.\d+$/, '')
+    end
+
+    ##
+    # Checkout all of the V8 source and its dependencies using the
+    # chromium depot tools.
+    #
+    # https://chromium.googlesource.com/v8/v8.git#Getting-the-Code
+    #
     def setup_build_deps!
+      fetch = File.expand_path('../../../vendor/depot_tools/fetch', __FILE__)
       gclient = File.expand_path('../../../vendor/depot_tools/gclient', __FILE__)
-      `#{gclient} sync`
+      Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
+        `#{fetch} v8`
+        Dir.chdir('v8') do
+          `git checkout #{source_version}`
+          `#{gclient} sync`
+        end
+      end
     end
 
     private
