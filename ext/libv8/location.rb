@@ -33,7 +33,7 @@ module Libv8
 
       def verify_installation!
         Libv8::Paths.object_paths.each do |p|
-          fail ArchiveNotFound, p unless File.exists? p
+          fail ArchiveNotFound, p unless File.exist? p
         end
       end
 
@@ -48,6 +48,7 @@ module Libv8
       def configure(context = MkmfContext.new)
         context.send(:dir_config, 'v8')
         context.send(:find_header, 'v8.h') or fail NotFoundError
+        context.send(:have_library, 'v8') or fail NotFoundError
       end
 
       class NotFoundError < StandardError

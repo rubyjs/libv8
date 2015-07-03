@@ -14,9 +14,12 @@ module Libv8
       @compiler = choose_compiler
     end
 
-    def make_flags(*flags)
+    def make_target
       profile = enable_config('debug') ? 'debug' : 'release'
+      "#{libv8_arch}.#{profile}"
+    end
 
+    def make_flags(*flags)
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
@@ -40,7 +43,11 @@ module Libv8
       # Solaris / Smart OS requires additional -G flag to use with -fPIC
       flags << "CFLAGS=-G" if @compiler.target =~ /solaris/
 
-      "#{libv8_arch}.#{profile} #{flags.join ' '}"
+      # Disable werror as this version of v8 is getting difficult to maintain
+      # with it on
+      flags << 'werror=no'
+
+      "#{make_target} #{flags.join ' '}"
     end
 
     def build_libv8!
@@ -91,8 +98,8 @@ module Libv8
     end
 
     def python_version
-      if system 'which python 2>&1 > /dev/null'
-        `python -c 'import platform; print(platform.python_version())'`.chomp
+      if `which python` =~ /python/
+        `python -c "import platform; print(platform.python_version())"`.chomp
       else
         "not available"
       end

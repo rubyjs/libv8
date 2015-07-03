@@ -18,7 +18,7 @@ module Helpers
 end
 
 desc "compile v8 via the ruby extension mechanism"
-task :compile do
+task :compile  do
   sh "ruby ext/libv8/extconf.rb"
 end
 
@@ -48,6 +48,22 @@ task :binary => :compile do
   end
 
   FileUtils.mv package, 'pkg'
+end
+
+namespace :build do
+  ['x86_64-linux', 'x86-linux'].each do |arch|
+    desc "build binary gem for #{arch}"
+    task arch do
+      arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
+      Dir.chdir(arch_dir) do
+        sh "vagrant up"
+        sh "vagrant ssh -c 'cd /vagrant && rm -rf libv8 && git clone /libv8/.git libv8'"
+        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle install --path vendor/bundle'"
+        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle exec rake checkout binary'"
+        sh "vagrant ssh -c 'cp /vagrant/libv8/pkg/*.gem /vagrant'"
+      end
+    end
+  end
 end
 
 task :clean_submodules do
