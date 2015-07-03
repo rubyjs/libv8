@@ -1,25 +1,27 @@
 diff --git a/Makefile b/Makefile
-index f49be61..89f0d47 100644
+index 9761265..80169b2 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -227,7 +227,7 @@ NACL_ARCHES = nacl_ia32 nacl_x64
- # List of files that trigger Makefile regeneration:
- GYPFILES = build/all.gyp build/features.gypi build/standalone.gypi \
-            build/toolchain.gypi samples/samples.gyp src/d8.gyp \
--           test/cctest/cctest.gyp tools/gyp/v8.gyp
-+           tools/gyp/v8.gyp
-
- # If vtunejit=on, the v8vtune.gyp will be appended.
- ifeq ($(vtunejit), on)
+@@ -248,8 +248,6 @@ NACL_ARCHES = nacl_ia32 nacl_x64
+ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+ 	   build/shim_headers.gypi build/features.gypi build/standalone.gypi \
+ 	   build/toolchain.gypi build/all.gyp build/mac/asan.gyp \
+-	   test/cctest/cctest.gyp \
+-	   test/unittests/unittests.gyp tools/gyp/v8.gyp \
+ 	   tools/parser-shell.gyp testing/gmock.gyp testing/gtest.gyp \
+ 	   buildtools/third_party/libc++abi/libc++abi.gyp \
+ 	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
 diff --git a/build/all.gyp b/build/all.gyp
-index 3860379..176b60f 100644
+index 4aeb507..1ff2c7a 100644
 --- a/build/all.gyp
 +++ b/build/all.gyp
-@@ -10,7 +10,6 @@
+@@ -10,8 +10,6 @@
        'dependencies': [
          '../samples/samples.gyp:*',
          '../src/d8.gyp:d8',
 -        '../test/cctest/cctest.gyp:*',
+-        '../test/unittests/unittests.gyp:*',
        ],
        'conditions': [
          ['component!="shared_library"', {
+

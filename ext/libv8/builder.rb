@@ -54,8 +54,8 @@ module Libv8
       Dir.chdir(File.expand_path('../../../vendor/v8', __FILE__)) do
         fail 'No compilers available' if @compiler.nil?
         setup_python!
-        patch!
         setup_build_deps!
+        patch!
         print_build_info
         puts 'Beginning compilation. This will take some time.'
         system "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
@@ -78,7 +78,8 @@ module Libv8
     end
 
     def setup_build_deps!
-      `#{make} dependencies`
+      gclient = File.expand_path('../../../vendor/depot_tools/gclient', __FILE__)
+      `#{gclient} sync`
     end
 
     private
