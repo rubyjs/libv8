@@ -5,11 +5,6 @@ rvm:
   - 2.0.0
   - 1.9.3
   - rbx-2
-matrix:
-  include:
-    - rvm: 2.1.2-clang
-      env: CXX=clang++
-  fast_finish: true
 bundler_args: -j4
 script:
   - bundle exec rake spec build binary --trace
@@ -19,3 +14,4 @@ notifications:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
 cache: bundler
+env: CXX=clang++
