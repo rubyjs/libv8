@@ -57,9 +57,9 @@ namespace :build do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
       Dir.chdir(arch_dir) do
         sh "vagrant up"
-        sh "vagrant ssh -c 'cd /vagrant && rm -rf libv8 && git clone /libv8/.git libv8'"
+        sh "vagrant ssh -c 'cd /vagrant && rm -rf libv8 && git clone --recursive /libv8/.git libv8'"
         sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle exec rake checkout binary'"
+        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle exec rake binary'"
         sh "vagrant ssh -c 'cp /vagrant/libv8/pkg/*.gem /vagrant'"
       end
     end
