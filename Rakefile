@@ -69,12 +69,12 @@ end
 task :clean_submodules do
   sh "git submodule --quiet foreach git reset --hard"
   sh "git submodule --quiet foreach git clean -dxf"
+  sh "git submodule update --init"
 end
 
 desc "clean up artifacts of the build"
 task :clean => [:clean_submodules] do
   sh "rm -rf pkg"
-  sh "rm -rf vendor/v8"
   sh "git clean -dxf -e .bundle -e vendor/bundle"
 end
 
