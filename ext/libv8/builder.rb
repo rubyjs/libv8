@@ -27,7 +27,7 @@ module Libv8
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
       # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
-      flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.4'
+      flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.6'
 
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
