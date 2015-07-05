@@ -11,7 +11,7 @@ module Libv8
     end
 
     def object_paths
-      [libv8_object(:base), libv8_object(:snapshot)].map do |path|
+      [libv8_object(:base), libv8_object(:libplatform), libv8_object(:libbase), libv8_object(:snapshot)].map do |path|
         Shellwords.escape path
       end
     end
