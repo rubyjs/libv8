@@ -19,7 +19,7 @@ module Libv8::Compiler
     end
 
     describe '#compatible?' do
-      context 'when GCC\'s version is >= 4.3' do
+      context 'when GCC\'s version is >= 4.8' do
         it 'returns true' do
           stub_as_available 'c++', :gcc, '4.9.0'
           expect(subject).to be_compatible
