@@ -21,7 +21,7 @@ module Libv8
       compilers += ['g++48', 'g++46', 'g++44']
 
       # Default compiler names
-      compilers << ['g++', 'clang++']
+      compilers += ['g++', 'clang++']
 
       compilers.uniq
     end
