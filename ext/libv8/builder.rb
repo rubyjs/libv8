@@ -58,7 +58,10 @@ module Libv8
         patch!
         print_build_info
         puts 'Beginning compilation. This will take some time.'
-        system "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+
+        command = "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+        puts "Building v8 with #{command}"
+        system command
       end
       return $?.exitstatus
     end
