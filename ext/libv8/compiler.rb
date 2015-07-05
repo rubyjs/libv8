@@ -55,7 +55,7 @@ module Libv8
     end
 
     def execute_command(command)
-      output = `#{command}`
+      output = `env LC_ALL=C LANG=C #{command}`
       status = $?
       ExecutionResult.new output, status
     end
