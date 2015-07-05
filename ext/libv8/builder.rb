@@ -23,13 +23,20 @@ module Libv8
       "#{libv8_arch}.#{profile}"
     end
 
+    def gyp_defines(*defines)
+      # Do not use an external snapshot as we don't really care for binary size
+      defines << 'v8_use_external_startup_data=0'
+
+      # Pass clang flag to GYP in order to work around GCC compilation failures
+      defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
+
+      "GYP_DEFINES=\"#{defines.join ' '}\""
+    end
+
     def make_flags(*flags)
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
       flags << "ARFLAGS.target=crs"
-
-      # Pass clang flag to GYP in order to work around GCC compilation failures
-      flags << "GYP_DEFINES=\"clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}\""
 
       # Disable i18n
       flags << 'i18nsupport=off'
@@ -40,6 +47,9 @@ module Libv8
       # Disable werror as this version of v8 is getting difficult to maintain
       # with it on
       flags << 'werror=no'
+
+      # Append GYP variable definitions
+      flags << gyp_defines
 
       "#{make_target} #{flags.join ' '}"
     end
