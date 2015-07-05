@@ -143,7 +143,7 @@ module Libv8
       puts "Using compiler: #{@compiler} (#{@compiler.name} version #{@compiler.version})"
       unless @compiler.compatible?
         warn "Unable to find a compiler officially supported by v8."
-        warn "It is recommended to use GCC v4.4 or higher"
+        warn "It is recommended to use clang v3.5 or GCC v4.8 or higher"
       end
     end
   end
