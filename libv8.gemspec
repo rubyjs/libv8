@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   submodules = `git submodule --quiet foreach 'echo $path'`.split("\n").map(&:chomp)
   submodules.each do |submodule|
     s.files += Dir.chdir(submodule) do
-      `git ls-files`.split("\n").map {|f| "#{submodule}/#{f}"}
+      `git ls-files`.split("\n").reject {|f| f =~ /^test/}.map {|f| "#{submodule}/#{f}"}
     end
   end
 
@@ -28,6 +28,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 10'
   s.add_development_dependency 'rake-compiler', '~> 0'
-  s.add_development_dependency 'rspec', '~> 2.14', '< 2.14.99'
-  s.add_development_dependency 'rspec-spies', '~> 2.0'
+  s.add_development_dependency 'rspec', '~> 3'
 end

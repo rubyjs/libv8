@@ -7,14 +7,14 @@ module Libv8::Compiler
 
     describe '#name' do
       it 'returns clang' do
-        subject.name.should eq 'clang'
+        expect(subject.name).to eq 'clang'
       end
     end
 
     describe '#version' do
       it 'returns the version of the compiler' do
         stub_as_available 'c++', :clang, '3.4.1'
-        subject.version.should eq '3.4.1'
+        expect(subject.version).to eq '3.4.1'
       end
     end
 
@@ -22,7 +22,7 @@ module Libv8::Compiler
       context 'when clang\'s version is >= 3.1' do
         it 'returns true' do
           stub_as_available 'c++', :clang, '3.4.1'
-          subject.compatible?.should be_true
+          expect(subject).to be_compatible
         end
       end
     end

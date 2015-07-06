@@ -23,23 +23,20 @@ module Libv8
       "#{libv8_arch}.#{profile}"
     end
 
+    def gyp_defines(*defines)
+      # Do not use an external snapshot as we don't really care for binary size
+      defines << 'v8_use_external_startup_data=0'
+
+      # Pass clang flag to GYP in order to work around GCC compilation failures
+      defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
+
+      "GYP_DEFINES=\"#{defines.join ' '}\""
+    end
+
     def make_flags(*flags)
-      # FreeBSD uses gcc 4.2 by default which leads to
-      # compilation failures due to warnings about aliasing.
-      # http://svnweb.freebsd.org/ports/head/lang/v8/Makefile?view=markup
-      flags << "strictaliasing=off" if @compiler.is_a?(Compiler::GCC) and @compiler.version < '4.4'
-
-      # Check which ARM features are available according to the compiler
-      # XXX: Needs testing
-      flags << "armtest=on" if @compiler.target.include? "arm"
-
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
       flags << "ARFLAGS.target=crs"
-
-      # Pass clang=1 to GYP as noted in wiki
-      # https://code.google.com/p/v8/wiki/BuildingWithGYP#Clang_+_make
-      flags << 'GYP_DEFINES="clang=1"' if @compiler.is_a? Compiler::Clang
 
       # Disable i18n
       flags << 'i18nsupport=off'
@@ -50,6 +47,9 @@ module Libv8
       # Disable werror as this version of v8 is getting difficult to maintain
       # with it on
       flags << 'werror=no'
+
+      # Append GYP variable definitions
+      flags << gyp_defines
 
       "#{make_target} #{flags.join ' '}"
     end
@@ -62,7 +62,10 @@ module Libv8
         patch!
         print_build_info
         puts 'Beginning compilation. This will take some time.'
-        system "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+
+        command = "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+        puts "Building v8 with #{command}"
+        system command
       end
       return $?.exitstatus
     end
@@ -125,8 +128,8 @@ module Libv8
     end
 
     def python_version
-      if `which python` =~ /python/
-        `python -c "import platform; print(platform.python_version())"`.chomp
+      if system 'which python 2>&1 > /dev/null'
+        `python -c 'import platform; print(platform.python_version())'`.chomp
       else
         "not available"
       end
@@ -140,7 +143,7 @@ module Libv8
       puts "Using compiler: #{@compiler} (#{@compiler.name} version #{@compiler.version})"
       unless @compiler.compatible?
         warn "Unable to find a compiler officially supported by v8."
-        warn "It is recommended to use GCC v4.4 or higher"
+        warn "It is recommended to use clang v3.5 or GCC v4.8 or higher"
       end
     end
   end
