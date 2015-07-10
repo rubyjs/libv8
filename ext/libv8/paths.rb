@@ -7,12 +7,12 @@ module Libv8
     module_function
 
     def include_paths
-      [Shellwords.escape("#{vendored_source_path}/include")]
+      [Shellwords.escape(vendored_source_path)]
     end
 
     def object_paths
-      [libv8_object(:base), libv8_object(:libplatform), libv8_object(:libbase), libv8_object(:snapshot)].map do |path|
-        Shellwords.escape path
+      [:base, :libplatform, :libbase, :snapshot].map do |name|
+        Shellwords.escape libv8_object(name)
       end
     end
 
