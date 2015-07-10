@@ -34,7 +34,7 @@ task :binary => :compile do
   gemspec.files += ['ext/libv8/.location.yml']
 
   # V8
-  gemspec.files += Dir['vendor/v8/include/*']
+  gemspec.files += Dir['vendor/v8/include/**/*.h']
   gemspec.files += Dir['vendor/v8/out/**/*.a']
 
   FileUtils.chmod 0644, gemspec.files
