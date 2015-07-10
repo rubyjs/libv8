@@ -18,7 +18,7 @@ module Libv8
       compilers << 'c++'
 
       # FreeBSD GCC command names
-      compilers += ['g++48', 'g++46', 'g++44']
+      compilers += ['g++48', 'g++49', 'g++5']
 
       # Default compiler names
       compilers += ['g++', 'clang++']
