@@ -1,7 +1,7 @@
 # libv8
 [![Gem Version](https://badge.fury.io/rb/libv8.svg)](http://badge.fury.io/rb/libv8)
 [![Build Status](https://travis-ci.org/cowboyd/libv8.svg?branch=master)](https://travis-ci.org/cowboyd/libv8)
-[![Build status](https://ci.appveyor.com/api/projects/status/ugeqff972kxlba5j?svg=true)](https://ci.appveyor.com/project/cowboyd/libv8)
+<!-- [![Build status](https://ci.appveyor.com/api/projects/status/ugeqff972kxlba5j?svg=true)](https://ci.appveyor.com/project/cowboyd/libv8) -->
 [![Join the chat at https://gitter.im/cowboyd/therubyracer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cowboyd/therubyracer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 A gem for distributing the v8 runtime libraries and headers in both
