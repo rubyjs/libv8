@@ -66,10 +66,14 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
-    sudo apt-get install -y gcc-4.8 g++-4.8 build-essential git git-svn python ruby ruby-dev
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
-    sudo update-alternatives --config gcc
-    gem install bundler
+     apt-get update
+     apt-get install -y gcc-4.8 g++-4.8 build-essential git git-svn python ruby ruby-dev emacs
+     update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
+     update-alternatives --config gcc
+     su -c 'gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3' - vagrant
+     su -c '\\curl -sSL https://get.rvm.io | bash -s stable' - vagrant
+     su -c 'rvm install 2.2.2 --disable-binary' - vagrant
+     su -c 'rvm --default use 2.2.2' - vagrant
+     su -c 'gem install bundler' - vagrant
   SHELL
 end
