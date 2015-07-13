@@ -36,7 +36,7 @@ module Libv8
     def make_flags(*flags)
       # Fix Malformed archive issue caused by GYP creating thin archives by
       # default.
-      flags << "ARFLAGS.target=crs"
+      flags << "standalone_static_library=1"
 
       # Disable i18n
       flags << 'i18nsupport=off'
