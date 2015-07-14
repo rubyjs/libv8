@@ -99,10 +99,12 @@ module Libv8
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
         system "fetch v8" or fail "unable to fetch v8 source"
         Dir.chdir('v8') do
+          system "git checkout Makefile" # Work around a weird bug on FreeBSD
           unless system "git checkout #{source_version}"
             fail "unable to checkout source for v8 #{source_version}"
           end
           system "gclient sync" or fail "could not sync v8 build dependencies"
+          system "git checkout Makefile" # Work around a weird bug on FreeBSD
         end
       end
     end
