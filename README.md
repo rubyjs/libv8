@@ -59,6 +59,16 @@ distribution
 
 > This step release system is a workaround to carlhuda/bundler#1537
 
+### Requirements
+
+Building the v8 library from source imposes the following requirements:
+
+*  A compiler that supports C++11 (such as GCC 4.8 and above or clang,
+preferably 3.5 and above)
+*  GNU Make
+*  Python 2
+*  git-svn
+
 ### Using a git version
 
 If you want to use the latest unstable version of the gem you can do
@@ -74,15 +84,14 @@ You can find more info on using a git repo as a gem source in
 
 ### What if I can't install from source?
 
-If you can fix the "Makefile" so that it correctly compiles for your
+If you can fix v8's build system so that it correctly compiles for your
 platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
-    git clone git://github.com/cowboyd/libv8.git
+    git clone --recursive git://github.com/cowboyd/libv8.git
     cd libv8
     bundle install
-    bundle exec rake checkout
     bundle exec rake compile
 
 ### Bring your own V8
@@ -101,8 +110,14 @@ Using Bundler (in your Gemfile):
 
     bundle config build.libv8 --with-system-v8
 
+#### Gotchas
+
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian distros).
+
+Also keep in mind that v8's API does not tend to be stable and you need to make
+sure that the version of therubyracer you intend to use is compatible with the
+version of v8 present on your system. Otherwise therubyracer's build will fail.
 
 ### Bring your own compiler
 
