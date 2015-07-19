@@ -30,3 +30,13 @@ notifications:
     - bordjukov@gmail.com
 cache: bundler
 sudo: false
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8
+      - g++-4.8
+      - clang
+env:
+  - CXX=g++-4.8
