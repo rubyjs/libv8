@@ -71,7 +71,7 @@ so by specifying the git repo as a gem source. Just make sure you have
 `git-svn` and add the following to your `Gemfile`:
 
 ```Ruby
-gem "libv8", git: "git://github.com/cowboyd/libv8.git", submodules: true
+gem "libv8", github: "cowboyd/libv8", submodules: true
 ```
 
 You can find more info on using a git repo as a gem source in
