@@ -44,7 +44,7 @@ module Libv8
       # msysgit provides git svn
       return if RUBY_PLATFORM =~ /mingw/
 
-      unless system 'git help svn 2>&1 > /dev/null'
+      unless system 'git svn --version 2>&1 > /dev/null'
         fail "git-svn not installed!\nPlease install git-svn."
       end
     end
