@@ -59,16 +59,15 @@ module Libv8
       class NotFoundError < StandardError
         def initialize(*args)
           super(<<-EOS)
-You have chosen to use the version of V8 found on your system
-and *not* the one that is bundle with the libv8 rubygem. However,
-it could not be located. please make sure you have a version of
-v8 that is compatible with #{Libv8::VERSION} installed. You may
-need to special --with-v8-dir options if it is in a non-standard
-location
+By using --with-system-v8, you have chosen to use the version 
+of V8 found on your system and *not* the one that is bundled with 
+the libv8 rubygem. 
 
-thanks,
-The Mgmt
+However, your system version of v8 could not be located. 
 
+Please make sure your system version of v8 that is compatible 
+with #{Libv8::VERSION} installed. You may need to use the 
+--with-v8-dir option if it is installed in a non-standard location
 EOS
         end
       end
