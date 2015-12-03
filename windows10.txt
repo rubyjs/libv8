@@ -1,0 +1,2 @@
+I compiled the Makefile in Windows 10 administrator. 
+The errors are from a missing patch file in Windows. 
