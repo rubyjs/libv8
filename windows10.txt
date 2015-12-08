@@ -1,2 +1,10 @@
 I compiled the Makefile in Windows 10 administrator. 
-The errors are from a missing patch file in Windows. 
+Installed rubygems dependencies:
+bundle, patch, rbconfig, mkmf, openS3, yaml, pathname2, shell_tools, shell-utils.
+
+Downloaded patch gnuwin32 sourceforge.net and edited path variable for patch.exe.
+
+Changed directory for patch.exe in /libv8/ext/libv8/patcher.rb.
+
+Added dependencies from libv8.gemspec.
+
