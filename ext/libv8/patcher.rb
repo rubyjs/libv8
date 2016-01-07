@@ -47,7 +47,9 @@ module Libv8
         applied_patches = f.readlines.map(&:chomp)
 
         (available_patches - applied_patches).each do |patch|
-          `patch -p1 -N < #{patch}`
+          str_patch = "patch -p1 -N < #{patch}#{' --binary' if RUBY_PLATFORM =~ /mingw/}"
+          puts str_patch
+          `#{str_patch}`
           fail 'failed to apply patch' unless $?.success?
           f.puts patch
         end
