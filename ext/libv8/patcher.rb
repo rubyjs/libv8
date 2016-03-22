@@ -20,6 +20,7 @@ module Libv8
         patch_directories << 'clang33' if compiler.version >= '3.3'
         patch_directories << 'clang51' if compiler.version >= '5.1'
         patch_directories << 'clang70' if compiler.version >= '7.0'
+        patch_directories << 'clang73' if compiler.version >= '7.3'
       end
 
       patch_directories

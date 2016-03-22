@@ -1,0 +1,36 @@
+diff --git a/src/liveedit.cc b/src/liveedit.cc
+index 2502ae6..c91e007 100644
+--- a/src/liveedit.cc
++++ b/src/liveedit.cc
+@@ -203,7 +203,7 @@ class Differencer {
+ 
+   static const int kDirectionSizeBits = 2;
+   static const int kDirectionMask = (1 << kDirectionSizeBits) - 1;
+-  static const int kEmptyCellValue = -1 << kDirectionSizeBits;
++  static const int kEmptyCellValue = -1U << kDirectionSizeBits;
+ 
+   // This method only holds static assert statement (unfortunately you cannot
+   // place one in class scope).
+diff --git a/src/objects.h b/src/objects.h
+index 1241312..1451ea6 100644
+--- a/src/objects.h
++++ b/src/objects.h
+@@ -5249,7 +5249,7 @@ class Map: public HeapObject {
+   static const int kElementsKindBitCount = 5;
+ 
+   // Derived values from bit field 2
+-  static const int kElementsKindMask = (-1 << kElementsKindShift) &
++  static const int kElementsKindMask = (-1U << kElementsKindShift) &
+       ((1 << (kElementsKindShift + kElementsKindBitCount)) - 1);
+   static const int8_t kMaximumBitField2FastElementValue = static_cast<int8_t>(
+       (FAST_ELEMENTS + 1) << Map::kElementsKindShift) - 1;
+@@ -7383,7 +7383,7 @@ class String: public HeapObject {
+   STATIC_CHECK(IS_POWER_OF_TWO(kMaxCachedArrayIndexLength + 1));
+ 
+   static const int kContainsCachedArrayIndexMask =
+-      (~kMaxCachedArrayIndexLength << kArrayIndexHashLengthShift) |
++      (~static_cast<unsigned>(kMaxCachedArrayIndexLength) << kArrayIndexHashLengthShift) |
+       kIsNotArrayIndexMask;
+ 
+   // Value of empty hash field indicating that the hash is not computed.
+
