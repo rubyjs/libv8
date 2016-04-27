@@ -92,20 +92,20 @@ task :devkit do
 end
 
 namespace :build do
-  ['x86_64-linux', 'x86-linux'].each do |arch|
+  ['x86_64-linux', 'x86-linux', 'x86_64-freebsd10'].each do |arch|
     desc "build binary gem for #{arch}"
     task arch do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
       Dir.chdir(arch_dir) do
+        ENV['RUBYLIB'] = nil # https://github.com/mitchellh/vagrant/issues/6158
         sh "vagrant up"
-        sh "vagrant ssh -c 'cd /vagrant && rm -rf libv8 && git clone /libv8/.git libv8'"
-        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd /vagrant/libv8 && bundle exec rake checkout binary'"
-        sh "vagrant ssh -c 'cp /vagrant/libv8/pkg/*.gem /vagrant'"
+        sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8'"
+        sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
+        sh "vagrant ssh -c 'cd ~/libv8 && bundle exec rake checkout binary'"
+        sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
       end
     end
   end
-
 end
 
 task :default => [:checkout, :compile, :spec]
