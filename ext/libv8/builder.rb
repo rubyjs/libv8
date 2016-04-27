@@ -102,7 +102,7 @@ module Libv8
     def choose_compiler
       compiler_names = if with_config('cxx') then [with_config('cxx')]
                        elsif ENV['CXX']      then [ENV['CXX']]
-                       else                       Compiler::KNOWN_COMPILERS
+                       else                       Compiler::well_known_compilers
                        end
 
       available_compilers = Compiler.available_compilers(*compiler_names)

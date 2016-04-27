@@ -1,5 +1,6 @@
 ### Unreleased
 
+* Enhance compiler version detection and architecture detection #212
 * Introduce darwin13-15 binary building #211
 * Disable errors on warning for OS X #210
 * Improve --with-system-v8 error message #200
