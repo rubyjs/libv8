@@ -1,28 +1,28 @@
 module Libv8
   module Compiler
     class GenericCompiler
-      VERSION_REGEXP = /(\d+\.\d+(\.\d+)*)/
-      TARGET_REGEXP = /Target: ([a-z0-9\-_.]*)/
+      GENERIC_VERSION_REGEXP = /(\d+\.\d+(\.\d+)*)/
+      GENERIC_TARGET_REGEXP = /Target: ([a-z0-9\-_.]*)/
 
-      def initialize(path)
-        @path = path
+      def initialize(command)
+        @command = command
       end
 
       def name
-        File.basename @path
+        File.basename @command
       end
 
       def to_s
-        @path
+        @command
       end
 
       def version
-        call('-v')[0..1].join =~ VERSION_REGEXP
+        version_string =~ version_regexp
         $1
       end
 
       def target
-        call('-v')[0..1].join =~ TARGET_REGEXP
+        version_string =~ target_regexp
         $1
       end
 
@@ -31,7 +31,25 @@ module Libv8
       end
 
       def call(*arguments)
-        Open3.capture3 arguments.unshift('env LC_ALL=en', @path).join(' ')
+        Compiler::execute_command arguments.unshift(@command).join(' ')
+      end
+
+      private
+
+      def version_string
+        begin
+          Compiler::version_string_of @command
+        rescue StandardError
+          nil
+        end
+      end
+
+      def version_regexp
+        GENERIC_VERSION_REGEXP
+      end
+
+      def target_regexp
+        GENERIC_TARGET_REGEXP
       end
     end
   end
