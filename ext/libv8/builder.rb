@@ -20,7 +20,7 @@ module Libv8
       profile = enable_config('debug') ? 'debug' : 'release'
       "#{libv8_arch}.#{profile}"
     end
-    
+
     def make_flags(*flags)
       # FreeBSD uses gcc 4.2 by default which leads to
       # compilation failures due to warnings about aliasing.
@@ -49,24 +49,29 @@ module Libv8
     end
 
     def build_libv8!
+      checkout!
+      setup_python!
       Dir.chdir(V8_Source) do
-        fail 'No compilers available' if @compiler.nil?
-        checkout!
-        setup_python!
         setup_build_deps!
-        patch! *patch_directories_for(@compiler)
+        fail 'No compilers available' if @compiler.nil?
+        patch!
         print_build_info
+        puts 'Beginning compilation. This will take some time.'
+
+        command = "env CXX=#{@compiler} LINK=#{@compiler}"
 
         case RUBY_PLATFORM
         when /mingw/
           # use a script that will fix the paths in the generated Makefiles
           # don't use make_flags otherwise it will trigger a rebuild of the Makefiles
           system "env CXX=#{@compiler} LINK=#{@compiler} bash #{PATCH_DIRECTORY}/mingw-generate-makefiles.sh"
-          system "env CXX=#{@compiler} LINK=#{@compiler} make #{make_target}"
-          
+          command += " make #{make_target}"
         else
-          puts `env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}`
+          command += "  #{make} #{make_flags}"
         end
+
+        puts "Building v8 with #{command}"
+        system command
       end
       return $?.exitstatus
     end
