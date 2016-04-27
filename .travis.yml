@@ -1,14 +1,38 @@
 rvm:
-  - 2.0.0
-  - 2.1.5
+  - 2.3.0
+  - 2.2.4
+  - 2.1.8
   - 1.9.3
   - rbx
+matrix:
+  include:
+    - rvm: system
+      os: osx
+      osx_image: xcode7.3
+    - rvm: system
+      os: osx
+      osx_image: xcode6.4
+    - rvm: system
+      os: osx
+      osx_image: beta-xcode6.2
 bundler_args: --jobs=1 --retry=3
+before_install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install git-svn; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update --system; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo gem install bundler ; fi
+script:
+  - MAKEFLAGS+=-j8 bundle exec rake checkout compile spec binary --trace
+deploy:
+  provider: releases
+  file: $(git ls-files -o pkg | head -1)
+  api_key:
+    secure: hvq5MEvIq3qk2OC3qGj7dVjq8p6RzGdY98Gq+cSn2MaNr3AUFgJw11458ZGqwrsB3V9TLnPIVZFeSRd2PWYfUx+aan5qtKX4yGc17UJ5IyFPSyCgQj5N1NR40pAwEmFJkVcLXDSMhIVMlo64lCfetCS7apOewOxuH85JcZENrIiEyoOH5rWpd7W8idNTy+dCUaLEN30rOuA2JP0KPgP9uwf5J89tzGp/THy0Dk++pyz9JdOiPxI07CUf/zqHGwm8F4XAdx0SxRwesokDDU2x5dik1cYVVYqcdwHUpz4ywaT6WjjQ50Kt0KHi869kCMkUZ7TtNbCXUoWFZavkK7DSUSmJeuEniaTYxKRPf7bhWJudKko/qwWhLLAWzVtfwGc5uJnE7ZcpeBdbcOLhv+zOFVyes9S16VGxWpkEZykgGynltvbcX3gLb7cYYtZkoTMdeeTZpuHSyuupHCBSU+KM76AeeXG9zpX6STR3jYDKrf1ZqibwEH6AR77BOG+pK7zstD8sZaBvp+KERgYPg6+kA2omVazWFrYK1pIi8L2wzuTWmajL83STz+P+iuA0a4xXA+XGzJhZ9B/U+Ib2wf5R7y9/EdkF/xTN5nG2sHKHgswGkXf1WCfR1qxMBXHzIvyJcEeBg0bskiiedlgPtbZVG5Utrxt0Q9+7VDz/4A5NNZ4=
+  skip_cleanup: true
+  on:
+    tags: true
 notifications:
   recipients:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install git-svn
-  - gem update bundler
