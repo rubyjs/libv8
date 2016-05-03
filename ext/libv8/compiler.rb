@@ -11,14 +11,15 @@ module Libv8
     def well_known_compilers
       compilers = []
 
-      # The command Ruby was compiled with
-      compilers << RbConfig::CONFIG['CXX']
+      # The command native Ruby gems are to be compiled with
+      begin
+        compilers << MakeMakefile::CONFIG['CXX'] # stdlib > 2.0.0
+      rescue NameError
+        compilers << RbConfig::CONFIG['CXX'] # stdlib < 2.0.0
+      end
 
       # The default system compiler
       compilers << 'c++'
-
-      # FreeBSD GCC command names
-      compilers += ['g++48', 'g++49', 'g++5']
 
       # Default compiler names
       compilers += ['clang++', 'g++']
