@@ -1,8 +1,8 @@
+language: ruby
 rvm:
   - 2.3.1
   - 2.2.5
   - 2.1.9
-  - 1.9.3
   - rbx
 matrix:
   include:
@@ -17,29 +17,25 @@ matrix:
       osx_image: beta-xcode6.2
     - rvm: ruby-2.3.1-clang
       env: CXX=clang++
+    - rvm: 1.9.3
     - rvm: ree
     - rvm: ruby-1.8.7
   allow_failures:
     - rvm: ree
     - rvm: ruby-1.8.7
+    - rvm: 1.9.3
   fast_finish: true
+dist: trusty
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.8
-      - g++-4.8
       - clang
 bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update --system; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export CXX=g++-4.8; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo gem install bundler ; fi
 script:
   - MAKEFLAGS+=-j8 bundle exec rake spec build binary --trace
-  - MAKEFLAGS+=-j8 travis_wait gem install pkg/*.gem
 deploy:
   provider: releases
   file: $(git ls-files -o pkg | head -1)
