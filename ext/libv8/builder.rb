@@ -100,7 +100,9 @@ module Libv8
     def setup_build_deps!
       ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        system "fetch v8" or fail "unable to fetch v8 source"
+        unless Dir.exists? 'v8'
+          system "fetch v8" or fail "unable to fetch v8 source"
+        end
         Dir.chdir('v8') do
           system "git checkout Makefile" # Work around a weird bug on FreeBSD
           unless system "git checkout #{source_version}"
