@@ -27,6 +27,9 @@ module Libv8
       # Do not use an external snapshot as we don't really care for binary size
       defines << 'v8_use_external_startup_data=0'
 
+      # Do not use the GPLv3 ld.gold binary on Linux
+      defines << 'linux_use_bundled_gold=0'
+
       # Pass clang flag to GYP in order to work around GCC compilation failures
       defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
 
