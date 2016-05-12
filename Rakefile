@@ -58,9 +58,10 @@ namespace :build do
       Dir.chdir(arch_dir) do
         ENV['RUBYLIB'] = nil # https://github.com/mitchellh/vagrant/issues/6158
         sh "vagrant up"
-        sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8'"
+        sh "vagrant ssh -c 'rm -rf ~/libv8'"
+        sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8 --recursive'"
         sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd ~/libv8 && bundle exec rake checkout binary'"
+        sh "vagrant ssh -c 'cd ~/libv8 && bundle exec rake binary'"
         sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
       end
     end
