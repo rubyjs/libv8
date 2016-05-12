@@ -104,6 +104,8 @@ module Libv8
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
         unless Dir.exists? 'v8'
           system "fetch v8" or fail "unable to fetch v8 source"
+        else
+          system "gclient fetch" or fail "could not fetch v8 build dependencies commits"
         end
         Dir.chdir('v8') do
           system "git checkout Makefile" # Work around a weird bug on FreeBSD
