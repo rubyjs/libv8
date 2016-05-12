@@ -107,7 +107,7 @@ module Libv8
         end
         Dir.chdir('v8') do
           system "git checkout Makefile" # Work around a weird bug on FreeBSD
-          unless system "git checkout #{source_version}"
+          unless system "git checkout #{source_version} -- ."
             fail "unable to checkout source for v8 #{source_version}"
           end
           system "gclient sync" or fail "could not sync v8 build dependencies"

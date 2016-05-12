@@ -44,6 +44,10 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
+cache:
+  bundler: true
+  directories:
+    - vendor/v8/.git
 notifications:
   recipients:
     - cowboyd@thefrontside.net
