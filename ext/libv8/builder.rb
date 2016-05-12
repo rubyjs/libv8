@@ -90,7 +90,7 @@ module Libv8
     # then this will be 4.5.95
     #
     def source_version
-      Libv8::VERSION.gsub(/\.\d+$/, '')
+      Libv8::VERSION.gsub(/\.[^.]+$/, '')
     end
 
     ##
