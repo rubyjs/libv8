@@ -108,7 +108,6 @@ module Libv8
           system "gclient fetch" or fail "could not fetch v8 build dependencies commits"
         end
         Dir.chdir('v8') do
-          system "git checkout Makefile" # Work around a weird bug on FreeBSD
           unless system "git checkout #{source_version} -- ."
             fail "unable to checkout source for v8 #{source_version}"
           end
