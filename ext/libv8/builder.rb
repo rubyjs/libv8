@@ -2,6 +2,8 @@ unless $:.include? File.expand_path("../../../lib", __FILE__)
   $:.unshift File.expand_path("../../../lib", __FILE__)
 end
 require 'mkmf'
+require 'rbconfig'
+require 'shellwords'
 require 'libv8/version'
 require File.expand_path '../compiler', __FILE__
 require File.expand_path '../arch', __FILE__
@@ -62,7 +64,7 @@ module Libv8
         print_build_info
         puts 'Beginning compilation. This will take some time.'
 
-        command = "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+        command = "env CXX=#{Shellwords.escape @compiler.to_s} LINK=#{Shellwords.escape @compiler.to_s} #{make} #{make_flags}"
         puts "Building v8 with #{command}"
         system command
       end
@@ -117,17 +119,17 @@ module Libv8
     private
 
     def choose_compiler
-      compiler_names = if with_config('cxx') then [with_config('cxx')]
-                       elsif ENV['CXX']      then [ENV['CXX']]
-                       else                       Compiler::well_known_compilers
-                       end
+      compiler = if with_config('cxx') || ENV['CXX']
+                   with_config('cxx') || ENV['CXX']
+                 else
+                   begin
+                     MakeMakefile::CONFIG['CXX'] # stdlib > 2.0.0
+                   rescue NameError
+                     RbConfig::CONFIG['CXX'] # stdlib < 2.0.0
+                   end
+                 end
 
-      available_compilers = Compiler.available_compilers(*compiler_names)
-      compatible_compilers = available_compilers.select(&:compatible?)
-
-      unless compatible_compilers.empty? then compatible_compilers
-      else available_compilers
-      end.first
+      Libv8::Compiler.type_of(compiler).new compiler
     end
 
     def python_version
