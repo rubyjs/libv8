@@ -73,9 +73,7 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
-    sudo apt-get install -y gcc-4.8 g++-4.8 build-essential git git-svn python ruby ruby-dev
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
-    sudo update-alternatives --config gcc
+    sudo apt-get install -y build-essential git python ruby ruby-dev
     gem install bundler
   SHELL
 end
