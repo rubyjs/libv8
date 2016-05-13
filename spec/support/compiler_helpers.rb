@@ -32,13 +32,11 @@ module CompilerHelpers
   end
 
   def stub_as_available(command, name, version)
-    stub_shell_command "which #{command} 2>&1", '', success_status
-    stub_shell_command "#{command} -v 2>&1", version_output_of(name, version), success_status
+    stub_shell_command "env LC_ALL=C LANG=C #{command} -v 2>&1", version_output_of(name, version), success_status
   end
 
   def stub_as_unavailable(command)
-    stub_shell_command "which #{command} 2>&1", '', failure_status
-    stub_shell_command(/^#{Regexp.escape(command)}/, '', failure_status)
+    stub_shell_command(/^env LC_ALL=C LANG=C #{Regexp.escape(command)}/, '', failure_status)
   end
 end
 

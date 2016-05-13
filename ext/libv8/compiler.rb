@@ -8,31 +8,8 @@ module Libv8
   module Compiler
     module_function
 
-    def well_known_compilers
-      compilers = []
-
-      # The command Ruby was compiled with
-      compilers << RbConfig::CONFIG['CXX']
-
-      # The default system compiler
-      compilers << 'c++'
-
-      # FreeBSD GCC command names
-      compilers += ['g++48', 'g++49', 'g++5']
-
-      # Default compiler names
-      compilers += ['clang++', 'g++']
-
-      compilers.uniq
-    end
-
-    def available_compilers(*compiler_names)
-      available = compiler_names.select { |compiler_name| available? compiler_name }
-      available.map { |compiler_name| type_of(compiler_name).new compiler_name }
-    end
-
-    def type_of(compiler_name)
-      case version_string_of(compiler_name)
+    def type_of(compiler)
+      case version_string_of(compiler)
       when /^Apple LLVM\b/ then AppleLLVM
       when /\bclang\b/i then Clang
       when /^gcc/i then GCC
@@ -40,22 +17,18 @@ module Libv8
       end
     end
 
-    def version_string_of(compiler_name)
-      command_result = execute_command "#{compiler_name} -v 2>&1"
+    def version_string_of(compiler)
+      command_result = execute_command "env LC_ALL=C LANG=C #{compiler} -v 2>&1"
 
       unless command_result.status.success?
-        raise "Could not get version string of compiler #{compiler_name}"
+        raise "Could not get version string of compiler #{compiler}"
       end
 
       command_result.output
     end
 
-    def available?(command)
-      execute_command("which #{command} 2>&1").status.success?
-    end
-
     def execute_command(command)
-      output = `env LC_ALL=C LANG=C #{command}`
+      output = `#{command}`
       status = $?
       ExecutionResult.new output, status
     end

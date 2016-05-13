@@ -1,9 +1,9 @@
 diff --git a/build/standalone.gypi b/build/standalone.gypi
-index b6519c4..ef9e7c5 100644
+index a71ed95..308a7e3 100644
 --- a/build/standalone.gypi
 +++ b/build/standalone.gypi
-@@ -373,6 +373,9 @@
-       }],
+@@ -476,6 +476,9 @@
+       }],  # fastbuild!=0
      ],
      'target_conditions': [
 +      ['_type=="static_library"', {

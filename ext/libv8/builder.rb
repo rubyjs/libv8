@@ -2,6 +2,8 @@ unless $:.include? File.expand_path("../../../lib", __FILE__)
   $:.unshift File.expand_path("../../../lib", __FILE__)
 end
 require 'mkmf'
+require 'rbconfig'
+require 'shellwords'
 require 'libv8/version'
 require File.expand_path '../compiler', __FILE__
 require File.expand_path '../arch', __FILE__
@@ -26,6 +28,9 @@ module Libv8
     def gyp_defines(*defines)
       # Do not use an external snapshot as we don't really care for binary size
       defines << 'v8_use_external_startup_data=0'
+
+      # Do not use the GPLv3 ld.gold binary on Linux
+      defines << 'linux_use_bundled_gold=0'
 
       # Pass clang flag to GYP in order to work around GCC compilation failures
       defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
@@ -59,7 +64,7 @@ module Libv8
         print_build_info
         puts 'Beginning compilation. This will take some time.'
 
-        command = "env CXX=#{@compiler} LINK=#{@compiler} #{make} #{make_flags}"
+        command = "env CXX=#{Shellwords.escape @compiler.to_s} LINK=#{Shellwords.escape @compiler.to_s} #{make} #{make_flags}"
         puts "Building v8 with #{command}"
         system command
       end
@@ -85,7 +90,7 @@ module Libv8
     # then this will be 4.5.95
     #
     def source_version
-      Libv8::VERSION.gsub(/\.\d+$/, '')
+      Libv8::VERSION.gsub(/\.[^.]+$/, '')
     end
 
     ##
@@ -97,10 +102,13 @@ module Libv8
     def setup_build_deps!
       ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        system "fetch v8" or fail "unable to fetch v8 source"
+        unless Dir.exists? 'v8'
+          system "fetch v8" or fail "unable to fetch v8 source"
+        else
+          system "gclient fetch" or fail "could not fetch v8 build dependencies commits"
+        end
         Dir.chdir('v8') do
-          system "git checkout Makefile" # Work around a weird bug on FreeBSD
-          unless system "git checkout #{source_version}"
+          unless system "git checkout #{source_version} -- ."
             fail "unable to checkout source for v8 #{source_version}"
           end
           system "gclient sync" or fail "could not sync v8 build dependencies"
@@ -112,17 +120,17 @@ module Libv8
     private
 
     def choose_compiler
-      compiler_names = if with_config('cxx') then [with_config('cxx')]
-                       elsif ENV['CXX']      then [ENV['CXX']]
-                       else                       Compiler::well_known_compilers
-                       end
+      compiler = if with_config('cxx') || ENV['CXX']
+                   with_config('cxx') || ENV['CXX']
+                 else
+                   begin
+                     MakeMakefile::CONFIG['CXX'] # stdlib > 2.0.0
+                   rescue NameError
+                     RbConfig::CONFIG['CXX'] # stdlib < 2.0.0
+                   end
+                 end
 
-      available_compilers = Compiler.available_compilers(*compiler_names)
-      compatible_compilers = available_compilers.select(&:compatible?)
-
-      unless compatible_compilers.empty? then compatible_compilers
-      else available_compilers
-      end.first
+      Libv8::Compiler.type_of(compiler).new compiler
     end
 
     def python_version

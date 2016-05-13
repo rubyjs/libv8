@@ -22,11 +22,11 @@ opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following
 platforms.
 
+* x86_64-darwin-15
 * x86_64-darwin-14
 * x86_64-linux
 * x86-linux
 * x86_64-freebsd-10
-* i386-freebsd-10
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -35,10 +35,10 @@ distro for you.
 ### Versioning
 
 Versions of the libv8 gem track the version of v8 itself, adding its
-own point release after the main v8 version. So libv8 `3.11.8.5` and
-`3.11.8.14` both correspond to v8 version `3.11.8`. Another way to
-think about it would be that `3.11.8.14` is the 14th release of the
-libv8 rubygem based on v8 version `3.11.8`
+own point release after the main v8 version. So libv8 `5.0.71.35.5`
+and `5.0.71.35.14` both correspond to v8 version `5.0.71.35`. Another
+way to think about it would be that `5.0.71.35.14` is the 14th release
+of the libv8 rubygem based on v8 version `5.0.71.35`
 
 #### Source and Binary Releases
 
@@ -53,9 +53,9 @@ distributions, but if, for whatever reason, you have problems with the
 binaries, you can always "lock in" your dependency a single point version
 down, forcing it to compile from source.
 
-So for example, `3.15.12.3` contains all the binary distributions, while
-`3.15.12.2` is the exact same code, but contain only a source-based
-distribution
+So for example, `5.0.71.35.3` contains all the binary distributions,
+while `5.0.71.35.2` is the exact same code, but contain only a
+source-based distribution
 
 > This step release system is a workaround to carlhuda/bundler#1537
 
@@ -67,16 +67,15 @@ Building the v8 library from source imposes the following requirements:
 preferably 3.5 and above)
 *  GNU Make
 *  Python 2
-*  git-svn
 
 ### Using a git version
 
 If you want to use the latest unstable version of the gem you can do
-so by specifying the git repo as a gem source. Just make sure you have
-`git-svn` and add the following to your `Gemfile`:
+so by specifying the git repo as a gem source. Just make sure you add
+the following to your `Gemfile`:
 
 ```Ruby
-gem "libv8", git: "git://github.com/cowboyd/libv8.git", submodules: true
+gem "libv8", github: "cowboyd/libv8", submodules: true
 ```
 
 You can find more info on using a git repo as a gem source in
@@ -115,9 +114,10 @@ Using Bundler (in your Gemfile):
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian distros).
 
-Also keep in mind that v8's API does not tend to be stable and you need to make
-sure that the version of therubyracer you intend to use is compatible with the
-version of v8 present on your system. Otherwise therubyracer's build will fail.
+Also keep in mind that v8's API does not tend to be stable and you
+need to make sure that the version of therubyracer you intend to use
+is compatible with the version of v8 present on your system. Otherwise
+therubyracer's build will fail.
 
 ### Bring your own compiler
 
@@ -140,7 +140,7 @@ installed that gem.
 
 ### Sponsored by
 
-<a href="http://thefrontside.net">![The Frontside](http://github.com/cowboyd/libv8/raw/master/thefrontside.png)</a>
+<a href="http://thefrontside.net">![The Frontside](/thefrontside.png)</a>
 
 ### License
 
