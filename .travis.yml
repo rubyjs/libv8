@@ -45,7 +45,7 @@ deploy:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
 before_cache:
-  - cd vendor/v8 && git clean -xdf && git checkout .
+  - cd vendor/v8 && git clean -xdf && git checkout . && cd ../..
   - rm -rf vendor/depot_tools
 cache:
   bundler: true
