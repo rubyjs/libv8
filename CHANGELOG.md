@@ -1,6 +1,6 @@
 ### Unreleased
 
-### 5.0.71.48.0beta2, 5.0.71.48.1beta2 - 2016-05-13:
+### 5.0.71.48.2, 5.0.71.48.3 - 2016-05-13:
 
 * Upgrade upstream v8 version to 5.0.71.45
 * Remove all workarounds for building v8 3.16 with newer compilers
