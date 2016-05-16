@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Enable the -fPIC flag for ARM
+
 ### 5.0.71.48.2, 5.0.71.48.3 - 2016-05-13:
 
 * Upgrade upstream v8 version to 5.0.71.45
