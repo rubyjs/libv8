@@ -60,7 +60,7 @@ describe "libv8 locations" do
     end
 
     it "prepends its own incflags before any pre-existing ones" do
-      expect(@context.incflags).to eql "-I/foo\\ bar/v8 -I/usr/include -I/usr/local/include"
+      expect(@context.incflags).to eql "-I/foo\\ bar/v8/include -I/usr/include -I/usr/local/include"
     end
 
     it "prepends the locations of any libv8 objects on the the ldflags" do
