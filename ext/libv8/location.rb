@@ -34,8 +34,8 @@ module Libv8
 
       def verify_installation!
         include_paths = Libv8::Paths.include_paths
-        unless include_paths.detect { |p| Pathname(p).join('include/v8.h').exist? }
-          fail HeaderNotFound, "Unable to locate 'include/v8.h' in the libv8 header paths: #{include_paths.inspect}"
+        unless include_paths.detect { |p| Pathname(p).join('v8.h').exist? }
+          fail HeaderNotFound, "Unable to locate 'v8.h' in the libv8 header paths: #{include_paths.inspect}"
         end
         Libv8::Paths.object_paths.each do |p|
           fail ArchiveNotFound, p unless File.exist? p

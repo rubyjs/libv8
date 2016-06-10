@@ -7,7 +7,7 @@ module Libv8
     module_function
 
     def include_paths
-      [Shellwords.escape(vendored_source_path)]
+      [Shellwords.escape(File.join(vendored_source_path, 'include'))]
     end
 
     def object_paths
