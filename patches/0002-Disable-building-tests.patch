@@ -1,18 +1,27 @@
+From a27a92cbe9db50bceedfffeb43d12345209e4d75 Mon Sep 17 00:00:00 2001
+From: Petko Bordjukov <bordjukov@gmail.com>
+Date: Fri, 10 Jun 2016 08:57:29 +0300
+Subject: [PATCH 2/3] Disable building tests
+
+---
+ Makefile      |  6 ++----
+ build/all.gyp | 27 ---------------------------
+ 2 files changed, 2 insertions(+), 31 deletions(-)
+
 diff --git a/Makefile b/Makefile
-index 4fb6ee0..549ae58 100644
+index a0c08a6..10b2924 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -251,11 +251,9 @@ NACL_ARCHES = nacl_ia32 nacl_x64
+@@ -258,11 +258,9 @@ NACL_ARCHES = nacl_ia32 nacl_x64
  GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
  	   build/shim_headers.gypi build/features.gypi build/standalone.gypi \
  	   build/toolchain.gypi build/all.gyp build/mac/asan.gyp \
 -	   test/cctest/cctest.gyp test/fuzzer/fuzzer.gyp \
 -	   test/unittests/unittests.gyp tools/gyp/v8.gyp \
 -	   tools/parser-shell.gyp testing/gmock.gyp testing/gtest.gyp \
--	   buildtools/third_party/libc++abi/libc++abi.gyp \
--	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
 +	   tools/gyp/v8.gyp tools/parser-shell.gyp \
-+           buildtools/third_party/libc++abi/libc++abi.gyp \
+ 	   buildtools/third_party/libc++abi/libc++abi.gyp \
+-	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
 +	   buildtools/third_party/libc++/libc++.gyp \
  	   src/third_party/vtune/v8vtune.gyp src/d8.gyp
  
@@ -63,3 +72,6 @@ index feaf4fe..96820a0 100644
        ]
      }
    ]
+-- 
+2.8.3
+

@@ -6,7 +6,7 @@ module Libv8
 
     def patch!
       File.open(".applied_patches", File::RDWR|File::CREAT) do |f|
-        available_patches = Dir.glob(File.join(PATCH_DIRECTORY, '*.patch'))
+        available_patches = Dir.glob(File.join(PATCH_DIRECTORY, '*.patch')).sort
         applied_patches = f.readlines.map(&:chomp)
 
         (available_patches - applied_patches).each do |patch|
