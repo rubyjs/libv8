@@ -26,8 +26,9 @@ module Libv8
         verify_installation!
         return exit_status
       end
+
       def configure(context = MkmfContext.new)
-        context.incflags.insert 0, Libv8::Paths.include_paths.map{|p| "-I#{p}"}.join(" ")  + " "
+        context.incflags.insert 0, Libv8::Paths.include_paths.map{ |p| "-I#{p}" }.join(" ")  + " "
         context.ldflags.insert 0, Libv8::Paths.object_paths.join(" ") + " "
       end
 
@@ -40,7 +41,9 @@ module Libv8
           fail ArchiveNotFound, p unless File.exist? p
         end
       end
+
       class HeaderNotFound < StandardError; end
+
       class ArchiveNotFound < StandardError
         def initialize(filename)
           super "libv8 did not install properly, expected binary v8 archive '#{filename}'to exist, but it was not found"
@@ -59,14 +62,14 @@ module Libv8
       class NotFoundError < StandardError
         def initialize(*args)
           super(<<-EOS)
-By using --with-system-v8, you have chosen to use the version 
-of V8 found on your system and *not* the one that is bundled with 
-the libv8 rubygem. 
+By using --with-system-v8, you have chosen to use the version
+of V8 found on your system and *not* the one that is bundled with
+the libv8 rubygem.
 
-However, your system version of v8 could not be located. 
+However, your system version of v8 could not be located.
 
-Please make sure your system version of v8 that is compatible 
-with #{Libv8::VERSION} installed. You may need to use the 
+Please make sure your system version of v8 that is compatible
+with #{Libv8::VERSION} installed. You may need to use the
 --with-v8-dir option if it is installed in a non-standard location
 EOS
         end
