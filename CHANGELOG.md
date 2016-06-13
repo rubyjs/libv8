@@ -1,5 +1,8 @@
 ### Unreleased
 
+* Update upstream v8 version to 5.1.281.59
+* Make sure the patch set is applied in the correct order
+
 ### 5.0.71.48.4, 5.0.71.48.5 - 2016-05-13:
 
 * Enable the -fPIC flag for ARM
