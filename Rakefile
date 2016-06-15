@@ -36,6 +36,7 @@ task :binary => :compile do
   # V8
   gemspec.files += Dir['vendor/v8/include/**/*.h']
   gemspec.files += Dir['vendor/v8/out/**/*.a']
+  gemspec.files += Dir['vendor/v8/out/**/*.bin']
 
   FileUtils.chmod 0644, gemspec.files
   FileUtils.mkdir_p 'pkg'

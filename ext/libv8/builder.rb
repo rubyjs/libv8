@@ -26,9 +26,6 @@ module Libv8
     end
 
     def gyp_defines(*defines)
-      # Do not use an external snapshot as we don't really care for binary size
-      defines << 'v8_use_external_startup_data=0'
-
       # Do not use the GPLv3 ld.gold binary on Linux
       defines << 'linux_use_bundled_gold=0'
 
