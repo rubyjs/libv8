@@ -61,7 +61,7 @@ source-based distribution
 
 ##### Use with different standard C libraries
 
-The binary versions of this gem are linked against the most used standard
+The Linux binary versions of this gem are linked against the most used standard
 library - glibc. Currently rubygems has no mechanism to differentiate
 platform-specific gems by standard library so we have no way of distributing
 different binaries for differnt standard libraries.
