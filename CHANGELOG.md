@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Update upstream v8 version to 5.1.281.67 to address #219
+
 ### 5.1.281.59.0, 5.1.281.59.1 - 2016-06-15:
 
 * Update upstream v8 version to 5.1.281.59
