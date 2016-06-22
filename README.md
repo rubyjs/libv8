@@ -64,7 +64,7 @@ source-based distribution
 The Linux binary versions of this gem are linked against the most used standard
 library - glibc. Currently rubygems has no mechanism to differentiate
 platform-specific gems by standard library so we have no way of distributing
-different binaries for differnt standard libraries.
+different binaries for different standard libraries.
 
 What this means is that if you're running a distro that does not use glibc
 (like Alpine Linux), you'll have to use a source version of the gem.
