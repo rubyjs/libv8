@@ -31,8 +31,6 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo gem install bundler; fi
 script:
-  - if ! [ "$(ls -A vendor/v8/.git)" ] ; then rm -rf vendor/v8; fi
-  - rm -rf vendor/depot_tools
   - git submodule update --init
   - MAKEFLAGS+=-j8 bundle exec rake spec binary --trace
 deploy:
@@ -44,13 +42,8 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
-before_cache:
-  - cd vendor/v8 && git clean -xdf && git checkout . && cd ../..
-  - rm -rf vendor/depot_tools
 cache:
   bundler: true
-  directories:
-    - vendor
 notifications:
   recipients:
     - cowboyd@thefrontside.net
