@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Compare compiler versions part by part as integers instead of using string
+  comparison on the whole version string #154 (thanks @ltk)
+* Update upstream v8 to version 5.2.361.43 and refresh the patch set
+
 ### 5.1.281.67.0, 5.1.281.67.1 - 2016-06-26:
 
 * Update upstream v8 version to 5.1.281.67 to address #219
