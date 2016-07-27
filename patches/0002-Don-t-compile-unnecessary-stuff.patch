@@ -1,7 +1,7 @@
-From bb7beaa8dddf7d406de80cc6511abe942dfeabd6 Mon Sep 17 00:00:00 2001
+From 930d596106fb3289f6aa37cdf8abaec3106c31b9 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:04:07 +0300
-Subject: [PATCH 2/3] Don't compile unnecessary stuff
+Subject: [PATCH 2/4] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------

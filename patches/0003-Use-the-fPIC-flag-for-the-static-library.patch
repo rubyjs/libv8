@@ -1,7 +1,7 @@
-From 22cd3f03af2d94da1f7506a8daa7708e8c93b928 Mon Sep 17 00:00:00 2001
+From 8873d0ee6e1304e256bf3181b287e189bc68a9c8 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:05:47 +0300
-Subject: [PATCH 3/3] Use the -fPIC flag for the static library
+Subject: [PATCH 3/4] Use the -fPIC flag for the static library
 
 ---
  gypfiles/standalone.gypi | 2 +-
