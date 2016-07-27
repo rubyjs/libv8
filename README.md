@@ -45,11 +45,11 @@ the older version of your OS.
 
 ### Versioning
 
-Versions of the libv8 gem track the version of v8 itself, adding its
-own point release after the main v8 version. So libv8 `5.0.71.35.5`
-and `5.0.71.35.14` both correspond to v8 version `5.0.71.35`. Another
+Versions of the libv8 gem track the version of V8 itself, adding its
+own point release after the main V8 version. So libv8 `5.0.71.35.5`
+and `5.0.71.35.14` both correspond to V8 version `5.0.71.35`. Another
 way to think about it would be that `5.0.71.35.14` is the 14th release
-of the libv8 rubygem based on v8 version `5.0.71.35`
+of the libv8 rubygem based on V8 version `5.0.71.35`
 
 #### Source and Binary Releases
 
@@ -82,7 +82,7 @@ What this means is that if you're running a distro that does not use glibc
 
 ### Requirements
 
-Building the v8 library from source imposes the following requirements:
+Building the V8 library from source imposes the following requirements:
 
 *  A compiler that supports C++11 (such as GCC 4.8 and above or clang,
 preferably 3.5 and above)
@@ -104,7 +104,7 @@ You can find more info on using a git repo as a gem source in
 
 ### What if I can't install from source?
 
-If you can fix v8's build system so that it correctly compiles for your
+If you can fix V8's build system so that it correctly compiles for your
 platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
@@ -140,9 +140,9 @@ Using Bundler (in your Gemfile):
 Please note that if you intend to run your own V8, you must install
 both V8 *and its headers* (found in libv8-dev for Debian-based distros).
 
-Also, keep in mind that v8's API does not tend to be stable and in case you're
+Also, keep in mind that V8's API does not tend to be stable and in case you're
 using your local version of V8 you *need* to **make sure that the the gems that
-depend on libv8 are compatible with the API of the version of v8 present on your
+depend on libv8 are compatible with the API of the version of V8 present on your
 system**. Otherwise those gems' builds *will* fail. Ideally you want the same
 version of V8 as the one packaged in the installed version of the gem. See the
 Versioning section for more information.
@@ -159,11 +159,11 @@ environment variable before compilation, or by adding the
 
 This project spun off of
 [therubyracer](http://github.com/cowboyd/therubyracer) which depends
-on having a specific version of v8 to compile and run against.
+on having a specific version of V8 to compile and run against.
 However, actually delivering that version reliably to all the
 different platforms proved to be a challenge to say the least.
 
-We got tired of waiting 5 minutes for v8 to compile every time we
+We got tired of waiting 5 minutes for V8 to compile every time we
 installed that gem.
 
 ### Sponsored by
