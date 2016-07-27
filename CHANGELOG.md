@@ -1,4 +1,4 @@
-### Unreleased
+### 5.2.361.43.0, 5.2.361.43.1 - 2016-06-26:
 
 * Compare compiler versions part by part as integers instead of using string
   comparison on the whole version string #154 (thanks @ltk)
