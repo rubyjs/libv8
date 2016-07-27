@@ -21,7 +21,7 @@ module Libv8
       end
 
       it 'recognises correctly Apple\'s LLVM' do
-        stub_as_available 'c++', :apple_llvm, '5.1'
+        stub_as_available 'c++', :apple_llvm, '4.20'
         expect(Compiler.type_of('c++').new('c++')).to be_a Compiler::AppleLLVM
       end
     end

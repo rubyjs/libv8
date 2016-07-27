@@ -27,7 +27,9 @@ module Libv8
       end
 
       def compatible?
-        false
+        return false unless required_version && !version.nil?
+
+        (string_to_semver(version) <=> string_to_semver(required_version)) > -1
       end
 
       def call(*arguments)
@@ -50,6 +52,14 @@ module Libv8
 
       def target_regexp
         GENERIC_TARGET_REGEXP
+      end
+
+      def required_version
+        nil
+      end
+
+      def string_to_semver(version)
+        version.split('.').map(&:to_i)
       end
     end
   end

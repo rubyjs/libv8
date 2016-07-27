@@ -25,6 +25,13 @@ module Libv8::Compiler
           expect(subject).to be_compatible
         end
       end
+
+      context 'when clang\'s version is < 3.1' do
+        it 'returns false' do
+          stub_as_available 'c++', :clang, '3.0.9'
+          expect(subject).to_not be_compatible
+        end
+      end
     end
   end
 end
