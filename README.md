@@ -32,6 +32,18 @@ If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
 distro for you.
 
+#### Note on ~~OS X~~ macOS binaries
+
+If you're installing libv8 on a macOS system that is present in the list above,
+and despite that, RubyGems insists on downloading a source version and compiling
+it, check the output of `ruby -e 'puts Gem::Platform.local'`. If it does not
+reflect the current version of your OS, recompile Ruby.
+
+The platform gets hardcoded in Ruby during compilation and if you've updated
+your OS since you've compiled Ruby, it does not represent correctly your current
+platform which leads to RubyGems trying to download a platform-specific gem for
+the older version of your OS.
+
 ### Versioning
 
 Versions of the libv8 gem track the version of v8 itself, adding its
