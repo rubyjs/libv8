@@ -108,7 +108,7 @@ module Libv8
           system "gclient fetch" or fail "could not fetch v8 build dependencies commits"
         end
         Dir.chdir('v8') do
-          unless system "git checkout #{source_version} -- ."
+          unless system "git checkout #{source_version}"
             fail "unable to checkout source for v8 #{source_version}"
           end
           system "gclient sync" or fail "could not sync v8 build dependencies"
