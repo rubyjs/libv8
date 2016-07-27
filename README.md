@@ -116,11 +116,16 @@ To get the source, these commands will get you started:
 
 ### Bring your own V8
 
-Because libv8 is the interface for the V8 engine used by
-[therubyracer](http://github.com/cowboyd/therubyracer), you may need
-to use libv8, even if you have V8 installed already. If you wish to
-use your own V8 installation, rather than have it built for you, use
-the `--with-system-v8` option.
+*This is a great way to ensure that the builds of all gems that depend on libv8
+fail. Please see the Gotchas section below and use the follwing instructions
+only if you know what you're doing. If you're resorting to this because the
+build of the gem is failing on your system or because there's no
+platform-specific gem for your platform, please open up an issue.*
+
+Because libv8 is the interface for the V8 engine used by several gems, you may
+need to use libv8, even if you have V8 installed already. If you wish to use
+your own V8 installation, rather than have it built for you, use the
+`--with-system-v8` option.
 
 Using RubyGems:
 
@@ -133,12 +138,14 @@ Using Bundler (in your Gemfile):
 #### Gotchas
 
 Please note that if you intend to run your own V8, you must install
-both V8 *and its headers* (found in libv8-dev for Debian distros).
+both V8 *and its headers* (found in libv8-dev for Debian-based distros).
 
-Also keep in mind that v8's API does not tend to be stable and you
-need to make sure that the version of therubyracer you intend to use
-is compatible with the version of v8 present on your system. Otherwise
-therubyracer's build will fail.
+Also, keep in mind that v8's API does not tend to be stable and in case you're
+using your local version of V8 you *need* to **make sure that the the gems that
+depend on libv8 are compatible with the API of the version of v8 present on your
+system**. Otherwise those gems' builds *will* fail. Ideally you want the same
+version of V8 as the one packaged in the installed version of the gem. See the
+Versioning section for more information.
 
 ### Bring your own compiler
 
