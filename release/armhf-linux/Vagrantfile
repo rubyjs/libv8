@@ -68,6 +68,7 @@ Vagrant.configure("2") do |config|
     domain.driver = 'qemu'
     domain.cpu_mode = "custom"
     domain.cpu_model = nil
+    domain.cpus = 4
     domain.graphics_type = 'none'
   end
 
