@@ -61,7 +61,7 @@ namespace :build do
         sh "vagrant ssh -c 'rm -rf ~/libv8'"
         sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8 --recursive'"
         sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd ~/libv8 && bundle exec rake binary'"
+        sh "vagrant ssh -c 'cd ~/libv8 && MAKEFLAGS+=-j4 bundle exec rake binary'"
         sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
         sh "vagrant destroy"
       end
