@@ -20,6 +20,7 @@ matrix:
     - rvm: 1.9.3
   allow_failures:
     - rvm: 1.9.3
+    - rvm: rbx
   fast_finish: true
 dist: trusty
 addons:
