@@ -1,4 +1,4 @@
-From 930d596106fb3289f6aa37cdf8abaec3106c31b9 Mon Sep 17 00:00:00 2001
+From 48d4b7ae6cbb8a2109555f57845fa5f6aa4fa30a Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:04:07 +0300
 Subject: [PATCH 2/4] Don't compile unnecessary stuff
@@ -9,10 +9,10 @@ Subject: [PATCH 2/4] Don't compile unnecessary stuff
  2 files changed, 1 insertion(+), 38 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 0f8f93a..68778e9 100644
+index ffb5192..8e60aab 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -264,12 +264,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+@@ -265,12 +265,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
  	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
             gypfiles/standalone.gypi \
  	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
@@ -70,5 +70,5 @@ index ff1bea4..96820a0 100644
      }
    ]
 -- 
-2.9.0
+2.9.3
 
