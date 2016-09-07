@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "libv8"
 
-  s.files  = `git ls-files`.split("\n")
+  s.files  = `git ls-files`.split("\n").reject {|f| f =~ /^release\//}
 
   submodules = `git submodule --quiet foreach 'echo $path'`.split("\n").map(&:chomp)
   submodules.each do |submodule|
