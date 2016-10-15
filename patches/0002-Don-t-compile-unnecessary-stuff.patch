@@ -1,18 +1,18 @@
-From 48d4b7ae6cbb8a2109555f57845fa5f6aa4fa30a Mon Sep 17 00:00:00 2001
+From 785a8197ebefd37592f15f0b23c13a44faa5c239 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
-Date: Mon, 25 Jul 2016 00:04:07 +0300
-Subject: [PATCH 2/4] Don't compile unnecessary stuff
+Date: Sat, 15 Oct 2016 15:05:01 +0300
+Subject: [PATCH 2/3] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------
- gypfiles/all.gyp | 32 --------------------------------
- 2 files changed, 1 insertion(+), 38 deletions(-)
+ gypfiles/all.gyp | 33 +--------------------------------
+ 2 files changed, 2 insertions(+), 38 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index ffb5192..8e60aab 100644
+index a6d4d13..bd73b13 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -265,12 +265,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+@@ -258,12 +258,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
  	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
             gypfiles/standalone.gypi \
  	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
@@ -27,13 +27,14 @@ index ffb5192..8e60aab 100644
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index ff1bea4..96820a0 100644
+index 6b4ef82..9b02b4d 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
-@@ -16,38 +16,6 @@
+@@ -15,38 +15,7 @@
+           'dependencies': [
              '../tools/parser-shell.gyp:parser-shell',
            ],
-         }],
+-        }],
 -        # These items don't compile for Android on Mac.
 -        ['host_os!="mac" or OS!="android"', {
 -          'dependencies': [
@@ -41,14 +42,13 @@ index ff1bea4..96820a0 100644
 -            '../test/cctest/cctest.gyp:*',
 -            '../test/fuzzer/fuzzer.gyp:*',
 -            '../test/unittests/unittests.gyp:*',
--            ],
+-          ],
 -        }],
 -        ['test_isolation_mode != "noop"', {
 -          'dependencies': [
 -            '../test/bot_default.gyp:*',
 -            '../test/benchmarks/benchmarks.gyp:*',
 -            '../test/default.gyp:*',
--            '../test/ignition.gyp:*',
 -            '../test/intl/intl.gyp:*',
 -            '../test/message/message.gyp:*',
 -            '../test/mjsunit/mjsunit.gyp:*',
@@ -66,9 +66,10 @@ index ff1bea4..96820a0 100644
 -            '../tools/run-valgrind.gyp:*',
 -          ],
 -        }],
++        }]
        ]
      }
    ]
 -- 
-2.9.3
+2.10.0
 

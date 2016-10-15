@@ -1,6 +1,7 @@
 ### Unreleased
 
 * Fix architecture detection for armv7 #226
+* Update upstream v8 version to 5.4.500.31
 
 ### v5.3.332.38.0, v5.3.332.38.1 - 2016-09-07
 
