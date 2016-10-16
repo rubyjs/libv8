@@ -36,8 +36,6 @@ addons:
 bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y --only-upgrade binutils; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo gem install bundler; fi
 script:
   - git submodule update --init

@@ -30,7 +30,7 @@ module Libv8
       defines << 'v8_use_external_startup_data=0'
 
       # Do not use the GPLv3 ld.gold binary on Linux
-      defines << 'linux_use_bundled_gold=0'
+      #defines << 'linux_use_bundled_gold=0'
 
       # Pass clang flag to GYP in order to work around GCC compilation failures
       defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
@@ -64,7 +64,7 @@ module Libv8
         print_build_info
         puts 'Beginning compilation. This will take some time.'
 
-        command = "env CXX=#{Shellwords.escape @compiler.to_s} LINK=#{Shellwords.escape @compiler.to_s} #{make} #{make_flags}"
+        command = "env CXX=#{Shellwords.escape @compiler.to_s} #{make} #{make_flags}"
         puts "Building v8 with #{command}"
         system command
       end
