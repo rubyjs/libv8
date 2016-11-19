@@ -1,32 +1,38 @@
 language: ruby
 rvm:
-  - 2.3.1
+  - 2.3.2
   - 2.2
   - 2.1
   - rbx
 matrix:
   include:
-    - rvm: 2.2
+    - rvm: 2.3.2
       os: osx
-      osx_image: xcode8
+      osx_image: xcode8.2
     - rvm: 2.2
       os: osx
       osx_image: xcode7.3
-    - rvm: 2.2
+    - rvm: system
+      os: osx
+      osx_image: xcode7.3
+    - rvm: system
+      os: osx
+      osx_image: xcode8.2
+    - rvm: 2.3.2
       os: osx
       osx_image: xcode6.4
     - rvm: system
       os: osx
-      osx_image: xcode7.3
-    - rvm: system
-      os: osx
-      osx_image: xcode8
-    - rvm: ruby-2.3.1-clang
+      osx_image: xcode6.4
+    - rvm: ruby-2.3.2-clang
       env: CXX=clang++
     - rvm: 1.9.3
   allow_failures:
     - rvm: 1.9.3
     - rvm: rbx
+    - rvm: 2.3.2
+      os: osx
+      osx_image: xcode6.4
   fast_finish: true
 dist: trusty
 addons:
@@ -36,7 +42,10 @@ addons:
 bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo gem install bundler; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update --system; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" == "system" ]; then sudo gem install bundler; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update --system; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update bundler; fi
 script:
   - git submodule update --init
   - MAKEFLAGS+=-j8 bundle exec rake spec binary --trace
