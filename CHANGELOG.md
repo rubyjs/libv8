@@ -1,5 +1,9 @@
 ### Unreleased
 
+### 3.16.14.16, 3.16.14.17 - 2016-04-28:
+
+* macOS Sierra binary gem
+
 ### 3.16.14.14, 3.16.14.15 - 2016-04-28:
 
 * Enhance compiler version detection and architecture detection #212
