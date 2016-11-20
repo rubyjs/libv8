@@ -51,6 +51,7 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = osx
+    all_branches: true
 cache:
   bundler: true
 notifications:
