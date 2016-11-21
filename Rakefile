@@ -51,7 +51,7 @@ task :binary => :compile do
 end
 
 namespace :build do
-  ['x86_64-linux', 'x86-linux', 'armhf-linux', 'x86_64-freebsd-10'].each do |arch|
+  ['x86_64-linux', 'x86-linux', 'armhf-linux', 'x86_64-freebsd-10', 'x86_64-freebsd-11'].each do |arch|
     desc "build binary gem for #{arch}"
     task arch do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
@@ -61,9 +61,9 @@ namespace :build do
         sh "vagrant ssh -c 'rm -rf ~/libv8'"
         sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8 --recursive'"
         sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd ~/libv8 && MAKEFLAGS+=-j4 bundle exec rake binary'"
+        sh "vagrant ssh -c 'cd ~/libv8 && env MAKEFLAGS+=-j4 bundle exec rake binary'"
         sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
-        sh "vagrant destroy"
+        sh "vagrant destroy -f"
       end
     end
   end
