@@ -3,6 +3,10 @@
 * Fix architecture detection for armv7 #226
 * Update upstream v8 version to 5.4.500.31
 
+### v5.3.332.38.2, v5.3.332.38.3 - 2016-11-21
+
+* Add a macOS Sierra binary gem
+
 ### v5.3.332.38.0, v5.3.332.38.1 - 2016-09-07
 
 * Update upstream v8 version to 5.3.332.38
