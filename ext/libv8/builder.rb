@@ -35,6 +35,8 @@ module Libv8
       # Pass clang flag to GYP in order to work around GCC compilation failures
       defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
 
+      defines << "$GYP_DEFINES"
+
       "GYP_DEFINES=\"#{defines.join ' '}\""
     end
 
