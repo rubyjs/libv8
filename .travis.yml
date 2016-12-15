@@ -1,12 +1,12 @@
 language: ruby
 rvm:
-  - 2.3.2
+  - 2.3.3
   - 2.2
   - 2.1
   - rbx
 matrix:
   include:
-    - rvm: 2.3.2
+    - rvm: 2.3.3
       os: osx
       osx_image: xcode8.2
     - rvm: 2.2
@@ -18,19 +18,19 @@ matrix:
     - rvm: system
       os: osx
       osx_image: xcode8.2
-    - rvm: 2.3.2
+    - rvm: 2.3.3
       os: osx
       osx_image: xcode6.4
     - rvm: system
       os: osx
       osx_image: xcode6.4
-    - rvm: ruby-2.3.2-clang
+    - rvm: ruby-2.3.1-clang
       env: CXX=clang++
     - rvm: 1.9.3
   allow_failures:
     - rvm: 1.9.3
     - rvm: rbx
-    - rvm: 2.3.2
+    - rvm: 2.3.3
       os: osx
       osx_image: xcode6.4
   fast_finish: true
