@@ -6,21 +6,21 @@ rvm:
   - rbx
 matrix:
   include:
-    - rvm: 2.3.3
+    - rvm: 2.4.0
       os: osx
       osx_image: xcode8.2
-    - rvm: 2.2
+    - rvm: 2.4.0
       os: osx
       osx_image: xcode7.3
-    - rvm: system
-      os: osx
-      osx_image: xcode7.3
-    - rvm: system
-      os: osx
-      osx_image: xcode8.2
-    - rvm: 2.3.3
+    - rvm: 2.4.0
       os: osx
       osx_image: xcode6.4
+    - rvm: system
+      os: osx
+      osx_image: xcode8.2
+    - rvm: system
+      os: osx
+      osx_image: xcode7.3
     - rvm: system
       os: osx
       osx_image: xcode6.4
@@ -30,9 +30,6 @@ matrix:
   allow_failures:
     - rvm: 1.9.3
     - rvm: rbx
-    - rvm: 2.3.3
-      os: osx
-      osx_image: xcode6.4
   fast_finish: true
 dist: trusty
 addons:
