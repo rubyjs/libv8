@@ -23,6 +23,7 @@ opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following
 platforms.
 
+* x86_64-darwin-16
 * x86_64-darwin-15
 * x86_64-darwin-14
 * x86_64-linux
