@@ -1,14 +1,14 @@
-From 44da612b4aa078bc2090cad3bd42506f444dd900 Mon Sep 17 00:00:00 2001
+From b0f5f916c4b6b908c0ece2805ecad22cff644c0f Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:05:47 +0300
-Subject: [PATCH 3/4] Use the -fPIC flag for the static library
+Subject: [PATCH 3/5] Use the -fPIC flag for the static library
 
 ---
  gypfiles/standalone.gypi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gypfiles/standalone.gypi b/gypfiles/standalone.gypi
-index a59e12b..4e64f2e 100644
+index a59e12bbfc..4e64f2ed94 100644
 --- a/gypfiles/standalone.gypi
 +++ b/gypfiles/standalone.gypi
 @@ -772,7 +772,7 @@
@@ -21,5 +21,5 @@ index a59e12b..4e64f2e 100644
            }],
            [ 'clang==0 and coverage==1', {
 -- 
-2.9.3
+2.11.1
 

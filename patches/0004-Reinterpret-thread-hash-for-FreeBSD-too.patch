@@ -1,14 +1,14 @@
-From cf7ec827796ccaef75e77bd83771e7f31b645d2f Mon Sep 17 00:00:00 2001
+From c04e8c3d31921526dfcb726a79b92c55d22713bf Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Wed, 27 Jul 2016 06:20:13 +0300
-Subject: [PATCH 4/4] Reinterpret thread hash for FreeBSD, too
+Subject: [PATCH 4/5] Reinterpret thread hash for FreeBSD, too
 
 ---
  src/libsampler/v8-sampler.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/libsampler/v8-sampler.cc b/src/libsampler/v8-sampler.cc
-index edf6df1..9b2a718 100644
+index edf6df130e..9b2a71893b 100644
 --- a/src/libsampler/v8-sampler.cc
 +++ b/src/libsampler/v8-sampler.cc
 @@ -194,7 +194,7 @@ void* ThreadKey(pthread_t thread_id) {
@@ -21,5 +21,5 @@ index edf6df1..9b2a718 100644
  #else
    return static_cast<uint32_t>(thread_id);
 -- 
-2.9.3
+2.11.1
 
