@@ -1,7 +1,7 @@
-From 785a8197ebefd37592f15f0b23c13a44faa5c239 Mon Sep 17 00:00:00 2001
+From 78d8850d13bf24b0c07e6470f4af5a3cee7289df Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Sat, 15 Oct 2016 15:05:01 +0300
-Subject: [PATCH 2/3] Don't compile unnecessary stuff
+Subject: [PATCH 2/4] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------
@@ -9,7 +9,7 @@ Subject: [PATCH 2/3] Don't compile unnecessary stuff
  2 files changed, 2 insertions(+), 38 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index a6d4d13..bd73b13 100644
+index a6d4d135da..bd73b13263 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -258,12 +258,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
@@ -27,7 +27,7 @@ index a6d4d13..bd73b13 100644
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index 6b4ef82..9b02b4d 100644
+index 6b4ef82d69..9b02b4d305 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
 @@ -15,38 +15,7 @@
@@ -71,5 +71,5 @@ index 6b4ef82..9b02b4d 100644
      }
    ]
 -- 
-2.10.0
+2.11.1
 
