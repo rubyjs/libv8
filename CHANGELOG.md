@@ -1,5 +1,7 @@
 ### Unreleased
 
+* Dramatically reduce the binary size on macOS (thanks @aviat)
+
 ### 3.16.14.16, 3.16.14.17 - 2016-04-28:
 
 * macOS Sierra binary gem
