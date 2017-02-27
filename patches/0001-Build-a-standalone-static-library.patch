@@ -1,4 +1,4 @@
-From b042a96f069c0fd35adbceb43bd9db78f8420008 Mon Sep 17 00:00:00 2001
+From fbf90ea249b9f00e0dc31ee9ca335a29a218e735 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:00:19 +0300
 Subject: [PATCH 1/4] Build a standalone static library
@@ -8,10 +8,10 @@ Subject: [PATCH 1/4] Build a standalone static library
  1 file changed, 3 insertions(+)
 
 diff --git a/gypfiles/standalone.gypi b/gypfiles/standalone.gypi
-index 6599bb8351..c81ae2caa0 100644
+index d438a5aeab..f28c9bfa9f 100644
 --- a/gypfiles/standalone.gypi
 +++ b/gypfiles/standalone.gypi
-@@ -531,6 +531,9 @@
+@@ -538,6 +538,9 @@
        }],  # fastbuild!=0
      ],
      'target_conditions': [

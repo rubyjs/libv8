@@ -1,18 +1,18 @@
-From 78d8850d13bf24b0c07e6470f4af5a3cee7289df Mon Sep 17 00:00:00 2001
+From 2ddb964b20ad4381de65077a2db6f44a6cc05c52 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
-Date: Sat, 15 Oct 2016 15:05:01 +0300
+Date: Tue, 28 Feb 2017 00:04:26 +0200
 Subject: [PATCH 2/4] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------
- gypfiles/all.gyp | 33 +--------------------------------
- 2 files changed, 2 insertions(+), 38 deletions(-)
+ gypfiles/all.gyp | 39 +--------------------------------------
+ 2 files changed, 2 insertions(+), 44 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index a6d4d135da..bd73b13263 100644
+index 6eeac09a14..a2807ffafe 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -258,12 +258,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+@@ -266,12 +266,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
  	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
             gypfiles/standalone.gypi \
  	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
@@ -27,10 +27,10 @@ index a6d4d135da..bd73b13263 100644
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index 6b4ef82d69..9b02b4d305 100644
+index a3f2eedc77..9b02b4d305 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
-@@ -15,38 +15,7 @@
+@@ -15,44 +15,7 @@
            'dependencies': [
              '../tools/parser-shell.gyp:parser-shell',
            ],
@@ -42,6 +42,12 @@ index 6b4ef82d69..9b02b4d305 100644
 -            '../test/cctest/cctest.gyp:*',
 -            '../test/fuzzer/fuzzer.gyp:*',
 -            '../test/unittests/unittests.gyp:*',
+-          ],
+-        }],
+-        ['v8_enable_inspector==1', {
+-          'dependencies': [
+-            '../test/debugger/debugger.gyp:*',
+-            '../test/inspector/inspector.gyp:*',
 -          ],
 -        }],
 -        ['test_isolation_mode != "noop"', {
