@@ -1,0 +1,31 @@
+diff --git a/src/platform-freebsd.cc b/src/platform-freebsd.cc
+index 62653b4ca7..a64dd98ce5 100644
+--- a/src/platform-freebsd.cc
++++ b/src/platform-freebsd.cc
+@@ -368,7 +368,7 @@ VirtualMemory::VirtualMemory(size_t size, size_t alignment)
+   void* reservation = mmap(OS::GetRandomMmapAddr(),
+                            request_size,
+                            PROT_NONE,
+-                           MAP_PRIVATE | MAP_ANON | MAP_NORESERVE,
++                           MAP_PRIVATE | MAP_ANON,
+                            kMmapFd,
+                            kMmapFdOffset);
+   if (reservation == MAP_FAILED) return;
+@@ -440,7 +440,7 @@ void* VirtualMemory::ReserveRegion(size_t size) {
+   void* result = mmap(OS::GetRandomMmapAddr(),
+                       size,
+                       PROT_NONE,
+-                      MAP_PRIVATE | MAP_ANON | MAP_NORESERVE,
++                      MAP_PRIVATE | MAP_ANON,
+                       kMmapFd,
+                       kMmapFdOffset);
+ 
+@@ -470,7 +470,7 @@ bool VirtualMemory::UncommitRegion(void* base, size_t size) {
+   return mmap(base,
+               size,
+               PROT_NONE,
+-              MAP_PRIVATE | MAP_ANON | MAP_NORESERVE | MAP_FIXED,
++              MAP_PRIVATE | MAP_ANON | MAP_FIXED,
+               kMmapFd,
+               kMmapFdOffset) != MAP_FAILED;
+ }
