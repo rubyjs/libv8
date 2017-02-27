@@ -2,6 +2,7 @@
 
 * Fix architecture detection for armv7 #226
 * Update upstream v8 version to 5.4.500.31
+* Dramatically reduce the binary size on macOS (thanks @aviat)
 
 ### v5.3.332.38.2, v5.3.332.38.3 - 2016-11-21
 
