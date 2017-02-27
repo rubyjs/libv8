@@ -35,6 +35,9 @@ module Libv8
       # Pass clang flag to GYP in order to work around GCC compilation failures
       defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
 
+      # Add contents of the GYP_DEFINES environment variable if present
+      defines << ENV['GYP_DEFINES'] unless ENV['GYP_DEFINES'].nil?
+
       "GYP_DEFINES=\"#{defines.join ' '}\""
     end
 
