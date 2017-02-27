@@ -1,7 +1,10 @@
 ### Unreleased
 
-* Fix architecture detection for armv7 #226
 * Update upstream v8 version to 5.4.500.31
+
+### v5.3.332.38.4, v5.3.332.38.5 - 2016-02-27
+
+* Fix architecture detection for armv7 #226
 * Dramatically reduce the binary size on macOS (thanks @aviat)
 * Allow passing of GYP_DEFINES as an environment variable
 
