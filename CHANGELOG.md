@@ -1,6 +1,7 @@
 ### Unreleased
 
 * Fix architecture detection for armv7 #226
+* Dramatically reduce the binary size on macOS (thanks @aviat)
 
 ### v5.3.332.38.2, v5.3.332.38.3 - 2016-11-21
 
