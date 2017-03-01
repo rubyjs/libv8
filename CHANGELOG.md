@@ -1,4 +1,4 @@
-### Unreleased
+### 3.16.14.18, 3.16.14.19 - 2016-03-01:
 
 * Dramatically reduce the binary size on macOS (thanks @aviat)
 * Fix compilation on FreeBSD 11 #231
