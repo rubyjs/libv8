@@ -29,6 +29,7 @@ platforms.
 * x86_64-linux
 * x86-linux
 * x86_64-freebsd-10
+* x86_64-freebsd-11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
