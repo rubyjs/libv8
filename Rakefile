@@ -51,7 +51,14 @@ task :binary => :compile do
 end
 
 namespace :build do
-  ['x86_64-linux', 'x86-linux', 'armhf-linux', 'x86_64-freebsd-10', 'x86_64-freebsd-11'].each do |arch|
+  [
+    'x86_64-linux',
+    'x86-linux',
+    'armhf-linux',
+    'x86_64-freebsd-10',
+    'x86_64-freebsd-11',
+    'x86_64-linux-musl'
+  ].each do |arch|
     desc "build binary gem for #{arch}"
     task arch do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
