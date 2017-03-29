@@ -1,6 +1,11 @@
 ### Unreleased
 
-* Update upstream v8 version to 5.6.326.50
+* Update upstream v8 version to 5.7.492.65
+* Stop using the bundled toolchain to compile. (Fixes Alpine Linux compilation
+  failures) #227
+* Set GYP_DEFINES when fetching/syncing upstream source #233
+* Add ARMv6 architecture detection #234, #235
+* Add an Alpine Linux Vagrant VM for testing purposes #221
 
 ### v5.3.332.38.4, v5.3.332.38.5 - 2016-02-27
 
