@@ -1,12 +1,12 @@
-From 2ddb964b20ad4381de65077a2db6f44a6cc05c52 Mon Sep 17 00:00:00 2001
+From 73b9ff314b5027e9bd1410130df607dbd7f40aa4 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Tue, 28 Feb 2017 00:04:26 +0200
 Subject: [PATCH 2/4] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------
- gypfiles/all.gyp | 39 +--------------------------------------
- 2 files changed, 2 insertions(+), 44 deletions(-)
+ gypfiles/all.gyp | 43 +------------------------------------------
+ 2 files changed, 2 insertions(+), 48 deletions(-)
 
 diff --git a/Makefile b/Makefile
 index 6eeac09a14..a2807ffafe 100644
@@ -27,10 +27,10 @@ index 6eeac09a14..a2807ffafe 100644
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index a3f2eedc77..9b02b4d305 100644
+index 12e1fdadb7..9b02b4d305 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
-@@ -15,44 +15,7 @@
+@@ -15,48 +15,7 @@
            'dependencies': [
              '../tools/parser-shell.gyp:parser-shell',
            ],
@@ -46,8 +46,12 @@ index a3f2eedc77..9b02b4d305 100644
 -        }],
 -        ['v8_enable_inspector==1', {
 -          'dependencies': [
--            '../test/debugger/debugger.gyp:*',
 -            '../test/inspector/inspector.gyp:*',
+-          ],
+-        }],
+-        ['v8_enable_inspector==1 and test_isolation_mode != "noop"', {
+-          'dependencies': [
+-            '../test/debugger/debugger.gyp:*',
 -          ],
 -        }],
 -        ['test_isolation_mode != "noop"', {
@@ -77,5 +81,5 @@ index a3f2eedc77..9b02b4d305 100644
      }
    ]
 -- 
-2.11.1
+2.12.1
 

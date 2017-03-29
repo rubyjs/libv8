@@ -1,4 +1,4 @@
-From bdeebd38b99b47f379f3ee8b392692cbea729439 Mon Sep 17 00:00:00 2001
+From 3084588d43a95001266fdc77a6c6ed3ce9747937 Mon Sep 17 00:00:00 2001
 From: Jb Aviat <jb@sqreen.io>
 Date: Mon, 27 Feb 2017 11:14:42 +0200
 Subject: [PATCH 4/4] Do not embed debug symbols in macOS libraries
@@ -21,5 +21,5 @@ index 01e4dc9336..027eaff718 100644
            'GCC_INLINES_ARE_PRIVATE_EXTERN': 'YES',
            'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',      # -fvisibility=hidden
 -- 
-2.11.1
+2.12.1
 
