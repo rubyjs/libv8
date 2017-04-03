@@ -18,6 +18,32 @@ Not only does this drastically reduce gem install times, but it also
 reduces dependencies on the local machine receiving the gem. It also
 opens the door for supporting Windows.
 
+***** Windows instructions **********
+
+Installed rubygem dependencies:
+bundle, patch, rbconfig, mkmf, openS3, yaml, pathname2, shell_tools, shell-utils.
+Installed dependencies from libv8.gemspec. 
+
+Downloaded patch gnuwin32 sourceforge.net and edited path variable for patch.exe.
+
+Changed directory for patch.exe in /libv8/ext/libv8/patcher.rb.
+
+cd to libv8 directory 
+run bundle install
+
+gem install libv8 -- --with-system-v8
+
+C:\Users\ghoal\workspace\project\libv8>gem install libv8 -- --with-system-v8
+Temporarily enhancing PATH to include DevKit...
+Building native extensions with: '--with-system-v8'
+This could take a while...
+Successfully installed libv8-4.5.95.5
+Parsing documentation for libv8-4.5.95.5
+Installing ri documentation for libv8-4.5.95.5
+Done installing documentation for libv8 after 7 seconds
+1 gem installed
+****************************************
+
 ### Do I get a binary?
 
 That depends on your platform. Right now, we support the following
