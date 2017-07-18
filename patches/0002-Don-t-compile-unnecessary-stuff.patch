@@ -1,18 +1,18 @@
-From 73b9ff314b5027e9bd1410130df607dbd7f40aa4 Mon Sep 17 00:00:00 2001
+From 3332a98da84d9ad9ec918feedb0aefc0bfceed52 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Tue, 28 Feb 2017 00:04:26 +0200
-Subject: [PATCH 2/4] Don't compile unnecessary stuff
+Subject: [PATCH 2/5] Don't compile unnecessary stuff
 
 ---
  Makefile         |  7 +------
- gypfiles/all.gyp | 43 +------------------------------------------
- 2 files changed, 2 insertions(+), 48 deletions(-)
+ gypfiles/all.gyp | 32 --------------------------------
+ 2 files changed, 1 insertion(+), 38 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 6eeac09a14..a2807ffafe 100644
+index 299d4aa09c..16d8d2dd11 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -266,12 +266,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+@@ -270,12 +270,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
  	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
             gypfiles/standalone.gypi \
  	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
@@ -22,19 +22,26 @@ index 6eeac09a14..a2807ffafe 100644
 -	   buildtools/third_party/libc++abi/libc++abi.gyp \
 -	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
 -	   src/third_party/vtune/v8vtune.gyp src/d8.gyp
-+	   src/v8.gyp tools/parser-shell.gyp src/d8.gyp
++           src/v8.gyp tools/parser-shell.gyp src/d8.gyp
  
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index 12e1fdadb7..9b02b4d305 100644
+index bbad66741c..96820a0ecc 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
-@@ -15,48 +15,7 @@
-           'dependencies': [
+@@ -9,7 +9,6 @@
+       'type': 'none',
+       'dependencies': [
+         '../src/d8.gyp:d8',
+-        '../test/inspector/inspector.gyp:*',
+       ],
+       'conditions': [
+         ['component!="shared_library"', {
+@@ -17,37 +16,6 @@
              '../tools/parser-shell.gyp:parser-shell',
            ],
--        }],
+         }],
 -        # These items don't compile for Android on Mac.
 -        ['host_os!="mac" or OS!="android"', {
 -          'dependencies': [
@@ -44,20 +51,11 @@ index 12e1fdadb7..9b02b4d305 100644
 -            '../test/unittests/unittests.gyp:*',
 -          ],
 -        }],
--        ['v8_enable_inspector==1', {
--          'dependencies': [
--            '../test/inspector/inspector.gyp:*',
--          ],
--        }],
--        ['v8_enable_inspector==1 and test_isolation_mode != "noop"', {
--          'dependencies': [
--            '../test/debugger/debugger.gyp:*',
--          ],
--        }],
 -        ['test_isolation_mode != "noop"', {
 -          'dependencies': [
 -            '../test/bot_default.gyp:*',
 -            '../test/benchmarks/benchmarks.gyp:*',
+-            '../test/debugger/debugger.gyp:*',
 -            '../test/default.gyp:*',
 -            '../test/intl/intl.gyp:*',
 -            '../test/message/message.gyp:*',
@@ -66,7 +64,6 @@ index 12e1fdadb7..9b02b4d305 100644
 -            '../test/optimize_for_size.gyp:*',
 -            '../test/perf.gyp:*',
 -            '../test/preparser/preparser.gyp:*',
--            '../test/simdjs/simdjs.gyp:*',
 -            '../test/test262/test262.gyp:*',
 -            '../test/webkit/webkit.gyp:*',
 -            '../tools/check-static-initializers.gyp:*',
@@ -76,10 +73,9 @@ index 12e1fdadb7..9b02b4d305 100644
 -            '../tools/run-valgrind.gyp:*',
 -          ],
 -        }],
-+        }]
        ]
      }
    ]
 -- 
-2.12.1
+2.13.3
 

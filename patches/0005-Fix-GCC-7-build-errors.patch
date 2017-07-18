@@ -1,0 +1,147 @@
+From 116d78a457473837092190b2a9187b660813258d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C3=ABl=20Zasso?= <mic.besace@gmail.com>
+Date: Tue, 20 Jun 2017 13:14:38 +0200
+Subject: [PATCH 5/5] Fix GCC 7 build errors
+
+BUG=chromium:691681
+R=franzih@chromium.org
+
+Change-Id: Id7e5698487f16dc217a804f6d3f24da7213c72b9
+Reviewed-on: https://chromium-review.googlesource.com/530227
+Commit-Queue: Toon Verwaest <verwaest@chromium.org>
+Reviewed-by: Toon Verwaest <verwaest@chromium.org>
+Cr-Commit-Position: refs/heads/master@{#46045}
+---
+ BUILD.gn                       |  1 +
+ src/objects-body-descriptors.h |  2 +-
+ src/objects-inl.h              |  2 ++
+ src/objects/hash-table-inl.h   | 34 ++++++++++++++++++++++++++++++++++
+ src/objects/hash-table.h       | 20 ++++----------------
+ src/v8.gyp                     |  1 +
+ 6 files changed, 43 insertions(+), 17 deletions(-)
+ create mode 100644 src/objects/hash-table-inl.h
+
+diff --git a/BUILD.gn b/BUILD.gn
+index 80ff7340b1..becf4177c1 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1717,6 +1717,7 @@ v8_source_set("v8_base") {
+     "src/objects/dictionary.h",
+     "src/objects/frame-array-inl.h",
+     "src/objects/frame-array.h",
++    "src/objects/hash-table-inl.h",
+     "src/objects/hash-table.h",
+     "src/objects/literal-objects.cc",
+     "src/objects/literal-objects.h",
+diff --git a/src/objects-body-descriptors.h b/src/objects-body-descriptors.h
+index 9f080eb755..b201c20fbb 100644
+--- a/src/objects-body-descriptors.h
++++ b/src/objects-body-descriptors.h
+@@ -99,7 +99,7 @@ class FixedBodyDescriptor final : public BodyDescriptorBase {
+ 
+   template <typename StaticVisitor>
+   static inline void IterateBody(HeapObject* obj, int object_size) {
+-    IterateBody(obj);
++    IterateBody<StaticVisitor>(obj);
+   }
+ };
+ 
+diff --git a/src/objects-inl.h b/src/objects-inl.h
+index 4b819d43f4..07b62cc140 100644
+--- a/src/objects-inl.h
++++ b/src/objects-inl.h
+@@ -31,6 +31,8 @@
+ #include "src/lookup-cache-inl.h"
+ #include "src/lookup.h"
+ #include "src/objects.h"
++#include "src/objects/hash-table-inl.h"
++#include "src/objects/hash-table.h"
+ #include "src/objects/literal-objects.h"
+ #include "src/objects/module-info.h"
+ #include "src/objects/regexp-match-info.h"
+diff --git a/src/objects/hash-table-inl.h b/src/objects/hash-table-inl.h
+new file mode 100644
+index 0000000000..7b2db38495
+--- /dev/null
++++ b/src/objects/hash-table-inl.h
+@@ -0,0 +1,34 @@
++// Copyright 2017 the V8 project authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef V8_OBJECTS_HASH_TABLE_INL_H_
++#define V8_OBJECTS_HASH_TABLE_INL_H_
++
++#include "src/objects/hash-table.h"
++
++namespace v8 {
++namespace internal {
++
++template <typename Derived, typename Shape, typename Key>
++uint32_t HashTable<Derived, Shape, Key>::Hash(Key key) {
++  if (Shape::UsesSeed) {
++    return Shape::SeededHash(key, GetHeap()->HashSeed());
++  } else {
++    return Shape::Hash(key);
++  }
++}
++
++template <typename Derived, typename Shape, typename Key>
++uint32_t HashTable<Derived, Shape, Key>::HashForObject(Key key, Object* object) {
++  if (Shape::UsesSeed) {
++    return Shape::SeededHashForObject(key, GetHeap()->HashSeed(), object);
++  } else {
++    return Shape::HashForObject(key, object);
++  }
++}
++
++}  // namespace internal
++}  // namespace v8
++
++#endif  // V8_OBJECTS_HASH_TABLE_INL_H_
+diff --git a/src/objects/hash-table.h b/src/objects/hash-table.h
+index 221598b711..3a351e3e16 100644
+--- a/src/objects/hash-table.h
++++ b/src/objects/hash-table.h
+@@ -135,22 +135,10 @@ class HashTable : public HashTableBase {
+  public:
+   typedef Shape ShapeT;
+ 
+-  // Wrapper methods
+-  inline uint32_t Hash(Key key) {
+-    if (Shape::UsesSeed) {
+-      return Shape::SeededHash(key, GetHeap()->HashSeed());
+-    } else {
+-      return Shape::Hash(key);
+-    }
+-  }
+-
+-  inline uint32_t HashForObject(Key key, Object* object) {
+-    if (Shape::UsesSeed) {
+-      return Shape::SeededHashForObject(key, GetHeap()->HashSeed(), object);
+-    } else {
+-      return Shape::HashForObject(key, object);
+-    }
+-  }
++  // Wrapper methods.  Defined in src/objects/hash-table-inl.h
++  // to break a cycle with src/heap/heap.h.
++  inline uint32_t Hash(Key key);
++  inline uint32_t HashForObject(Key key, Object* object);
+ 
+   // Returns a new HashTable object.
+   MUST_USE_RESULT static Handle<Derived> New(
+diff --git a/src/v8.gyp b/src/v8.gyp
+index 1f94a0680a..a8efcdcf3f 100644
+--- a/src/v8.gyp
++++ b/src/v8.gyp
+@@ -1118,6 +1118,7 @@
+         'objects/dictionary.h',
+         'objects/frame-array.h',
+         'objects/frame-array-inl.h',
++        'objects/hash-table-inl.h',
+         'objects/hash-table.h',
+         'objects/literal-objects.cc',
+         'objects/literal-objects.h',
+-- 
+2.13.3
+
