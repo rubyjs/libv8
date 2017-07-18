@@ -59,6 +59,10 @@ module Libv8
       # Append GYP variable definitions
       flags << gyp_defines
 
+      # Append manually specified MAKEFLAGS
+      flags << ENV['MAKEFLAGS'] if ENV['MAKEFLAGS']
+      ENV['MAKEFLAGS'] = nil
+
       "#{make_target} #{flags.join ' '}"
     end
 

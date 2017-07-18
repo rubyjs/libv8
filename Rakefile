@@ -70,7 +70,7 @@ namespace :build do
         sh "vagrant ssh -c 'rm -rf ~/libv8'"
         sh "vagrant ssh -c 'git clone /libv8/.git ~/libv8 --recursive'"
         sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
-        sh "vagrant ssh -c 'cd ~/libv8 && env MAKEFLAGS+=-j4 bundle exec rake binary'"
+        sh "vagrant ssh -c 'cd ~/libv8 && env MAKEFLAGS=-j4 bundle exec rake binary'"
         sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
         sh("vagrant status | grep scaleway") do |ok, res|
           sh "vagrant ssh --no-tty -c 'cd ~/libv8/pkg && tar -cf - *.gem' 2>/dev/null | tar -xv"
