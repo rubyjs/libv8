@@ -55,6 +55,8 @@ namespace :build do
     'x86_64-linux',
     'x86-linux',
     'armhf-linux',
+    'arm-linux',
+    'aarch64-linux',
     'x86_64-freebsd-10',
     'x86_64-freebsd-11',
     'x86_64-linux-musl'
@@ -70,6 +72,9 @@ namespace :build do
         sh "vagrant ssh -c 'cd ~/libv8 && bundle install --path vendor/bundle'"
         sh "vagrant ssh -c 'cd ~/libv8 && env MAKEFLAGS+=-j4 bundle exec rake binary'"
         sh "vagrant ssh -c 'cp ~/libv8/pkg/*.gem /vagrant'"
+        sh("vagrant status | grep scaleway") do |ok, res|
+          sh "vagrant ssh --no-tty -c 'cd ~/libv8/pkg && tar -cf - *.gem' 2>/dev/null | tar -xv"
+        end
         sh "vagrant destroy -f"
       end
     end

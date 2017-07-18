@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+
+SETTINGS = YAML.load_file(File.join(File.dirname(__FILE__), '.scaleway'))
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+
+  config.vm.provider :scaleway do |scaleway, override|
+    scaleway.organization = SETTINGS['organization']
+    scaleway.token = SETTINGS['token']
+    scaleway.commercial_type = 'ARM64-2GB'
+    scaleway.image = 'e1a0daf2-a61f-40bf-ba3c-f86ec4baa3bf'
+    scaleway.region = 'par1'
+    override.ssh.private_key_path = '~/.ssh/id_rsa'
+  end
+
+  if ARGV[0] == 'ssh'
+    config.ssh.username = 'vagrant'
+  end
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  config.vm.synced_folder "../../.git", "/libv8/.git"
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y software-properties-common
+    apt-get dist-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+    apt-get install -y build-essential git ruby ruby-dev
+    gem install bundler
+    useradd -m -s /bin/bash vagrant
+    mkdir -p /home/vagrant/.ssh
+    cp /root/.ssh/authorized_keys /home/vagrant/.ssh/
+    chown -R vagrant:vagrant /home/vagrant/.ssh
+    chmod go-rw /home/vagrant/.ssh
+  SHELL
+end

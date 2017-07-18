@@ -12,6 +12,7 @@ lib/libv8/VERSION
 /ext/libv8/.location.yml
 /release/**/libv8
 /release/**/.vagrant
+/release/**/.scaleway
 /vendor/.gclient
 /vendor/.gclient_entries
 /vendor/v8/
