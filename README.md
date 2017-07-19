@@ -172,7 +172,8 @@ installed that gem.
 
 ### Sponsored by
 
-<a href="http://thefrontside.net">![The Frontside](/thefrontside.png)</a>
+<a href="http://frontside.io">![The Frontside](/thefrontside.png)</a>
+<a href="https://www.scaleway.com">![Scaleway](/scaleway.png)</a>
 
 ### License
 
