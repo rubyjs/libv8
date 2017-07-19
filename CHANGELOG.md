@@ -1,5 +1,9 @@
 ### Unreleased
 
+* Update upstream v8 version to 5.9.211.38
+
+### v5.7.492.65.0, v5.7.492.65.1 - 2017-07-18
+
 * Update upstream v8 version to 5.7.492.65
 * Stop using the bundled toolchain to compile. (Fixes Alpine Linux compilation
   failures) #227
