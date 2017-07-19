@@ -1,4 +1,4 @@
-From b5adedd20f6868d229ac524b170fcabc8c44c2db Mon Sep 17 00:00:00 2001
+From 596e88c9c1a158abc878bd81112aa9b5ec38033a Mon Sep 17 00:00:00 2001
 From: Jb Aviat <jb@sqreen.io>
 Date: Mon, 27 Feb 2017 11:14:42 +0200
 Subject: [PATCH 4/5] Do not embed debug symbols in macOS libraries
@@ -9,10 +9,10 @@ This lowers dramatically the produced binary size
  1 file changed, 1 insertion(+)
 
 diff --git a/gypfiles/standalone.gypi b/gypfiles/standalone.gypi
-index 08eb0761c9..453e9efed9 100644
+index fdf27226ad..8c2972fe54 100644
 --- a/gypfiles/standalone.gypi
 +++ b/gypfiles/standalone.gypi
-@@ -1054,6 +1054,7 @@
+@@ -1059,6 +1059,7 @@
            'GCC_ENABLE_CPP_EXCEPTIONS': 'NO',        # -fno-exceptions
            'GCC_ENABLE_CPP_RTTI': 'NO',              # -fno-rtti
            'GCC_ENABLE_PASCAL_STRINGS': 'NO',        # No -mpascal-strings

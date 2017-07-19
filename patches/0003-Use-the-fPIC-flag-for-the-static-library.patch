@@ -1,4 +1,4 @@
-From b2ba4c09507d83ccd7ff9e95abf5087b30445430 Mon Sep 17 00:00:00 2001
+From 185c0249653dafb4ae20d21f2a0cc241c3e96c64 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:05:47 +0300
 Subject: [PATCH 3/5] Use the -fPIC flag for the static library
@@ -8,10 +8,10 @@ Subject: [PATCH 3/5] Use the -fPIC flag for the static library
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/gypfiles/standalone.gypi b/gypfiles/standalone.gypi
-index 9006c2c2f5..08eb0761c9 100644
+index 6a72a23cfb..fdf27226ad 100644
 --- a/gypfiles/standalone.gypi
 +++ b/gypfiles/standalone.gypi
-@@ -794,7 +794,7 @@
+@@ -800,7 +800,7 @@
            [ 'visibility=="hidden" and v8_enable_backtrace==0', {
              'cflags': [ '-fvisibility=hidden' ],
            }],

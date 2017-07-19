@@ -1,44 +1,52 @@
-From 3332a98da84d9ad9ec918feedb0aefc0bfceed52 Mon Sep 17 00:00:00 2001
+From 45000acd2fe5ccf48d1061f76eea2333524ebe74 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Tue, 28 Feb 2017 00:04:26 +0200
 Subject: [PATCH 2/5] Don't compile unnecessary stuff
 
 ---
- Makefile         |  7 +------
- gypfiles/all.gyp | 32 --------------------------------
- 2 files changed, 1 insertion(+), 38 deletions(-)
+ Makefile         | 14 ++++----------
+ gypfiles/all.gyp | 33 ---------------------------------
+ 2 files changed, 4 insertions(+), 43 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index 299d4aa09c..16d8d2dd11 100644
+index ed5b3a7fab..360dc3a1a1 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -270,12 +270,7 @@ GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
- 	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
-            gypfiles/standalone.gypi \
- 	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
+@@ -265,16 +265,10 @@ ANDROID_ARCHES = android_ia32 android_x64 android_arm android_arm64 \
+ 		 android_mipsel android_x87
+ 
+ # List of files that trigger Makefile regeneration:
+-GYPFILES = third_party/icu/icu.gypi third_party/icu/icu.gyp \
+-	   gypfiles/shim_headers.gypi gypfiles/features.gypi \
+-           gypfiles/standalone.gypi \
+-	   gypfiles/toolchain.gypi gypfiles/all.gyp gypfiles/mac/asan.gyp \
 -	   test/cctest/cctest.gyp test/fuzzer/fuzzer.gyp \
 -	   test/unittests/unittests.gyp src/v8.gyp \
 -	   tools/parser-shell.gyp testing/gmock.gyp testing/gtest.gyp \
 -	   buildtools/third_party/libc++abi/libc++abi.gyp \
 -	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
 -	   src/third_party/vtune/v8vtune.gyp src/d8.gyp
-+           src/v8.gyp tools/parser-shell.gyp src/d8.gyp
++GYPFILES = gypfiles/shim_headers.gypi gypfiles/features.gypi \
++           gypfiles/standalone.gypi gypfiles/toolchain.gypi \
++           gypfiles/all.gyp gypfiles/mac/asan.gyp \
++	   tools/parser-shell.gyp src/d8.gyp
  
  # If vtunejit=on, the v8vtune.gyp will be appended.
  ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
-index bbad66741c..96820a0ecc 100644
+index bc9d9650eb..96820a0ecc 100644
 --- a/gypfiles/all.gyp
 +++ b/gypfiles/all.gyp
-@@ -9,7 +9,6 @@
+@@ -9,8 +9,6 @@
        'type': 'none',
        'dependencies': [
          '../src/d8.gyp:d8',
 -        '../test/inspector/inspector.gyp:*',
+-        '../test/mkgrokdump/mkgrokdump.gyp:*',
        ],
        'conditions': [
          ['component!="shared_library"', {
-@@ -17,37 +16,6 @@
+@@ -18,37 +16,6 @@
              '../tools/parser-shell.gyp:parser-shell',
            ],
          }],

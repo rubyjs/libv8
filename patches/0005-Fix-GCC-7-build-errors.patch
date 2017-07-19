@@ -1,4 +1,4 @@
-From 116d78a457473837092190b2a9187b660813258d Mon Sep 17 00:00:00 2001
+From da4cfa16ed1cbbc5e2ecfeecb64cbe939029ff36 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C3=ABl=20Zasso?= <mic.besace@gmail.com>
 Date: Tue, 20 Jun 2017 13:14:38 +0200
 Subject: [PATCH 5/5] Fix GCC 7 build errors
@@ -22,19 +22,19 @@ Cr-Commit-Position: refs/heads/master@{#46045}
  create mode 100644 src/objects/hash-table-inl.h
 
 diff --git a/BUILD.gn b/BUILD.gn
-index 80ff7340b1..becf4177c1 100644
+index 80d6f34133..2060cb1981 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1717,6 +1717,7 @@ v8_source_set("v8_base") {
+@@ -1748,6 +1748,7 @@ v8_source_set("v8_base") {
      "src/objects/dictionary.h",
      "src/objects/frame-array-inl.h",
      "src/objects/frame-array.h",
 +    "src/objects/hash-table-inl.h",
      "src/objects/hash-table.h",
-     "src/objects/literal-objects.cc",
-     "src/objects/literal-objects.h",
+     "src/objects/intl-objects.cc",
+     "src/objects/intl-objects.h",
 diff --git a/src/objects-body-descriptors.h b/src/objects-body-descriptors.h
-index 9f080eb755..b201c20fbb 100644
+index 499c48a930..3eb3bb539e 100644
 --- a/src/objects-body-descriptors.h
 +++ b/src/objects-body-descriptors.h
 @@ -99,7 +99,7 @@ class FixedBodyDescriptor final : public BodyDescriptorBase {
@@ -44,10 +44,10 @@ index 9f080eb755..b201c20fbb 100644
 -    IterateBody(obj);
 +    IterateBody<StaticVisitor>(obj);
    }
- };
  
+   static inline int SizeOf(Map* map, HeapObject* object) { return kSize; }
 diff --git a/src/objects-inl.h b/src/objects-inl.h
-index 4b819d43f4..07b62cc140 100644
+index 406f49d996..d179dc54d6 100644
 --- a/src/objects-inl.h
 +++ b/src/objects-inl.h
 @@ -31,6 +31,8 @@
@@ -100,10 +100,10 @@ index 0000000000..7b2db38495
 +
 +#endif  // V8_OBJECTS_HASH_TABLE_INL_H_
 diff --git a/src/objects/hash-table.h b/src/objects/hash-table.h
-index 221598b711..3a351e3e16 100644
+index f3c68a82c5..de58bf4592 100644
 --- a/src/objects/hash-table.h
 +++ b/src/objects/hash-table.h
-@@ -135,22 +135,10 @@ class HashTable : public HashTableBase {
+@@ -138,22 +138,10 @@ class HashTable : public HashTableBase {
   public:
    typedef Shape ShapeT;
  
@@ -131,17 +131,17 @@ index 221598b711..3a351e3e16 100644
    // Returns a new HashTable object.
    MUST_USE_RESULT static Handle<Derived> New(
 diff --git a/src/v8.gyp b/src/v8.gyp
-index 1f94a0680a..a8efcdcf3f 100644
+index 34fccc19dc..720b4a54f7 100644
 --- a/src/v8.gyp
 +++ b/src/v8.gyp
-@@ -1118,6 +1118,7 @@
+@@ -1228,6 +1228,7 @@
          'objects/dictionary.h',
          'objects/frame-array.h',
          'objects/frame-array-inl.h',
 +        'objects/hash-table-inl.h',
          'objects/hash-table.h',
-         'objects/literal-objects.cc',
-         'objects/literal-objects.h',
+         'objects/intl-objects.cc',
+         'objects/intl-objects.h',
 -- 
 2.13.3
 
