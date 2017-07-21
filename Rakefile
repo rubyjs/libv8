@@ -7,13 +7,13 @@ RSpec::Core::RakeTask.new :spec
 DISTRIBUTIONS = [
   'x86_64-linux',
   'x86-linux',
-  'x86_64-linux-musl',
   'x86_64-freebsd-10',
   'x86_64-freebsd-11',
   'amd64-freebsd-10',
   'amd64-freebsd-11',
   'arm-linux',
-  'aarch64-linux'
+  # 'aarch64-linux', # Enable for V8 6
+  # 'x86_64-linux-musl'
 ]
 
 module Helpers
@@ -88,7 +88,10 @@ namespace :build do
 end
 
 desc "Build binary gems for all supported distributions"
-task :binary_release => DISTRIBUTIONS.map {|distribution| "build:#{distribution}"}
+task :binary_release => [:build] + DISTRIBUTIONS.map {|distribution| "build:#{distribution}"} do
+  sh "cd #{File.dirname(__FILE__)} && mkdir -p pkg"
+  sh "cd #{File.dirname(__FILE__)} && mv release/**/*.gem pkg/"
+end
 
 task :clean_submodules do
   sh "git submodule --quiet foreach git reset --hard"
