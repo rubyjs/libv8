@@ -27,7 +27,6 @@ Vagrant.configure(2) do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network "private_network", ip: "192.168.33.10"
-  # config.vm.network "private_network", ip: "192.168.33.10"
   config.vm.network "private_network", type: "dhcp"
 
   # Create a public network, which generally matched to bridged network.
@@ -58,10 +57,7 @@ Vagrant.configure(2) do |config|
   # View the documentation for the provider you are using for more
   # information on available options.
   # Various settings as suggested by the FreeBSD community
-
-  if ARGV[0] != 'ssh'
-    config.ssh.shell = "sh"
-  end
+  config.ssh.shell = "sh"
   config.vm.base_mac = "080027D14C66"
   config.vm.provider :virtualbox do |vb|
     vb.memory = "2048"
@@ -86,12 +82,7 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
-    echo 'fdesc    /dev/fd     fdescfs     rw  0   0' >> /etc/fstab
-    mount -a
     pkg upgrade -y
-    pkg install -y curl bash gmake git-lite python2
-    curl -sSL https://get.rvm.io | grep -v __rvm_print_headline | bash -s stable --ruby=2.4.1 --with-gems='bundler'
-    pw groupmod rvm -M vagrant
-    chsh -s /usr/local/bin/bash vagrant
+    pkg install -y bash gmake ruby rubygem-bundler git-lite python2
   SHELL
 end

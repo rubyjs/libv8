@@ -4,6 +4,18 @@ require 'rspec/core/rake_task'
 Bundler::GemHelper.install_tasks
 RSpec::Core::RakeTask.new :spec
 
+DISTRIBUTIONS = [
+  'x86_64-linux',
+  'x86-linux',
+  'x86_64-linux-musl',
+  'x86_64-freebsd-10',
+  'x86_64-freebsd-11',
+  'amd64-freebsd-10',
+  'amd64-freebsd-11',
+  'arm-linux',
+  'aarch64-linux'
+]
+
 module Helpers
   module_function
   def binary_gemspec(platform = Gem::Platform.local)
@@ -51,16 +63,7 @@ task :binary => :compile do
 end
 
 namespace :build do
-  [
-    'x86_64-linux',
-    'x86-linux',
-    'armhf-linux',
-    'arm-linux',
-    'aarch64-linux',
-    'x86_64-freebsd-10',
-    'x86_64-freebsd-11',
-    'x86_64-linux-musl'
-  ].each do |arch|
+  DISTRIBUTIONS.each do |arch|
     desc "build binary gem for #{arch}"
     task arch do
       arch_dir = Pathname(__FILE__).dirname.join("release/#{arch}")
@@ -83,6 +86,9 @@ namespace :build do
     end
   end
 end
+
+desc "Build binary gems for all supported distributions"
+task :binary_release => DISTRIBUTIONS.map {|distribution| "build:#{distribution}"}
 
 task :clean_submodules do
   sh "git submodule --quiet foreach git reset --hard"
