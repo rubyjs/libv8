@@ -84,6 +84,10 @@ different binaries for different standard libraries.
 What this means is that if you're running a distro that does not use glibc
 (like Alpine Linux), you'll have to use a source version of the gem.
 
+Also, at the time of writing this, the Ruby version in Alpine's package
+repositories has been patched to not look to download binary versions of gems at
+all.
+
 ### Requirements
 
 Building the V8 library from source imposes the following requirements:
