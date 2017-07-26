@@ -1,3 +1,10 @@
+### v5.9.211.38.0beta1 - Unreleased
+
+* Update upstream v8 version to 6.0.286.44
+* V8 source is no longer pulled using the fetch command from depot_tools but is
+  instead added as a submodule in the current tree
+* Hooks are no longer ran after syncing V8's upstream dependencies
+
 ### v5.9.211.38.0, v5.9.211.38.1 - 2017-07-26
 
 * Update upstream v8 version to 5.9.211.38
