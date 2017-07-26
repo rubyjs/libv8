@@ -12,7 +12,7 @@ DISTRIBUTIONS = [
   'amd64-freebsd-10',
   'amd64-freebsd-11',
   'arm-linux',
-  # 'aarch64-linux', # Enable for V8 6
+  'aarch64-linux',
   # 'x86_64-linux-musl'
 ]
 
