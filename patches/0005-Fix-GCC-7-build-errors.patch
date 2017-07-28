@@ -1,4 +1,4 @@
-From da4cfa16ed1cbbc5e2ecfeecb64cbe939029ff36 Mon Sep 17 00:00:00 2001
+From a8f772b3a6bcfad871b4d09935727032faf84df2 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Micha=C3=ABl=20Zasso?= <mic.besace@gmail.com>
 Date: Tue, 20 Jun 2017 13:14:38 +0200
 Subject: [PATCH 5/5] Fix GCC 7 build errors

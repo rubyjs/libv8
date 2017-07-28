@@ -1,4 +1,4 @@
-From b3d75137651a41d141c29c55725bc97485b247d8 Mon Sep 17 00:00:00 2001
+From 6c28fb0319c5e2e7afad4b5731fc0ded86e1f7e7 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:00:19 +0300
 Subject: [PATCH 1/5] Build a standalone static library
