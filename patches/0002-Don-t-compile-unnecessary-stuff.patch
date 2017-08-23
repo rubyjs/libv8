@@ -1,18 +1,18 @@
-From 45000acd2fe5ccf48d1061f76eea2333524ebe74 Mon Sep 17 00:00:00 2001
+From 31d199f67ff88be5576869abcc23ecf219fa1e6f Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
-Date: Tue, 28 Feb 2017 00:04:26 +0200
+Date: Fri, 28 Jul 2017 11:11:08 +0300
 Subject: [PATCH 2/5] Don't compile unnecessary stuff
 
 ---
- Makefile         | 14 ++++----------
+ Makefile         | 12 +++---------
  gypfiles/all.gyp | 33 ---------------------------------
- 2 files changed, 4 insertions(+), 43 deletions(-)
+ 2 files changed, 3 insertions(+), 42 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index ed5b3a7fab..360dc3a1a1 100644
+index ed5b3a7fab..04eddb5e8a 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -265,16 +265,10 @@ ANDROID_ARCHES = android_ia32 android_x64 android_arm android_arm64 \
+@@ -265,15 +265,9 @@ ANDROID_ARCHES = android_ia32 android_x64 android_arm android_arm64 \
  		 android_mipsel android_x87
  
  # List of files that trigger Makefile regeneration:
@@ -25,14 +25,12 @@ index ed5b3a7fab..360dc3a1a1 100644
 -	   tools/parser-shell.gyp testing/gmock.gyp testing/gtest.gyp \
 -	   buildtools/third_party/libc++abi/libc++abi.gyp \
 -	   buildtools/third_party/libc++/libc++.gyp samples/samples.gyp \
--	   src/third_party/vtune/v8vtune.gyp src/d8.gyp
 +GYPFILES = gypfiles/shim_headers.gypi gypfiles/features.gypi \
-+           gypfiles/standalone.gypi gypfiles/toolchain.gypi \
-+           gypfiles/all.gyp gypfiles/mac/asan.gyp \
-+	   tools/parser-shell.gyp src/d8.gyp
++           gypfiles/standalone.gypi gypfiles/all.gyp \
++	   gypfiles/mac/asan.gyp src/v8.gyp tools/parser-shell.gyp \
+ 	   src/third_party/vtune/v8vtune.gyp src/d8.gyp
  
  # If vtunejit=on, the v8vtune.gyp will be appended.
- ifeq ($(vtunejit), on)
 diff --git a/gypfiles/all.gyp b/gypfiles/all.gyp
 index bc9d9650eb..96820a0ecc 100644
 --- a/gypfiles/all.gyp
