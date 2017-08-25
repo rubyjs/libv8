@@ -1,4 +1,4 @@
-### v6.0.286.54.0 - Unreleased
+### v6.0.286.54.0, v6.0.286.54.1 - 2017-08-25
 
 * Update upstream v8 version to 6.0.286.54
 * V8 source is no longer pulled using the fetch command from depot_tools but is
