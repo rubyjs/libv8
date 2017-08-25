@@ -64,7 +64,7 @@ describe "libv8 locations" do
     end
 
     it "prepends the locations of any libv8 objects on the the ldflags" do
-      expect(@context.ldflags).to eql "-Wl,--start-group /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_base.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libbase.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_snapshot.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libplatform.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libsampler.a -Wl,--end-group -lobjc -lpthread"
+      expect(@context.ldflags).to eql "/foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_base.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libbase.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_snapshot.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libplatform.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libsampler.a -lobjc -lpthread"
     end
   end
 end

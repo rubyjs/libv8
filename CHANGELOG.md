@@ -5,7 +5,6 @@
   instead added as a submodule in the current tree
 * Hooks are no longer ran after syncing V8's upstream dependencies
 * Reordered libraries in accordance with the V8 wiki
-* Added groups around the library flags in accordance with the V8 wiki
 
 ### v5.9.211.38.0, v5.9.211.38.1 - 2017-07-26
 
