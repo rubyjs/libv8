@@ -29,7 +29,7 @@ module Libv8
 
       def configure(context = MkmfContext.new)
         context.incflags.insert 0, Libv8::Paths.include_paths.map{ |p| "-I#{p}" }.join(" ")  + " "
-        context.ldflags.insert 0, "-Wl,--start-group " + Libv8::Paths.object_paths.join(" ") + " -Wl,--end-group "
+        context.ldflags.insert 0, Libv8::Paths.object_paths.join(" ") + " "
       end
 
       def verify_installation!
