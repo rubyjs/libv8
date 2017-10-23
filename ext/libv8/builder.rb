@@ -112,12 +112,19 @@ module Libv8
     #
     def setup_build_deps!
       ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
-      Dir.chdir(File.expand_path('../../../vendor/v8', __FILE__)) do
-        unless system "git checkout #{source_version}"
-          fail "unable to checkout source for v8 #{source_version}"
+      Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
+        unless Dir.exists? 'v8'
+          system "env #{gyp_defines} fetch v8" or fail "unable to fetch v8 source"
+        else
+          system "env #{gyp_defines} gclient fetch" or fail "could not fetch v8 build dependencies commits"
         end
-        system "env #{gyp_defines} gclient sync -n" or fail "could not sync v8 build dependencies"
-        system "git checkout Makefile" # Work around a weird bug on FreeBSD
+        Dir.chdir('v8') do
+          unless system "git checkout #{source_version}"
+            fail "unable to checkout source for v8 #{source_version}"
+          end
+          system "env #{gyp_defines} gclient sync" or fail "could not sync v8 build dependencies"
+          system "git checkout Makefile" # Work around a weird bug on FreeBSD
+        end
       end
     end
 

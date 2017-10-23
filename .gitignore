@@ -13,3 +13,6 @@ lib/libv8/VERSION
 /release/**/libv8
 /release/**/.vagrant
 /release/**/.scaleway
+/vendor/.gclient
+/vendor/.gclient_entries
+/vendor/v8/
