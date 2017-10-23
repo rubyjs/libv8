@@ -102,6 +102,7 @@ end
 desc "clean up artifacts of the build"
 task :clean => [:clean_submodules] do
   sh "rm -rf pkg"
+  sh "rm -rf vendor/v8"
   sh "git clean -dxf -e .bundle -e vendor/bundle"
 end
 
