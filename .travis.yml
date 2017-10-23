@@ -1,7 +1,7 @@
 language: ruby
 rvm:
-  - 2.4.1
-  - 2.3.4
+  - 2.4.2
+  - 2.3.5
   - 2.2
   - rbx
 matrix:
@@ -17,7 +17,7 @@ matrix:
       osx_image: xcode6.4
     - rvm: 2.4.0
       os: osx
-      osx_image: xcode9
+      osx_image: xcode9.1
     - rvm: system
       os: osx
       osx_image: xcode8.2
@@ -29,7 +29,7 @@ matrix:
       osx_image: xcode6.4
     - rvm: system
       os: osx
-      osx_image: xcode9
+      osx_image: xcode9.1
     - rvm: ruby-2.3.1-clang
       env: CXX=clang++
     - rvm: 1.9.3
