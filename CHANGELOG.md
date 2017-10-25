@@ -1,4 +1,4 @@
-### v6.0.286.54.2, v6.0.286.54.3 - Unreleased
+### v6.0.286.54.2, v6.0.286.54.3 - 2017-10-25
 
 * Fix regression when building from source gem #246
 * Fix regression when linking against the library
