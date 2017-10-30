@@ -1,6 +1,9 @@
 ### Unreleased
 
-* Update upstream v8 version to 6.2.414.32
+* Update upstream v8 version to 6.2.414.36
+
+### v6.0.286.54.2, v6.0.286.54.3 - 2017-10-25
+
 * Fix regression when building from source gem #246
 * Fix regression when linking against the library
   https://github.com/discourse/mini_racer/issues/65#issuecomment-331765949
