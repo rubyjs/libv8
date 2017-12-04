@@ -1,6 +1,6 @@
 ### Unreleased
 
-* Update upstream v8 version to 6.2.414.36
+* Update upstream v8 version to 6.2.414.42
 
 ### v6.0.286.54.2, v6.0.286.54.3 - 2017-10-25
 
