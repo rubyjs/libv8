@@ -1,4 +1,4 @@
-From 97bb118756e30cea60216d3e74ba352d76001637 Mon Sep 17 00:00:00 2001
+From 68eadedb9728ee6ce634d646835ef0aab2d23be6 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:05:47 +0300
 Subject: [PATCH 3/5] Use the -fPIC flag for the static library
@@ -21,5 +21,5 @@ index d0d00d3f67..f01bd48596 100644
            }],
            [ 'clang==0 and coverage==1', {
 -- 
-2.14.3
+2.15.1
 

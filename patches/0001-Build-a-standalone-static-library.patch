@@ -1,4 +1,4 @@
-From cbe264bb5c231d06f64b48413f3f268ca490e00a Mon Sep 17 00:00:00 2001
+From a018c0c78b9d40c9d9787fe969530e40fca5d38a Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Mon, 25 Jul 2016 00:00:19 +0300
 Subject: [PATCH 1/5] Build a standalone static library
@@ -22,5 +22,5 @@ index 63930d8aef..d0d00d3f67 100644
          'defines!': [
            'DEBUG',
 -- 
-2.14.3
+2.15.1
 

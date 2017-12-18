@@ -1,4 +1,4 @@
-From 96075b7eeeef64063186d743d1fa36e6de494a6e Mon Sep 17 00:00:00 2001
+From 9ec36a77bb241ee4532553809b1ec7281ea998b1 Mon Sep 17 00:00:00 2001
 From: Petko Bordjukov <bordjukov@gmail.com>
 Date: Fri, 28 Jul 2017 11:11:08 +0300
 Subject: [PATCH 2/5] Don't compile unnecessary stuff
@@ -9,7 +9,7 @@ Subject: [PATCH 2/5] Don't compile unnecessary stuff
  2 files changed, 2 insertions(+), 40 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index eb146ac244..902832af48 100644
+index 167ebf8c08..d9d0b9b306 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -268,14 +268,9 @@ ANDROID_ARCHES = android_ia32 android_x64 android_arm android_arm64 \
@@ -81,5 +81,5 @@ index bc9d9650eb..96820a0ecc 100644
      }
    ]
 -- 
-2.14.3
+2.15.1
 
