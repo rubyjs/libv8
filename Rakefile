@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'rspec/core/rake_task'
+require 'tmpdir'
 
 Bundler::GemHelper.install_tasks
 RSpec::Core::RakeTask.new :spec
@@ -108,3 +109,22 @@ end
 
 task :default => [:compile, :spec]
 task :build => [:clean]
+
+task :repack, [:gemfile, :new_arch] do |t, args|
+  dir = Dir::mktmpdir
+
+  begin
+    sh "gem unpack #{args[:gemfile]} --target=#{dir}"
+    sh "gem spec #{args[:gemfile]} --ruby > #{dir}/repack.gemspec"
+    Dir.chdir(dir) do
+      sh "sed -i 's/^  s.platform = .*$/  s.platform = \"#{args[:new_arch]}\".freeze/' repack.gemspec"
+      Dir.chdir(Dir.glob("libv8-*/").first) do
+        sh 'gem build ../repack.gemspec'
+      end
+    end
+
+    sh "mv #{dir}/*/*.gem ./pkg/"
+  ensure
+    FileUtils.remove_entry_secure dir
+  end
+end
