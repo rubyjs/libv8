@@ -1,9 +1,9 @@
-### Unreleased
+### v6.3.292.48.0, v6.3.292.48.1 - 2017-12-20
 
 * Update upstream v8 version to 6.3.292.48
 * Add a fix for https://bugs.chromium.org/p/v8/issues/detail?id=6933
 
-### v6.2.414.42.0, v6.2.414.42.1 - 2017-10-25
+### v6.2.414.42.0, v6.2.414.42.1 - 2017-12-13
 
 * Update upstream v8 version to 6.2.414.42
 
