@@ -1,23 +1,16 @@
-unless $:.include? File.expand_path("../../../lib", __FILE__)
-  $:.unshift File.expand_path("../../../lib", __FILE__)
-end
 require 'mkmf'
 require 'rbconfig'
 require 'shellwords'
 require 'libv8/version'
-require File.expand_path '../compiler', __FILE__
-require File.expand_path '../arch', __FILE__
-require File.expand_path '../make', __FILE__
-require File.expand_path '../patcher', __FILE__
 
 module Libv8
   class Builder
-    include Libv8::Arch
-    include Libv8::Make
-    include Libv8::Patcher
+    def gn_args
+      'is_debug=false is_component_build=false v8_monolithic=true v8_use_external_startup_data=false target_cpu="x64" v8_target_cpu="x64" treat_warnings_as_errors=false v8_enable_i18n_support=false'
+    end
 
-    def initialize
-      @compiler = choose_compiler
+    def generate_gn_args
+      system "gn gen out.gn/libv8 --args='#{gn_args}'"
     end
 
     def make_target
@@ -25,59 +18,14 @@ module Libv8
       "#{libv8_arch}.#{profile}"
     end
 
-    def gyp_defines(*defines)
-      # Do not use an external snapshot as we don't really care for binary size
-      defines << 'v8_use_external_startup_data=0'
-
-      # Do not use the embedded toolchain
-      defines << 'use_sysroot=0'
-      defines << 'linux_use_bundled_binutils=0'
-      defines << 'linux_use_bundled_gold=0'
-      defines << 'make_clang_dir=""'
-      defines << 'clang_dir=""'
-
-      # Pass clang flag to GYP in order to work around GCC compilation failures
-      defines << "clang=#{@compiler.is_a?(Compiler::Clang) ? '1' : '0'}"
-
-      # Add contents of the GYP_DEFINES environment variable if present
-      defines << ENV['GYP_DEFINES'] unless ENV['GYP_DEFINES'].nil?
-
-      "GYP_DEFINES=\"#{defines.join ' '}\""
-    end
-
-    def make_flags(*flags)
-      # Disable i18n
-      flags << 'i18nsupport=off'
-
-      # Solaris / Smart OS requires additional -G flag to use with -fPIC
-      flags << "CFLAGS=-G" if @compiler.target =~ /solaris/
-
-      # Disable werror as this version of v8 is getting difficult to maintain
-      # with it on
-      flags << 'werror=no'
-
-      # Append GYP variable definitions
-      flags << gyp_defines
-
-      # Append manually specified MAKEFLAGS
-      flags << ENV['MAKEFLAGS'] if ENV['MAKEFLAGS']
-      ENV['MAKEFLAGS'] = nil
-
-      "#{make_target} #{flags.join ' '}"
-    end
-
     def build_libv8!
       setup_python!
       setup_build_deps!
       Dir.chdir(File.expand_path('../../../vendor/v8', __FILE__)) do
-        fail 'No compilers available' if @compiler.nil?
-        patch!
-        print_build_info
         puts 'Beginning compilation. This will take some time.'
+        generate_gn_args
 
-        command = "env CXX=#{Shellwords.escape @compiler.to_s} #{make} #{make_flags}"
-        puts "Building v8 with #{command}"
-        system command
+        system 'ninja -v -C out.gn/libv8 v8_monolith'
       end
       return $?.exitstatus
     end
@@ -112,55 +60,29 @@ module Libv8
     #
     def setup_build_deps!
       ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
+
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        unless Dir.exists? 'v8'
-          system "env #{gyp_defines} fetch v8" or fail "unable to fetch v8 source"
-        else
-          system "env #{gyp_defines} gclient fetch" or fail "could not fetch v8 build dependencies commits"
+        unless Dir.exists?('v8') || File.exists?('.gclient')
+          system "fetch v8" or fail "unable to fetch v8 source"
         end
+
         Dir.chdir('v8') do
+          system 'git fetch origin'
           unless system "git checkout #{source_version}"
             fail "unable to checkout source for v8 #{source_version}"
           end
-          system "env #{gyp_defines} gclient sync" or fail "could not sync v8 build dependencies"
-          system "git checkout Makefile" # Work around a weird bug on FreeBSD
+          system "gclient sync" or fail "could not sync v8 build dependencies"
         end
       end
     end
 
     private
 
-    def choose_compiler
-      compiler = if with_config('cxx') || ENV['CXX']
-                   with_config('cxx') || ENV['CXX']
-                 else
-                   begin
-                     MakeMakefile::CONFIG['CXX'] # stdlib > 2.0.0
-                   rescue NameError
-                     RbConfig::CONFIG['CXX'] # stdlib < 2.0.0
-                   end
-                 end
-
-      Libv8::Compiler.type_of(compiler).new compiler
-    end
-
     def python_version
       if system 'which python 2>&1 > /dev/null'
         `python -c 'import platform; print(platform.python_version())'`.chomp
       else
         "not available"
-      end
-    end
-
-    def print_build_info
-      puts "Compiling v8 for #{libv8_arch}"
-
-      puts "Using python #{python_version}"
-
-      puts "Using compiler: #{@compiler} (#{@compiler.name} version #{@compiler.version})"
-      unless @compiler.compatible?
-        warn "Unable to find a compiler officially supported by v8."
-        warn "It is recommended to use clang v3.5 or GCC v4.8 or higher"
       end
     end
   end
