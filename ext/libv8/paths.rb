@@ -1,6 +1,5 @@
 require 'rbconfig'
 require 'shellwords'
-require File.expand_path '../arch', __FILE__
 
 module Libv8
   module Paths

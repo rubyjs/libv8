@@ -43,12 +43,12 @@ task :binary => :compile do
   # We don't need most things for the binary
   gemspec.files = []
   gemspec.files += ['lib/libv8.rb', 'lib/libv8/version.rb']
-  gemspec.files += ['ext/libv8/arch.rb', 'ext/libv8/location.rb', 'ext/libv8/paths.rb']
+  gemspec.files += ['ext/libv8/location.rb', 'ext/libv8/paths.rb']
   gemspec.files += ['ext/libv8/.location.yml']
 
   # V8
   gemspec.files += Dir['vendor/v8/include/**/*.h']
-  gemspec.files += Dir['vendor/v8/out/**/*.a']
+  gemspec.files += Dir['vendor/v8/out.gn/**/*.a']
 
   FileUtils.chmod 0644, gemspec.files
   FileUtils.mkdir_p 'pkg'
