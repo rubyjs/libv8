@@ -1,21 +1,33 @@
+unless $:.include? File.expand_path("../../../lib", __FILE__)
+  $:.unshift File.expand_path("../../../lib", __FILE__)
+end
 require 'mkmf'
 require 'rbconfig'
 require 'shellwords'
 require 'libv8/version'
+require File.expand_path '../arch', __FILE__
 
 module Libv8
   class Builder
+    include Libv8::Arch
+
     def gn_args
-      'is_debug=false is_component_build=false v8_monolithic=true v8_use_external_startup_data=false target_cpu="x64" v8_target_cpu="x64" treat_warnings_as_errors=false v8_enable_i18n_support=false'
+      %W(is_debug=#{debug_build? ? 'true' : 'false'}
+         is_component_build=false
+         v8_monolithic=true
+         v8_use_external_startup_data=false
+         target_cpu="#{libv8_arch}"
+         v8_target_cpu="#{libv8_arch}"
+         treat_warnings_as_errors=false
+         v8_enable_i18n_support=false).join(' ')
     end
 
     def generate_gn_args
       system "gn gen out.gn/libv8 --args='#{gn_args}'"
     end
 
-    def make_target
-      profile = enable_config('debug') ? 'debug' : 'release'
-      "#{libv8_arch}.#{profile}"
+    def debug_build?
+      enable_config('debug')
     end
 
     def build_libv8!
