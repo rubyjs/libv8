@@ -55,7 +55,6 @@ describe "libv8 locations" do
       allow(@context).to receive(:ldflags) {@ldflags ||= "-lobjc -lpthread"}
 
       allow(Libv8::Paths).to receive(:vendored_source_path) {"/foo bar/v8"}
-      allow(Libv8::Arch).to receive(:libv8_arch) {'x64'}
       @location.configure @context
     end
 
@@ -64,7 +63,7 @@ describe "libv8 locations" do
     end
 
     it "prepends the locations of any libv8 objects on the the ldflags" do
-      expect(@context.ldflags).to eql "/foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_base.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libplatform.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libsampler.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_libbase.a /foo\\ bar/v8/out/x64.release/obj.target/tools/gyp/libv8_snapshot.a -lobjc -lpthread"
+      expect(@context.ldflags).to eql "/foo\\ bar/v8/out.gn/libv8/obj/libv8_monolith.a -lobjc -lpthread"
     end
   end
 end
