@@ -13,6 +13,7 @@ module Libv8
 
     def gn_args
       %W(is_debug=#{debug_build? ? 'true' : 'false'}
+         symbol_level=#{debug_build? ? '-1' : '0'}
          is_component_build=false
          v8_monolithic=true
          v8_use_external_startup_data=false
