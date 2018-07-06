@@ -27,7 +27,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update bundler; fi
 script:
   - git submodule update --init
-  - MAKEFLAGS+=-j8 bundle exec rake spec binary --trace
+  - bundle exec rake spec binary --trace
 deploy:
   provider: releases
   file: $(git ls-files -o pkg | head -1)
