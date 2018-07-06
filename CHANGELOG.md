@@ -1,3 +1,19 @@
+### v6.7.288.46.0, v6.7.288.46.1 - 2017-07-06
+
+* Update upstream v8 version to 6.7.288.46 (https://github.com/cowboyd/libv8/pull/258)
+  Due to the change in V8's build system this causes several major changes until
+  we're able to find a way to reimplement the necessary functionality. The changes
+  are listed below.
+* Remove the option to specify --with-cxx. For now V8 is built with the
+  toolchain provided by the build system (https://github.com/cowboyd/libv8/issues/260)
+* Remove the option to specify --with-system-v8. It was making it too easy for
+  the user to shot themself in the foot.
+* Drop ARM support. The V8 build system is not working natively on ARM and for
+  some reason crosscompilation produces X86 binaries
+  (https://github.com/cowboyd/libv8/issues/261)
+* Drop FreeBSD support. Chromium's depot_tools do not support FreeBSD at this
+  point. (https://github.com/cowboyd/libv8/issues/253)
+
 ### v6.3.292.48.0, v6.3.292.48.1 - 2017-12-20
 
 * Update upstream v8 version to 6.3.292.48

@@ -10,9 +10,11 @@ Vagrant.configure(2) do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  config.vm.boot_timeout=3600
+
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "freebsd/FreeBSD-11.1-RELEASE"
+  config.vm.box = "freebsd/FreeBSD-11.2-RELEASE"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -39,8 +41,8 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder ".", "/vagrant", nfs: true
-  config.vm.synced_folder "../..", "/libv8", nfs: true
+  config.vm.synced_folder ".", "/vagrant", nfs: true, nfs_udp: false
+  config.vm.synced_folder "../..", "/libv8", nfs: true, nfs_udp: false
 
 
   # Provider-specific configuration so you can fine-tune various
@@ -90,7 +92,7 @@ Vagrant.configure(2) do |config|
     echo 'fdesc    /dev/fd     fdescfs     rw  0   0' >> /etc/fstab
     mount -a
     pkg upgrade -y
-    pkg install -y curl bash gmake git-lite python2
+    pkg install -y curl bash git-lite python2 ninja
     curl -sSL https://get.rvm.io | grep -v __rvm_print_headline | bash -s stable --ruby=2.4.1 --with-gems='bundler'
     pw groupmod rvm -M vagrant
     chsh -s /usr/local/bin/bash vagrant

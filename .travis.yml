@@ -1,43 +1,19 @@
 language: ruby
 rvm:
-  - 2.4.2
-  - 2.3.5
-  - 2.2
-  - rbx
+  - 2.5
+  - 2.4
+  - rubinius-3
 matrix:
   include:
-    - rvm: 2.4.0
+    - rvm: 2.5.1
       os: osx
-      osx_image: xcode8.2
-    - rvm: 2.4.0
+      osx_image: xcode9.4.1
+    - rvm: 2.5.1
       os: osx
-      osx_image: xcode7.3
-    - os: osx
-      osx_image: xcode6.4
-    - os: osx
-      osx_image: xcode9.1
-    - rvm: system
-      os: osx
-      osx_image: xcode8.2
-    - rvm: system
-      os: osx
-      osx_image: xcode7.3
-    - rvm: system
-      os: osx
-      osx_image: xcode6.4
-    - rvm: system
-      os: osx
-      osx_image: xcode9.1
-    - rvm: ruby-2.3.1-clang
-      env: CXX=clang++
-    - rvm: 1.9.3
+      osx_image: xcode9.2
   allow_failures:
-    - rvm: 1.9.3
-    - rvm: rbx
-    - os: osx
-      osx_image: xcode6.4
+    - rvm: rubinius-3
   fast_finish: true
-dist: trusty
 addons:
   apt:
     packages:
@@ -51,7 +27,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update bundler; fi
 script:
   - git submodule update --init
-  - MAKEFLAGS+=-j8 bundle exec rake spec binary --trace
+  - bundle exec rake spec binary --trace
 deploy:
   provider: releases
   file: $(git ls-files -o pkg | head -1)
@@ -60,7 +36,7 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
-    condition: $TRAVIS_OS_NAME = osx
+    # condition: $TRAVIS_OS_NAME = osx
 cache:
   bundler: true
 notifications:

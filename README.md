@@ -11,7 +11,7 @@ source and binary form.
 ### Why?
 
 The goal of libv8 is two fold: provide a binary gem containing the a
-pre-compiled libv8.a for as many platforms as possible while at the
+pre-compiled libv8_monolith.a for as many platforms as possible while at the
 same time supporting for an automated compilation for all others.
 
 Not only does this drastically reduce gem install times, but it also
@@ -23,13 +23,12 @@ opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following
 platforms.
 
+* x86_64-darwin-17
 * x86_64-darwin-16
 * x86_64-darwin-15
 * x86_64-darwin-14
 * x86_64-linux
 * x86-linux
-* x86_64-freebsd-10
-* x86_64-freebsd-11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -74,28 +73,17 @@ source-based distribution
 
 > This step release system is a workaround to carlhuda/bundler#1537
 
-##### Use with different standard C libraries
-
-The Linux binary versions of this gem are linked against the most used standard
-library - glibc. Currently rubygems has no mechanism to differentiate
-platform-specific gems by standard library so we have no way of distributing
-different binaries for different standard libraries.
-
-What this means is that if you're running a distro that does not use glibc
-(like Alpine Linux), you'll have to use a source version of the gem.
-
-Also, at the time of writing this, the Ruby version in Alpine's package
-repositories has been patched to not look to download binary versions of gems at
-all.
-
 ### Requirements
 
 Building the V8 library from source imposes the following requirements:
 
-*  A compiler that supports C++11 (such as GCC 4.8 and above or clang,
-preferably 3.5 and above)
-*  GNU Make
-*  Python 2
+* An x86/x86_64 CPU. See [#261](https://github.com/cowboyd/libv8/issues/261) for ARM state.
+* Linux with glibc or macOS. See
+  [#259](https://github.com/cowboyd/libv8/issues/259),
+  [#253](https://github.com/cowboyd/libv8/issues/253) and
+  [#217](https://github.com/cowboyd/libv8/issues/217) for state of other
+  platforms.
+* Python 2
 
 ### Using a git version
 
@@ -122,47 +110,6 @@ To get the source, these commands will get you started:
     bundle install
     bundle exec rake compile
 
-### Bring your own V8
-
-*This is a great way to ensure that the builds of all gems that depend on libv8
-fail. Please see the Gotchas section below and use the follwing instructions
-only if you know what you're doing. If you're resorting to this because the
-build of the gem is failing on your system or because there's no
-platform-specific gem for your platform, please open up an issue.*
-
-Because libv8 is the interface for the V8 engine used by several gems, you may
-need to use libv8, even if you have V8 installed already. If you wish to use
-your own V8 installation, rather than have it built for you, use the
-`--with-system-v8` option.
-
-Using RubyGems:
-
-    gem install libv8 -- --with-system-v8
-
-Using Bundler (in your Gemfile):
-
-    bundle config build.libv8 --with-system-v8
-
-#### Gotchas
-
-Please note that if you intend to run your own V8, you must install
-both V8 *and its headers* (found in libv8-dev for Debian-based distros).
-
-Also, keep in mind that V8's API does not tend to be stable and in case you're
-using your local version of V8 you *need* to **make sure that the the gems that
-depend on libv8 are compatible with the API of the version of V8 present on your
-system**. Otherwise those gems' builds *will* fail. Ideally you want the same
-version of V8 as the one packaged in the installed version of the gem. See the
-Versioning section for more information.
-
-### Bring your own compiler
-
-You can specify a compiler of your choice by either setting the `CXX`
-environment variable before compilation, or by adding the
-`--with-cxx=<compiler>` option to the bundle configuration:
-
-    bundle config build.libv8 --with-cxx=clang++
-
 ### About
 
 This project spun off of
@@ -177,7 +124,6 @@ installed that gem.
 ### Sponsored by
 
 <a href="http://frontside.io">![The Frontside](/thefrontside.png)</a>
-<a href="https://www.scaleway.com">![Scaleway](/scaleway.png)</a>
 
 ### License
 
