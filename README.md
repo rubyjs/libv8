@@ -23,13 +23,12 @@ opens the door for supporting Windows.
 That depends on your platform. Right now, we support the following
 platforms.
 
+* x86_64-darwin-17
 * x86_64-darwin-16
 * x86_64-darwin-15
 * x86_64-darwin-14
 * x86_64-linux
 * x86-linux
-* x86_64-freebsd-10
-* x86_64-freebsd-11
 
 If you don't see your platform on this list, first, make sure that it
 installs from source, and second talk to us about setting up a binary
@@ -78,8 +77,13 @@ source-based distribution
 
 Building the V8 library from source imposes the following requirements:
 
-*  Ninja
-*  Python 2
+* An x86/x86_64 CPU. See [#261](https://github.com/cowboyd/libv8/issues/261) for ARM state.
+* Linux with glibc or macOS. See
+  [#259](https://github.com/cowboyd/libv8/issues/259),
+  [#253](https://github.com/cowboyd/libv8/issues/253) and
+  [#217](https://github.com/cowboyd/libv8/issues/217) for state of other
+  platforms.
+* Python 2
 
 ### Using a git version
 
@@ -120,7 +124,6 @@ installed that gem.
 ### Sponsored by
 
 <a href="http://frontside.io">![The Frontside](/thefrontside.png)</a>
-<a href="https://www.scaleway.com">![Scaleway](/scaleway.png)</a>
 
 ### License
 
