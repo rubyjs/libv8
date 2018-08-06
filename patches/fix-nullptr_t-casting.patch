@@ -1,0 +1,13 @@
+diff --git a/src/stub-cache.cc b/src/stub-cache.cc
+index 06b4782b76..17bddf4447 100644
+--- a/src/stub-cache.cc
++++ b/src/stub-cache.cc
+@@ -1376,7 +1376,7 @@ Handle<Code> StubCompiler::GetCodeWithFlags(Code::Flags flags,
+                                             Handle<String> name) {
+   return (FLAG_print_code_stubs && !name.is_null())
+       ? GetCodeWithFlags(flags, *name->ToCString())
+-      : GetCodeWithFlags(flags, reinterpret_cast<char*>(NULL));
++      : GetCodeWithFlags(flags, reinterpret_cast<char*>(0));
+ }
+ 
+ 
