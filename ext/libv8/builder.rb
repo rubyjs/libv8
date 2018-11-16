@@ -20,7 +20,16 @@ module Libv8
          target_cpu="#{libv8_arch}"
          v8_target_cpu="#{libv8_arch}"
          treat_warnings_as_errors=false
-         v8_enable_i18n_support=false).join(' ')
+         v8_enable_i18n_support=false
+         binutils_path=""
+         clang_base_path=""
+         clang_use_chrome_plugins=false
+         linux_use_bundled_binutils=false
+         target_sysroot_dir=""
+         use_custom_libcxx=false
+         use_sysroot=false
+         use_lld=false
+         use_icf=false).join(' ')
     end
 
     def generate_gn_args
