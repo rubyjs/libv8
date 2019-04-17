@@ -84,6 +84,7 @@ Building the V8 library from source imposes the following requirements:
   [#217](https://github.com/cowboyd/libv8/issues/217) for state of other
   platforms.
 * Python 2
+* pkg-config
 
 ### Using a git version
 

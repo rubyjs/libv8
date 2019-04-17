@@ -18,6 +18,7 @@ addons:
   apt:
     packages:
       - clang
+      - pkg-config
 bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
