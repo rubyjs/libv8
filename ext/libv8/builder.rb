@@ -12,7 +12,11 @@ module Libv8
     include Libv8::Arch
 
     def gn_args
-      %W(is_debug=#{debug_build? ? 'true' : 'false'}
+      %W(clang_use_chrome_plugins=false
+         linux_use_bundled_binutils=false
+         use_custom_libcxx=false
+         use_sysroot=false
+         is_debug=#{debug_build? ? 'true' : 'false'}
          symbol_level=#{debug_build? ? '-1' : '0'}
          is_component_build=false
          v8_monolithic=true

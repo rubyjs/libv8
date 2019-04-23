@@ -78,7 +78,7 @@ Vagrant.configure(2) do |config|
     sudo apt-add-repository ppa:brightbox/ruby-ng
     sudo apt-get update
     sudo apt-get dist-upgrade -y
-    sudo apt-get install -y build-essential git ruby-switch ruby2.3 ruby2.3-dev pkg-config
+    sudo apt-get install -y build-essential git ruby-switch ruby2.3 ruby2.3-dev libglib2.0-dev
     sudo ruby-switch --set ruby2.3
     sudo gem install bundler
   SHELL

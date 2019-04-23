@@ -85,6 +85,7 @@ Building the V8 library from source imposes the following requirements:
   platforms.
 * Python 2
 * pkg-config
+* GLib 2
 
 ### Using a git version
 
