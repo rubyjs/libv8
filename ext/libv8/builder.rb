@@ -32,7 +32,7 @@ module Libv8
     end
 
     def debug_build?
-      enable_config('debug')
+      enable_config('debug') || Libv8::VERSION.include?('beta')
     end
 
     def build_libv8!
