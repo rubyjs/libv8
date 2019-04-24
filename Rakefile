@@ -117,9 +117,10 @@ task :repack, [:gemfile, :new_arch] do |t, args|
     sh "gem unpack #{args[:gemfile]} --target=#{dir}"
     sh "gem spec #{args[:gemfile]} --ruby > #{dir}/repack.gemspec"
     Dir.chdir(dir) do
-      sh "sed -i 's/^  s.platform = .*$/  s.platform = \"#{args[:new_arch]}\".freeze/' repack.gemspec"
+      sh "sed -iorig 's/^  s.platform = .*$/  s.platform = \"#{args[:new_arch]}\".freeze/' repack.gemspec"
       Dir.chdir(Dir.glob("libv8-*/").first) do
-        sh 'gem build ../repack.gemspec'
+        sh 'mv ../repack.gemspec ./'
+        sh 'gem build repack.gemspec'
       end
     end
 
