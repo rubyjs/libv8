@@ -1,3 +1,7 @@
+### Unreleased
+
+* Enable I18n support in V8
+
 ### v7.3.492.27.0, v7.3.492.27.1 - 2019-04-24
 
 * Update upstream v8 version to 7.3.492.27
