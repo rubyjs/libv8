@@ -12,8 +12,6 @@ Gem::Specification.new do |s|
   s.description = %q{Distributes the V8 JavaScript engine in binary and source forms in order to support fast builds of The Ruby Racer}
   s.license     = "MIT"
 
-  s.rubyforge_project = "libv8"
-
   s.files  = `git ls-files`.split("\n").reject {|f| f =~ /^release\//}
 
   submodules = `git submodule --quiet foreach 'echo $path'`.split("\n").map(&:chomp)
