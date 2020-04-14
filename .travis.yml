@@ -25,6 +25,7 @@ bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update --system; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx"]; then xcode-select --install; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" == "system" ]; then sudo gem install bundler; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update --system; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$TRAVIS_RUBY_VERSION" != "system" ]; then gem update bundler; fi
