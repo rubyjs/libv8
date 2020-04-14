@@ -1,7 +1,7 @@
 # libv8
 [![Gem Version](https://badge.fury.io/rb/libv8.svg)](https://badge.fury.io/rb/libv8)
 [![Number of downloads](https://ruby-gem-downloads-badge.herokuapp.com/libv8?type=total)](https://rubygems.org/gems/libv8)
-[![Build Status](https://travis-ci.org/cowboyd/libv8.svg?branch=master)](https://travis-ci.org/cowboyd/libv8)
+[![Build Status](https://travis-ci.org/rubyjs/libv8.svg?branch=master)](https://travis-ci.org/rubyjs/libv8)
 [![Join the chat at https://gitter.im/cowboyd/therubyracer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cowboyd/therubyracer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Code Triagers Badge](https://www.codetriage.com/cowboyd/libv8/badges/users.svg)](https://www.codetriage.com/cowboyd/libv8)
 
@@ -79,11 +79,11 @@ source-based distribution
 
 Building the V8 library from source imposes the following requirements:
 
-* An x86/x86_64 CPU. See [#261](https://github.com/cowboyd/libv8/issues/261) for ARM state.
+* An x86/x86_64 CPU. See [#261](https://github.com/rubyjs/libv8/issues/261) for ARM state.
 * Linux with glibc or macOS. See
-  [#259](https://github.com/cowboyd/libv8/issues/259),
-  [#253](https://github.com/cowboyd/libv8/issues/253) and
-  [#217](https://github.com/cowboyd/libv8/issues/217) for state of other
+  [#259](https://github.com/rubyjs/libv8/issues/259),
+  [#253](https://github.com/rubyjs/libv8/issues/253) and
+  [#217](https://github.com/rubyjs/libv8/issues/217) for state of other
   platforms.
 * Python 2
 * pkg-config
@@ -96,7 +96,7 @@ so by specifying the git repo as a gem source. Just make sure you add
 the following to your `Gemfile`:
 
 ```Ruby
-gem "libv8", github: "cowboyd/libv8", submodules: true
+gem "libv8", github: "rubyjs/libv8", submodules: true
 ```
 
 You can find more info on using a git repo as a gem source in
@@ -109,7 +109,7 @@ platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
-    git clone --recursive git://github.com/cowboyd/libv8.git
+    git clone --recursive git://github.com/rubyjs/libv8.git
     cd libv8
     bundle install
     bundle exec rake compile
@@ -117,7 +117,7 @@ To get the source, these commands will get you started:
 ### About
 
 This project spun off of
-[therubyracer](http://github.com/cowboyd/therubyracer) which depends
+[therubyracer](http://github.com/rubyjs/therubyracer) which depends
 on having a specific version of V8 to compile and run against.
 However, actually delivering that version reliably to all the
 different platforms proved to be a challenge to say the least.
