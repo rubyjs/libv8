@@ -4,14 +4,14 @@ language: ruby
 rvm:
   - 2.6
   - 2.5
-  - rubinius-3
+  - rbx
 matrix:
   include:
     - rvm: 2.5.1
       os: osx
       osx_image: xcode9.4.1
   allow_failures:
-    - rvm: rubinius-3
+    - rvm: rbx
   fast_finish: true
 addons:
   apt:
