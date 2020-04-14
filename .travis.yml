@@ -2,8 +2,8 @@ dist: xenial
 compiler: clang
 language: ruby
 rvm:
+  - 2.6
   - 2.5
-  - 2.4
   - rubinius-3
 matrix:
   include:

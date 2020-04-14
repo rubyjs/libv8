@@ -2,6 +2,7 @@
 
 * Update upstream v8 version to 7.3.495.0
 * Enable I18n support in V8
+* Drop support for Ruby 2.4 (EOL)
 
 ### v7.3.492.27.0, v7.3.492.27.1 - 2019-04-24
 
