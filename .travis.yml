@@ -2,19 +2,14 @@ dist: xenial
 compiler: clang
 language: ruby
 rvm:
+  - 2.7
+  - 2.6
   - 2.5
-  - 2.4
-  - rubinius-3
 matrix:
   include:
-    - rvm: 2.5.1
+    - rvm: 2.6
       os: osx
       osx_image: xcode9.4.1
-    - rvm: 2.5.1
-      os: osx
-      osx_image: xcode9.2
-  allow_failures:
-    - rvm: rubinius-3
   fast_finish: true
 addons:
   apt:

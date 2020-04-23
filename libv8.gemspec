@@ -7,12 +7,10 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Charles Lowell"]
   s.email       = ["cowboyd@thefrontside.net"]
-  s.homepage    = "http://github.com/cowboyd/libv8"
+  s.homepage    = "http://github.com/rubyjs/libv8"
   s.summary     = %q{Distribution of the V8 JavaScript engine}
   s.description = %q{Distributes the V8 JavaScript engine in binary and source forms in order to support fast builds of The Ruby Racer}
   s.license     = "MIT"
-
-  s.rubyforge_project = "libv8"
 
   s.files  = `git ls-files`.split("\n").reject {|f| f =~ /^release\//}
 
