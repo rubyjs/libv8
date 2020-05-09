@@ -1,3 +1,3 @@
 module Libv8
-  VERSION = "7.3.495.0"
+  VERSION = '8.1.307.32.0'.freeze
 end

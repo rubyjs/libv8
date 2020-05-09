@@ -1,3 +1,7 @@
+### v8.1.307.32.0 - 2020-05-08
+
+* Update upstream v8 version to 8.1.307.32
+
 ### v7.3.495.0 - 2020-04-14
 
 * Update upstream v8 version to 7.3.495.0
