@@ -65,7 +65,7 @@ module Libv8
     # then this will be 4.5.95
     #
     def source_version
-      Libv8::VERSION.gsub(/\.[^.]+$/, '')
+      Libv8::V8_MINOR_VERSION
     end
 
     ##
@@ -84,7 +84,7 @@ module Libv8
 
         Dir.chdir('v8') do
           system 'git fetch origin'
-          unless system "git checkout #{source_version}"
+          unless system "git checkout branch-heads/#{source_version}"
             fail "unable to checkout source for v8 #{source_version}"
           end
           system "gclient sync" or fail "could not sync v8 build dependencies"
