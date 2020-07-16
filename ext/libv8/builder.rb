@@ -23,7 +23,8 @@ module Libv8
          v8_use_external_startup_data=false
          target_cpu="#{libv8_arch}"
          v8_target_cpu="#{libv8_arch}"
-         treat_warnings_as_errors=false).join(' ')
+         treat_warnings_as_errors=false
+         icu_use_data_file=false).join(' ')
     end
 
     def generate_gn_args
