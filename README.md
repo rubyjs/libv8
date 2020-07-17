@@ -26,9 +26,6 @@ platforms.
 * x86_64-darwin-19
 * x86_64-darwin-18
 * x86_64-darwin-17
-* x86_64-darwin-16
-* x86_64-darwin-15
-* x86_64-darwin-14
 * x86_64-linux
 * x86-linux
 

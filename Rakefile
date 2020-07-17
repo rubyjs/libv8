@@ -20,9 +20,20 @@ DISTRIBUTIONS = [
 module Helpers
   module_function
   def binary_gemspec(platform = Gem::Platform.local)
-    gemspec = eval(File.read 'libv8.gemspec')
-    gemspec.platform = platform
-    gemspec
+    eval(File.read 'libv8.gemspec').tap do |gemspec|
+      gemspec.platform = platform
+      gemspec.extensions.clear
+
+      # We don't need most things for the binary
+      gemspec.files = []
+      gemspec.files += ['lib/libv8.rb', 'lib/libv8/version.rb']
+      gemspec.files += ['ext/libv8/location.rb', 'ext/libv8/paths.rb']
+      gemspec.files += ['ext/libv8/.location.yml']
+
+      # V8
+      gemspec.files += Dir['vendor/v8/include/**/*.h']
+      gemspec.files += Dir['vendor/v8/out.gn/**/*.a']
+    end
   end
 
   def binary_gem_name(platform = Gem::Platform.local)
@@ -37,29 +48,14 @@ end
 
 desc "build a binary gem #{Helpers.binary_gem_name}"
 task :binary => :compile do
+  require 'rubygems/package'
+
   gemspec = Helpers.binary_gemspec
-  gemspec.extensions.clear
-
-  # We don't need most things for the binary
-  gemspec.files = []
-  gemspec.files += ['lib/libv8.rb', 'lib/libv8/version.rb']
-  gemspec.files += ['ext/libv8/location.rb', 'ext/libv8/paths.rb']
-  gemspec.files += ['ext/libv8/.location.yml']
-
-  # V8
-  gemspec.files += Dir['vendor/v8/include/**/*.h']
-  gemspec.files += Dir['vendor/v8/out.gn/**/*.a']
 
   FileUtils.chmod 0644, gemspec.files
   FileUtils.mkdir_p 'pkg'
 
-  package = if Gem::VERSION < '2.0.0'
-    Gem::Builder.new(gemspec).build
-  else
-    require 'rubygems/package'
-    Gem::Package.build gemspec
-  end
-
+  package = Gem::Package.build gemspec
   FileUtils.mv package, 'pkg'
 end
 
@@ -110,22 +106,13 @@ end
 task :default => [:compile, :spec]
 task :build => [:clean]
 
-task :repack, [:gemfile, :new_arch] do |t, args|
-  dir = Dir::mktmpdir
+desc 'Generate OSX varient platform names'
+task :osx_varients => [:compile] do
+  gemspec = binary_gemspec
+  return unless gemspec.platform == 'osx'
 
-  begin
-    sh "gem unpack #{args[:gemfile]} --target=#{dir}"
-    sh "gem spec #{args[:gemfile]} --ruby > #{dir}/repack.gemspec"
-    Dir.chdir(dir) do
-      sh "sed -iorig 's/^  s.platform = .*$/  s.platform = \"#{args[:new_arch]}\".freeze/' repack.gemspec"
-      Dir.chdir(Dir.glob("libv8-*/").first) do
-        sh 'mv ../repack.gemspec ./'
-        sh 'gem build repack.gemspec'
-      end
-    end
-
-    sh "mv #{dir}/*/*.gem ./pkg/"
-  ensure
-    FileUtils.remove_entry_secure dir
+  %w(x86_64 universal).each do |cpu|
+    gemspec.platform.cpu = cpu
+    Gem::Package.build gemspec
   end
 end
