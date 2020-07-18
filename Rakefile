@@ -1,6 +1,7 @@
 require 'bundler/setup'
 require 'rspec/core/rake_task'
 require 'tmpdir'
+require 'rubygems/package'
 
 Bundler::GemHelper.install_tasks
 RSpec::Core::RakeTask.new :spec
@@ -48,8 +49,6 @@ end
 
 desc "build a binary gem #{Helpers.binary_gem_name}"
 task :binary => :compile do
-  require 'rubygems/package'
-
   gemspec = Helpers.binary_gemspec
 
   FileUtils.chmod 0644, gemspec.files
@@ -106,13 +105,19 @@ end
 task :default => [:compile, :spec]
 task :build => [:clean]
 
-desc 'Generate OSX varient platform names'
-task :osx_varients => [:compile] do
-  gemspec = binary_gemspec
-  return unless gemspec.platform == 'osx'
+desc 'Generate OSX varient platform names. Requires `compile` to already have been run.'
+task :osx_varients do
+  gemspec = Helpers.binary_gemspec
+  next unless gemspec.platform.os == 'osx'
 
   %w(x86_64 universal).each do |cpu|
-    gemspec.platform.cpu = cpu
-    Gem::Package.build gemspec
+    platform = gemspec.platform.dup
+    next unless platform.cpu != cpu
+
+    platform.cpu = cpu
+    gemspec.platform = platform
+
+    package = Gem::Package.build gemspec
+    FileUtils.mv package, 'pkg'
   end
 end
