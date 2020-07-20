@@ -15,4 +15,5 @@ lib/libv8/VERSION
 /release/**/.scaleway
 /vendor/.gclient
 /vendor/.gclient_entries
+/vendor/.cipd
 /vendor/v8/

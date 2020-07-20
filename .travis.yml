@@ -7,10 +7,12 @@ rvm:
   - 2.5
 matrix:
   include:
-    - rvm: 2.6
-      os: osx
-      osx_image: xcode9.4.1
-  fast_finish: true
+    - os: osx
+      osx_image: xcode12
+    - os: osx
+      osx_image: xcode11.3
+    - os: osx
+      osx_image: xcode10.1
 addons:
   apt:
     packages:
@@ -26,18 +28,22 @@ before_install:
 script:
   - git submodule update --init
   - bundle exec rake spec binary --trace
+before_deploy:
+  - bundle exec rake osx_varients --trace
 deploy:
   provider: releases
-  file: $(git ls-files -o pkg | head -1)
+  file_glob: true
+  file: pkg/*.gem
   api_key:
     secure: OMCBceg89uRnU+FIPAPbeOK2pISvV4Cz62r9iTRIGXQCOOXX8M40i77/3DmtkMtc9FEuNyAu1+CH886PL2WtZZPK4CmEU3HuqXz1a5VsCI+zcAZL1tevKvblXOVQ3MG+B/SZRC3rEzGwjk4027WtzCCGoGCLUu4TFJP05+/8XN4=
   skip_cleanup: true
   on:
     tags: true
-    # condition: $TRAVIS_OS_NAME = osx
+    rvm: '2.7' # Only deploy 1 of each platform
 cache:
   bundler: true
 notifications:
   recipients:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
+    - nightpool@cybre.space
