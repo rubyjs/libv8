@@ -8,9 +8,7 @@ rvm:
 matrix:
   include:
     - os: osx
-      osx_image: xcode12
-    - os: osx
-      osx_image: xcode11.3
+      osx_image: xcode11.6
 addons:
   apt:
     packages:
@@ -33,12 +31,11 @@ deploy:
   file_glob: true
   file: pkg/*.gem
   api_key:
-    secure: OMCBceg89uRnU+FIPAPbeOK2pISvV4Cz62r9iTRIGXQCOOXX8M40i77/3DmtkMtc9FEuNyAu1+CH886PL2WtZZPK4CmEU3HuqXz1a5VsCI+zcAZL1tevKvblXOVQ3MG+B/SZRC3rEzGwjk4027WtzCCGoGCLUu4TFJP05+/8XN4=
+    secure: "YM1qW1D52lN/lfQMTYABP9Cm9ZAj0BMpZb2g+rHhWaE+EykdJr4RYmC4O4hexXWO9bzIQXyI7Jg0PYMh/ZYzO8SZHs49VXOqjmSHHm5aGywclAtLtRxaLVWSe2vc68eFQNJTg/kRpgYzFpJ/5bUhfWhSD7yvHJ2gfPIF08T/F8iH7x21SmZH8TJk5DbSUBRaf8ZgLg4EdYj/o9QtpCW3Hbi1szw+PypQy1GcZGyM1vYZT7GUsO2Jrq6z7tHZgx4v7a5AWrCmmLCQhB+ktJ6u0bsv63Goflgm2oEdTPbFLup3odMhVE+iaRdTSU7gB0fjXidiMxjWhLtBdOaLd04eYk4elYy/ZUlIS0r8iFJYnXGnws59nsiS3gn1wpqAnVInE+IQYNbL0TNK01UJKVndJ9wgyqDenoE0Dd61nkaBGcVRxkIMsozaCioaKP0kmPvSsZrI3ysfqIgZo2ZGNNG3yq5v9cSB4XLQXc4vJjWQv4dgGgEFVzKEsdmcbp+uiySTIzq24Q9vBfKiSHD4DTbyrPIod3SVfnaqUerljVjAEBfZLyWtewp+yk3Eq9sQsghW/EruGb6EGw5z94NtsPUmgx/FwgsNVSIRueDlErwBJhLRq7jtSH5Zygnem7gYIStQa3sjHqKiCrfmWBNBnc0PU4xGM7n5qKYRx4uh/hcKRQo="
   skip_cleanup: true
   on:
     tags: true
     rvm: '2.7'
-    osx_image: xcode12
 cache:
   bundler: true
 notifications:
