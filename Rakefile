@@ -105,19 +105,21 @@ end
 task :default => [:compile, :spec]
 task :build => [:clean]
 
-desc 'Generate OSX varient platform names. Requires `compile` to already have been run.'
+desc 'Generate OSX platform builds. Although any v8 OSX compile will run on any Mac OS version down to 10.10, RubyGems requires us to submit all of the different platforms seperately. Requires `compile` to already have been run, but is seperate for Travis reasons.'
 task :osx_varients do
   gemspec = Helpers.binary_gemspec
-  next unless gemspec.platform.os == 'osx'
+  next unless Gem::Platform.local.os == 'darwin'
 
-  %w(x86_64 universal).each do |cpu|
-    platform = gemspec.platform.dup
-    next unless platform.cpu != cpu
+  [15, 16, 17, 18, 19].each do |version|
+    %w(x86_64 universal).each do |cpu|
 
-    platform.cpu = cpu
-    gemspec.platform = platform
+      gemspec.platform = Gem::Platform.local.tap do |platform|
+        platform.cpu = cpu
+        platform.version = version
+      end
 
-    package = Gem::Package.build gemspec
-    FileUtils.mv package, 'pkg'
+      package = Gem::Package.build gemspec
+      FileUtils.mv package, 'pkg'
+    end
   end
 end
