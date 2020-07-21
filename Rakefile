@@ -123,3 +123,38 @@ task :osx_varients do
     end
   end
 end
+
+desc 'Push a release from github'
+task :push_github_release do
+
+  releases = (15..19).map do |i|
+    ["-universal-darwin-#{i}", "-x86_64-darwin-#{i}"]
+  end.flatten
+
+  releases << ""
+  releases << "-x86_64-linux"
+
+  FileUtils.mkdir_p("pkg")
+
+  Dir.chdir("pkg") do
+    releases.each do |release|
+      cmd = "wget https://github.com/rubyjs/libv8/releases/download/v#{Libv8::VERSION}/libv8-#{Libv8::VERSION}#{release}.gem"
+      puts cmd
+      puts `#{cmd}`
+    end
+
+    otp = 111111
+    Dir["*#{Libv8::VERSION}*.gem"].each do |f|
+      puts "pushing #{f}"
+      begin
+        result = `gem push #{f} --otp #{otp}`
+        if result =~ /OTP code is incorrect/
+          puts "enter otp"
+          otp = STDIN.gets.strip
+          redo
+        end
+      end
+      puts result
+    end
+  end
+end
