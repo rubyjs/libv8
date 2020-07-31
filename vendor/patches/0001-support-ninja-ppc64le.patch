@@ -1,0 +1,24 @@
+From 88070442df48a857460a68d065957d0f7efc5468 Mon Sep 17 00:00:00 2001
+From: Trung LE <trung.le@ruby-journal.com>
+Date: Sun, 8 Mar 2020 07:46:10 +0000
+Subject: [PATCH] Support ninja ppc64le
+
+---
+ ninja | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/ninja b/ninja
+index 1a650b54..eb146a4b 100755
+--- a/ninja
++++ b/ninja
+@@ -28,6 +28,8 @@ case "$OS" in
+         # bittage of the userspace install (e.g. when running 32-bit userspace
+         # on x86_64 kernel)
+         exec "${THIS_DIR}/ninja-linux${LONG_BIT}" "$@";;
++      ppc64le)
++	 exec "${THIS_DIR}/ninja-linux-ppc64le" "$@";;
+       *)
+         echo Unknown architecture \($MACHINE\) -- unable to run ninja.
+         print_help
+--
+2.17.1

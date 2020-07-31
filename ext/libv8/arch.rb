@@ -6,6 +6,7 @@ module Libv8
 
     def libv8_arch
       case Gem::Platform.local.cpu
+      when /^powerpc64/        then 'ppc64'
       when /^arm(v6.*|v7.*)*$/ then 'arm'
       when /^a(rm|arch)64$/    then 'arm64'
       when /^x86$/             then 'ia32'

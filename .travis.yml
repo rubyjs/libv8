@@ -1,12 +1,12 @@
-dist: xenial
+dist: bionic
 compiler: clang
 language: ruby
 rvm:
-  - 2.7
   - 2.6
-  - 2.5
 matrix:
   include:
+    - rvm: 2.6
+      arch: ppc64le
     - os: osx
       osx_image: xcode11.6
 addons:
@@ -14,6 +14,8 @@ addons:
     packages:
       - clang
       - pkg-config
+      - python3.8
+      - python2.7
 bundler_args: --jobs=4 --retry=3
 before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then gem update bundler; fi
