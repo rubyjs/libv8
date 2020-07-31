@@ -7,7 +7,8 @@ matrix:
   include:
     - rvm: 2.6
       arch: ppc64le
-  fast_finish: true
+    - os: osx
+      osx_image: xcode11.6
 addons:
   apt:
     packages:
@@ -25,18 +26,22 @@ before_install:
 script:
   - git submodule update --init
   - bundle exec rake spec binary --trace
+before_deploy:
+  - bundle exec rake osx_varients --trace
 deploy:
   provider: releases
-  file: $(git ls-files -o pkg | head -1)
+  file_glob: true
+  file: pkg/*.gem
   api_key:
-    secure: OMCBceg89uRnU+FIPAPbeOK2pISvV4Cz62r9iTRIGXQCOOXX8M40i77/3DmtkMtc9FEuNyAu1+CH886PL2WtZZPK4CmEU3HuqXz1a5VsCI+zcAZL1tevKvblXOVQ3MG+B/SZRC3rEzGwjk4027WtzCCGoGCLUu4TFJP05+/8XN4=
+    secure: "ONqUP7Unb84uQJhPCacyNdQL2JznZHIpXjXvW3Zcmvz9Hifp0Q94Kk/k7Q7jDgVZjHvqs9iI2WaXOut55Tumb9yZcMtn4ZbMCh/93MPPBYnvFGJd4qDQdiVylm+WLrg+phK/nG1259T/dX+nZKYbvKjQxQSHYaP7q6+MVvLPPcY="
   skip_cleanup: true
   on:
     tags: true
-    # condition: $TRAVIS_OS_NAME = osx
+    rvm: '2.7'
 cache:
   bundler: true
 notifications:
   recipients:
     - cowboyd@thefrontside.net
     - bordjukov@gmail.com
+    - nightpool@cybre.space
