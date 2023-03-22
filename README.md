@@ -106,7 +106,7 @@ platform, we'll pull it right in!
 
 To get the source, these commands will get you started:
 
-    git clone --recursive git://github.com/rubyjs/libv8.git
+    git clone --recursive https://github.com/rubyjs/libv8.git
     cd libv8
     bundle install
     bundle exec rake compile
