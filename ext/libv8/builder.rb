@@ -79,7 +79,7 @@ module Libv8
       ENV['PATH'] = "#{File.expand_path('../../../vendor/depot_tools', __FILE__)}:#{ENV['PATH']}"
 
       Dir.chdir(File.expand_path('../../../vendor', __FILE__)) do
-        unless Dir.exists?('v8') || File.exists?('.gclient')
+        unless Dir.exist?('v8') || File.exist?('.gclient')
           system "fetch v8" or fail "unable to fetch v8 source"
         end
 
